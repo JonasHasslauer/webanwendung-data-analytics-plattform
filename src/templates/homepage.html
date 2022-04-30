@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h1>Bitte anmelden</h1>
+    <form method="post" action="/login">
+        <label for="username">Username:</label>
+        <input class="form-control" name="username" id = username placeholder="Name">
+        <label for="password">Passwort:</label>
+        <input type="password" class="form-control" name="password" id = password placeholder="Passwort">
+        <button class="btn btn-secondary" type="sumbit">Einloggen</button>
+    </form>
+    <a href="/createAccount">Registrieren</a>
+
+</div>
+</body>
+</html>
