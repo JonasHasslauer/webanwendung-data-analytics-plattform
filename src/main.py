@@ -4,8 +4,6 @@ import os
 
 from src.accountcontroller import AccountController
 
-app = Flask(__name__, template_folder="./templates")
-
 ac_controller = AccountController()
 
 app.secret_key = "lelrel"
