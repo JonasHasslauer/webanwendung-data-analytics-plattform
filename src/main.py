@@ -85,7 +85,7 @@ def upload_file1():
     return render_template('success.html')
 
 
-@app.route('/readFile', methods=['POST'])       #unnötig, war nur ausprobiert
+@app.route('/readFile', methods=['POST'])
 def read_file():
     personen = []
     with open("Datei.csv", "r") as file:        #die gespeicherte Datei auslesen ??
