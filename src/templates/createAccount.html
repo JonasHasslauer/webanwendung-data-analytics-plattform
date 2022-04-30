@@ -2,9 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Neuen Account anlegen</title>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 <body>
+<div class ="container">
+    <h1>Neuen Account erstellen</h1>
 
+<form method="post" action="/submitAccount">
+    <label for="firstname">Vorname:</label>
+    <input class="form-control" name="firstname" id=firstname placeholder="Vorname" required="required">
+
+    <label for="lastname">Nachname:</label>
+    <input class="form-control" name="lastname" id=lastname placeholder="Nachname" required="required">
+
+    <label for="birthday">Geburtstag:</label>
+    <input type="date" class="form-control" name="birthday" id=birthday placeholder="Geburtsdatum" required="required">
+
+    <label for="username">Username:</label>
+    <input class="form-control" name="username" id=username placeholder="Username" required="required">
+
+    <label for="password">Passwort:</label>
+    <input type="password" class="form-control" name="password" id=password placeholder="Passwort" required="required" minlength="8">
+
+    <button class="btn btn-secondary" type="sumbit">Account anlegen</button>
+</form>
+</div>
 </body>
 </html>
