@@ -82,6 +82,10 @@ def upload_file1():
             file.save(os.path.join(folder, filename))
     return render_template('success.html')
 
+@app.route('/detailseite', methods = ['POST', 'GET'])
+def detailseite():
+    return render_template('detailseite.html')
+
 
 @app.route('/readFile', methods=['POST'])       #unnötig, war nur ausprobiert
 def read_file():
