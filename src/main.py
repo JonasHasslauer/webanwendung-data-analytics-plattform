@@ -4,12 +4,12 @@ import os
 
 from src.accountcontroller import AccountController
 
-app = Flask(__name__, template_folder="./templates")
-
 ac_controller = AccountController()
 
+app = Flask(__name__, template_folder="./templates")
+
 app.secret_key = "lelrel"
-folder = "webanwendung-data-analytics-plattform/src/Dateien"
+folder = "C:/Users/johan/webanwendung-data-analytics-plattform/src/Dateien"
 extensions = set({'csv'})
 
 
@@ -52,7 +52,7 @@ def create_account():
     return render_template("homepage.html")
 
 
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["POST", "GET"])
 def login():
     entered_username = request.form.get("username")
     entered_password = request.form.get("password")
@@ -85,10 +85,16 @@ def upload_file1():
     return render_template('success.html')
 
 
-@app.route('/readFile', methods=['POST'])       #unnötig, war nur ausprobiert
+@app.route('/detailseite', methods=['POST', 'GET'])
+def detailseite():
+    listS = ["Farbe", "PS", "Türen", "Hunde", "Katzen"]
+    return render_template('detailseite.html', spalten=listS)
+
+
+@app.route('/readFile', methods=['POST'])  # unnötig, war nur ausprobiert
 def read_file():
     personen = []
-    with open("Datei.csv", "r") as file:        #die gespeicherte Datei auslesen ??
+    with open("Datei.csv", "r") as file:  # die gespeicherte Datei auslesen ??
         for line in file:
             vorname, nachname, alter, geschlecht = line.split(",")
             person = {'vorname': vorname, 'nachname': nachname, 'alter': alter, 'geschlecht': geschlecht}
