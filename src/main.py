@@ -12,6 +12,9 @@ app.secret_key = "lelrel"
 folder = "C:/Users/johan/webanwendung-data-analytics-plattform/src/Dateien"
 extensions = set({'csv'})
 
+data = pd.read_csv (r'C:\Users\samim\Desktop\Testdatei.csv', sep= ";", decimal=".", header=0)
+list = data.columns.values
+
 
 def allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
@@ -87,8 +90,7 @@ def upload_file1():
 
 @app.route('/detailseite', methods=['POST', 'GET'])
 def detailseite():
-    listS = ["Farbe", "PS", "Türen", "Hunde", "Katzen"]
-    return render_template('detailseite.html', spalten=listS)
+    return render_template('detailseite.html', spalten=list)
 
 
 @app.route('/readFile', methods=['POST'])  # unnötig, war nur ausprobiert
