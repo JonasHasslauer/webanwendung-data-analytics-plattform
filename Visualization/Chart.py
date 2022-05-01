@@ -7,7 +7,7 @@ def makeLineDiagramm(dataForX, dataForY, title="", xlabel="", ylabel=""):
     plt.title(title)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
-    plt.show()
+    plt.savefig("diagramm.png")
 
 
 def makePieDiagramm():

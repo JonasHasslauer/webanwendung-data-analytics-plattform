@@ -9,10 +9,6 @@ def getDataFrameFromCSV(path: str) -> pd.DataFrame:
     return df
 
 
-def getColumnsFromCSVFile(file: pd.DataFrame) -> list:
-    return list(file.columns)
-
-
 class OrganizeDF:
     """
     Class for reorganizing the DF to extract data in the right way
