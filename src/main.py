@@ -52,7 +52,7 @@ def create_account():
     return render_template("homepage.html")
 
 
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["POST", "GET"])
 def login():
     entered_username = request.form.get("username")
     entered_password = request.form.get("password")
