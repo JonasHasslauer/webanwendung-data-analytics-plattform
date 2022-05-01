@@ -86,6 +86,7 @@ def upload_file1():
 
 @app.route('/detailseite', methods = ['POST', 'GET'])
 def detailseite():
+    list = ["Farbe", "PS", "Türen", "Hunde", "Katzen"]
     return render_template('detailseite.html')
 
 
