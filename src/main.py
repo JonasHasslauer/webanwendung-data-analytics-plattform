@@ -84,16 +84,17 @@ def upload_file1():
             file.save(os.path.join(folder, filename))
     return render_template('success.html')
 
-@app.route('/detailseite', methods = ['POST', 'GET'])
+
+@app.route('/detailseite', methods=['POST', 'GET'])
 def detailseite():
     list = ["Farbe", "PS", "Türen", "Hunde", "Katzen"]
-    return render_template('detailseite.html')
+    return render_template('detailseite.html', spalten=list)
 
 
-@app.route('/readFile', methods=['POST'])       #unnötig, war nur ausprobiert
+@app.route('/readFile', methods=['POST'])  # unnötig, war nur ausprobiert
 def read_file():
     personen = []
-    with open("Datei.csv", "r") as file:        #die gespeicherte Datei auslesen ??
+    with open("Datei.csv", "r") as file:  # die gespeicherte Datei auslesen ??
         for line in file:
             vorname, nachname, alter, geschlecht = line.split(",")
             person = {'vorname': vorname, 'nachname': nachname, 'alter': alter, 'geschlecht': geschlecht}
@@ -108,5 +109,3 @@ def logout():
 
 
 app.run(debug=True)
-
-
