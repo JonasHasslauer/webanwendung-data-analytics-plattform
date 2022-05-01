@@ -9,7 +9,7 @@ ac_controller = AccountController()
 app = Flask(__name__, template_folder="./templates")
 
 app.secret_key = "lelrel"
-folder = "webanwendung-data-analytics-plattform/src/Dateien"
+folder = "C:/Users/johan/webanwendung-data-analytics-plattform/src/Dateien"
 extensions = set({'csv'})
 
 
