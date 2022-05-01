@@ -108,7 +108,4 @@ def logout():
 
 app.run(debug=True)
 
-@app.route("/logout", methods=["POST"])
-def logout():
-    session.clear()
-    return render_template("homepage.html")
+
