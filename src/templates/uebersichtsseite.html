@@ -70,15 +70,15 @@
             <h4>Hochgeladene Excel Dateien</h4>
 
             <p>
-
-                <!-- Anweisung fehlt, was bei Drücken von senden passieren soll -->
+                <!-- Dateiupload -->
             <form action="http://localhost:5000/uebersichtsseite" method="POST"
                   enctype="multipart/form-data">
                 <input type="file" name="file"/>
                 <input type="submit"/>
             </form>
             </p>
-            <ul id="id01">
+            <!-- Anzeige der csv Dateien -->
+            <ul id="ExcelFile">
                 <li>{{Liste[0]}}</li>
                 <li>{{Liste[1]}}</li>
                 <li>{{Liste[2]}}</li>
@@ -86,12 +86,11 @@
             </ul>
             <!-- Sortieralgorythmus -->
             <script>
-                function sortListDir() {
+                <!-- Funktion zum Aufsteigend sortieren -->
+                function sortListDirAsc() {
                     var list, i, switching, b, shouldSwitch, dir, switchcount = 0;
-                    list = document.getElementById("id01");
+                    list = document.getElementById("ExcelFile");
                     switching = true;
-                    <!-- Aufsteigend sortieren -->
-                    dir = "asc";
                     <!-- Schleife bis keine Vertauschung mehr gemacht wird -->
                     while (switching) {
                         switching = false;
@@ -100,18 +99,10 @@
                         for (i = 0; i < (b.length - 1); i++) {
                             shouldSwitch = false;
                             <!-- Prüfen, ob das nächste Element getauscht werden soll -->
-                            if (dir == "asc") {
-                                if (b[i].innerHTML.toLowerCase() > b[i + 1].innerHTML.toLowerCase()) {
-                                    <!-- Wenn Element alphabetisch vor aktuellem Element ist break -->
-                                    shouldSwitch = true;
-                                    break;
-                                }
-                            } else if (dir == "desc") {
-                                if (b[i].innerHTML.toLowerCase() < b[i + 1].innerHTML.toLowerCase()) {
-                                    <!-- Wenn Element alphabetisch nach aktuellem Element ist break -->
-                                    shouldSwitch = true;
-                                    break;
-                                }
+                            if (b[i].innerHTML.toLowerCase() > b[i + 1].innerHTML.toLowerCase()) {
+                                <!-- Wenn Element alphabetisch vor aktuellem Element ist break -->
+                                shouldSwitch = true;
+                                break;
                             }
                         }
                         if (shouldSwitch) {
@@ -120,30 +111,55 @@
                             switching = true;
                             <!-- Bei jeder Vertauschung switchcount +1 -->
                             switchcount++;
-                        } else {
-                            <!-- Wenn keine Vertauschung gemacht wird und dir="asc" ist, das dir="desc" setzen und Schleife starten -->
-                            if (switchcount == 0 && dir == "asc") {
-                                dir = "desc";
-                                switching = true;
+                        }
+                    }
+                }
+
+                <!-- Funktion zum Absteigend sortieren -->
+                function sortListDirDesc() {
+                    var list, i, switching, b, shouldSwitch, switchcount = 0;
+                    list = document.getElementById("ExcelFile");
+                    switching = true;
+                    <!-- Schleife bis keine Vertauschung mehr gemacht wird -->
+                    while (switching) {
+                        switching = false;
+                        b = list.getElementsByTagName("LI");
+                        <!-- Schleife durch alle Elemente der Liste -->
+                        for (i = 0; i < (b.length - 1); i++) {
+                            shouldSwitch = false;
+                            <!-- Prüfen, ob das nächste Element getauscht werden soll -->
+                            if (b[i].innerHTML.toLowerCase() < b[i + 1].innerHTML.toLowerCase()) {
+                                <!-- Wenn Element alphabetisch nach aktuellem Element ist break -->
+                                shouldSwitch = true;
+                                break;
                             }
+                        }
+                        if (shouldSwitch) {
+                            <!-- Wenn Vertauschung gemacht werden muss, Element als getauscht markieren -->
+                            b[i].parentNode.insertBefore(b[i + 1], b[i]);
+                            switching = true;
+                            <!-- Bei jeder Vertauschung switchcount +1 -->
+                            switchcount++;
                         }
                     }
                 }
             </script>
             <p>
-                <button type="button" class="btn btn-secondary" onclick="sortListDir()">Sortieren</button>
                 <!-- Button zum Sortieren -->
+                <button type="button" class="btn btn-secondary" onclick="sortListDirAsc()">Aufsteigend sortieren
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="sortListDirDesc()">Absteigend sortieren
+                </button>
             </p>
         </div>
-        <div class="col-7 bg"> <!-- Rechte Box zum Sortieren und Auswählen der Daten -->
+
+        <!-- Rechte Box zum Sortieren und Auswählen der Daten -->
+        <div class="col-7 bg">
             <h4>Auswahl/Sortierung der Daten</h4>
 
         </div>
     </div>
 </div>
-
-
-
 
 
 <!--Button Detailseite-->
