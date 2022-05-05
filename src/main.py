@@ -61,7 +61,7 @@ list.columns.values
 
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():
-    return render_template('detailseite.html', Liste=list.columns.values)
+    return render_template('detailseite.html', Liste=list.columns.values, bild = "bewerbungen.png")
 
 
 @app.route("/logout", methods=["POST"])
