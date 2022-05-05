@@ -77,7 +77,8 @@
                 <input type="submit"/>
             </form>
             </p>
-            <!-- Anzeige der csv Dateien -->
+            <!-- Anzeige der csv Dateien  Hier muss noch eine Schleife implementiert werden,
+                 damit jede hochgeladene Datei in Liste eingefügt wird und nicht nur diese 4 -->
             <ul id="ExcelFile">
                 <li>{{Liste[0]}}</li>
                 <li>{{Liste[1]}}</li>
@@ -87,6 +88,7 @@
             <!-- Sortieralgorythmus -->
             <script>
                 <!-- Funktion zum Aufsteigend sortieren -->
+                <!-- Hier noch sehr viel doppelter Code, muss noch gefixt werden -->
                 function sortListDirAsc() {
                     var list, i, switching, b, shouldSwitch, dir, switchcount = 0;
                     list = document.getElementById("ExcelFile");
