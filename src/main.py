@@ -56,8 +56,9 @@ def uebersichtseite():
 
     return render_template('uebersichtsseite.html', Liste=os.listdir("Uploads")) #auf der Übersichtsseite wird temporär nicht die datei angezeigt
 
-list = pd.read_csv(os.getcwd() + "\\Uploads" + "\\Testdatei.csv", sep=";", decimal=".", header=0) #hier muss statt Testdatei.csv filename stehen die ausgewählt wurde bzw auch das temporäre anzeigen lassen
+list = pd.read_csv(os.getcwd() + "/Uploads" + "/Testdatei.csv", sep=";", decimal=".", header=0) #hier muss statt Testdatei.csv filename stehen die ausgewählt wurde bzw auch das temporäre anzeigen lassen
 list.columns.values
+
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():
     return render_template('detailseite.html', Liste=list.columns.values)
