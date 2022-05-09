@@ -2,69 +2,91 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def makeLineDiagramm(dataForX, dataForY, title="", xlabel="", ylabel=""):
-    plt.plot(dataForX, dataForY)
-    plt.title(title)
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.savefig("diagramm.png")
-
-
-def makePieDiagramm():
-    pass
-
-
-def makeBarDiagramm():
-    pass
-
-
 class Chart:
     chartType = ""
-    columnsPerFile = 0
-    linesPerFile = 0
+    dataX = 0
+    dataY = 0
+    title = ""
+    labelX = []
+    labelY = []
+    labelPie = []
+    labelSizePie = []
+    data = 0
+
+    def setLabelPie(self, labelPie: []):
+        self.labelPie = labelPie
+
+    def getLabelPie(self) -> labelPie:
+        return self.labelPie
+
+    def setLabelSizePie(self, labelSizePie: []):
+        self.labelSizePie = labelSizePie
+
+    def getLabelSizePie(self):
+        return self.labelSizePie
+
+    def setTitle(self, title: str):
+        self.title = title
+
+    def getTitle(self):
+        return self.title
+
+    def setDataX(self, data):
+        self.dataX = data
+
+    def getDataX(self):
+        return self.dataX
+
+    def setDataY(self, data):
+        self.dataY = data
+
+    def getDataY(self):
+        return self.dataY
+
+    def setLabelX(self, labelX: str):
+        self.labelX = labelX
+
+    def getLabelX(self, labelX: str):
+        return self.labelX
+
+    def setLabelY(self, labelY: str):
+        self.labelX = labelY
+
+    def getLabelY(self, labelY: str):
+        return self.labelY
 
     def getDataFromSQL(self):
         pass
 
-    def setSpecificLinesForChart(self, lines):
-        pass
-
-    def setSpecificColumnsForChart(self, columns):
-        pass
-
-    def setAmoutOfColumnsPerFile(self, columns: int) -> int:
-        """
-        :param columns: Represents the amount of selected columns in the given list
-        :return int:  Return - 1 if the amount of columns equals 0
-        """
-        if columns == 0:
-            return -1
-        self.columnsPerFile = columns
-
-    def getColumnsPerFile(self):
-        return self.columnsPerFile
-
-    def setAmountOfLinesPerFile(self, lines: int) -> int:
-        """
-        :param lines: Represents the amount of selected lines in the given list
-        :return int:  Return - 1 if the amount of lines equals 0
-        """
-        if lines == 0:
-            return -1
-        self.linesPerFile = lines
-
-    def getLinesPerFile(self):
-        return self.linesPerFile
-
-    def setChartType(self, chartType: str) -> None:
+    def setChartType(self, chartType: str):
         """
         :param chartType: The art of chart the user wants to get visualized (Linien-, Balken- oder Torte)
         :return None
         """
         self.chartType = chartType
 
-    def getChartType(self) -> chartType:
+    def getChartType(self):
         """"
         :return chartType: The art of chart the user wants to get visualized
         """
         return self.chartType
+
+    def makeLineDiagramm(self):
+        plt.plot(self.dataX, self.dataY, self.title, self.labelX, self.labelY)
+        plt.title(self)
+        plt.xlabel(self.labelX)
+        plt.ylabel(self.labelY)
+        plt.savefig("diagramm.png")
+
+    def makePieDiagramm(self):
+        fig1, ax1 = plt.subplots()
+        ax1.pie(self.labelSizePie, labels=self.labelPie, autopct='%1.1f%%',
+                shadow=True, startangle=90)
+        ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        plt.show()
+
+    def makeBarDiagramm(self):
+        fig = plt.figure()
+        ax = fig.add_axes([0, 0, 1, 1])
+        ax.bar(self.dataX, self.dataY)
+        plt.show()
