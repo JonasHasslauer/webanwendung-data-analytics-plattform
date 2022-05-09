@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, session, redirect
 from werkzeug.utils import secure_filename
 import os
-import pandas as pd
 
 from src.accountcontroller import AccountController
 
@@ -9,8 +8,8 @@ app = Flask(__name__, template_folder="./templates")
 
 ac_controller = AccountController()
 
-app.secret_key = "key"
-folder = os.getcwd() + "\\Uploads"
+app.secret_key = "lelrel"
+folder = "webanwendung-data-analytics-plattform/src/Dateien"
 extensions = set({'csv'})
 
 
@@ -19,9 +18,19 @@ def allowed(filename):
 
 
 @app.route("/")
-def homepage():
+def helloworld():
     return render_template("homepage.html")
 
+
+@app.route("/test")
+def show_test():
+    return "<h1>This is the test page.</h1>"
+
+
+# @app.route("/login", methods=["POST"])
+# def show_test_button():
+#    username = request.form.get("username")
+#    return render_template("login.html", name = username)
 
 @app.route("/createAccount")
 def show_create_account():
@@ -42,8 +51,28 @@ def create_account():
 
     return render_template("homepage.html")
 
-@app.route('/uebersichtsseite', methods=["POST", "GET"])
-def uebersichtseite():
+
+@app.route("/login", methods=["POST"])
+def login():
+    entered_username = request.form.get("username")
+    entered_password = request.form.get("password")
+    account = ac_controller.login(username=entered_username, password=entered_password)
+    if account != None:
+        account.print_account()
+        session["username"] = account.username
+        session["firstname"] = account.user.firstname
+        session["lastname"] = account.user.lastname
+        return render_template("account.html", ac=account)
+    return render_template("homepage.html")
+
+
+@app.route('/upload', methods=["POST"])
+def upload_file():
+    return render_template('upload.html')
+
+
+@app.route('/fileUploaded', methods=['GET', 'POST'])
+def upload_file1():
     if request.method == 'POST':
         if 'file' not in request.files:
             return redirect(request.url)
@@ -53,15 +82,18 @@ def uebersichtseite():
         if allowed(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(folder, filename))
+    return render_template('success.html')
 
-    return render_template('uebersichtsseite.html', Liste=os.listdir("Uploads")) #auf der Übersichtsseite wird temporär nicht die datei angezeigt
 
-list = pd.read_csv(os.getcwd() + "/Uploads" + "/Testdatei.csv", sep=";", decimal=".", header=0) #hier muss statt Testdatei.csv filename stehen die ausgewählt wurde bzw auch das temporäre anzeigen lassen
-list.columns.values
-
-@app.route('/detailseite', methods=["POST", "GET"])
-def detailseite():
-    return render_template('detailseite.html', Liste=list.columns.values, bild = "bewerbungen.png")
+@app.route('/readFile', methods=['POST'])
+def read_file():
+    personen = []
+    with open("Datei.csv", "r") as file:        #die gespeicherte Datei auslesen ??
+        for line in file:
+            vorname, nachname, alter, geschlecht = line.split(",")
+            person = {'vorname': vorname, 'nachname': nachname, 'alter': alter, 'geschlecht': geschlecht}
+            personen.append(person)
+    return render_template('read.html', personen=personen)
 
 
 @app.route("/logout", methods=["POST"])
