@@ -95,7 +95,6 @@ def read_file():
             personen.append(person)
     return render_template('read.html', personen=personen)
 
-
 @app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
