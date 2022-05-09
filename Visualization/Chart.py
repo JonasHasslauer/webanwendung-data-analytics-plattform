@@ -4,26 +4,25 @@ import matplotlib.pyplot as plt
 
 class Chart:
     chartType = ""
-    dataX = 0
-    dataY = 0
+    dataX = []
+    dataY = []
     title = ""
     labelX = []
     labelY = []
-    labelPie = []
-    labelSizePie = []
-    data = 0
+    PieLabel = []
+    PieLabelSize = []
 
-    def setLabelPie(self, labelPie: []):
-        self.labelPie = labelPie
+    def setPieLabel(self, labelPie: []):
+        self.PieLabel = labelPie
 
-    def getLabelPie(self) -> labelPie:
-        return self.labelPie
+    def getPieLabel(self) -> PieLabel:
+        return self.PieLabel
 
-    def setLabelSizePie(self, labelSizePie: []):
-        self.labelSizePie = labelSizePie
+    def setPieLabelSize(self, PieLabelSize: []):
+        self.PieLabelSize = PieLabelSize
 
-    def getLabelSizePie(self):
-        return self.labelSizePie
+    def getPieLabelSize(self):
+        return self.PieLabelSize
 
     def setTitle(self, title: str):
         self.title = title
@@ -50,7 +49,7 @@ class Chart:
         return self.labelX
 
     def setLabelY(self, labelY: str):
-        self.labelX = labelY
+        self.labelY = labelY
 
     def getLabelY(self, labelY: str):
         return self.labelY
@@ -72,21 +71,23 @@ class Chart:
         return self.chartType
 
     def makeLineDiagramm(self):
-        plt.plot(self.dataX, self.dataY, self.title, self.labelX, self.labelY)
-        plt.title(self)
+        plt.plot(self.dataX, self.dataY)
+        plt.title(self.title)
         plt.xlabel(self.labelX)
         plt.ylabel(self.labelY)
-        plt.savefig("diagramm.png")
+        plt.show()
 
     def makePieDiagramm(self):
         fig1, ax1 = plt.subplots()
-        ax1.pie(self.labelSizePie, labels=self.labelPie, autopct='%1.1f%%',
+        ax1.pie(self.PieLabelSize, labels=self.PieLabel, autopct='%1.1f%%',
                 shadow=True, startangle=90)
         ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         plt.show()
+        plt.savefig("PieDiagramm.png")
 
     def makeBarDiagramm(self):
         fig = plt.figure()
         ax = fig.add_axes([0, 0, 1, 1])
         ax.bar(self.dataX, self.dataY)
         plt.show()
+        plt.savefig("BarDiagramm.png")
