@@ -81,14 +81,16 @@
             <!-- Anzeige der csv Dateien  Hier muss noch eine Schleife implementiert werden,
                  damit jede hochgeladene Datei in Liste eingefügt wird und nicht nur diese 4 -->
             <ul id="ExcelFile">
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
+                <li>{{Liste[0]}}</li>
+                <li>{{Liste[1]}}</li>
+                <li>{{Liste[2]}}</li>
+                <li>{{Liste[3]}}</li>
             </ul>
+
             <!-- Sortieralgorythmus -->
             <script>
-                <!-- Funktion zum Aufsteigend sortieren -->
+                <!--Funktion zum Aufsteigend sortieren -->
+
                 <!-- Hier noch sehr viel doppelter Code, muss noch gefixt werden -->
                 function sortListDirAsc() {
                     var list, i, switching, b, shouldSwitch, dir, switchcount = 0;
