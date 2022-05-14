@@ -1,4 +1,8 @@
 import pandas as pd
+
+
+
+#Test Dataframe mit zufälligen Daten
 df = pd.DataFrame({'Name' : ["Peter", "Karla", "Anne", "Nino", "Andrzej"],
                    'Alter': [34, 53, 16, 22, 61],
                    'Nationalität': ["deutsch", "schweizerisch", "deutsch", "italienisch", "polnisch"],
@@ -19,7 +23,7 @@ def zeilenFiltern(df,spaltenname,wert,operator):
     :param spaltenname: Überschrift nach der zu sortierenden Spalte
     :param wert: Spaltenwert nach dem gefiltert werden soll
     :param operator: </>/==
-    :return:
+    :return:gibt die gefilterten Zeilen als neues Dataframe aus
     """
     if(operator=='>'):
         df_maske = df[spaltenname] > wert
@@ -34,21 +38,16 @@ def zeilenFiltern(df,spaltenname,wert,operator):
         filtered_df = df[df_maske]
         return filtered_df
 
-
-
-
-
-
 spaltenFiltern_df = df[['Name', 'Alter', 'Gehalt']]
 print(spaltenFiltern_df, "\n")
 
-#mit der Funktion spaltenFiltern können einzelne Spalten ausgegeben werden
+#mit der Funktion spaltenFiltern können einzelne oder mehere  Spalten ausgegeben werden
 def spaltenFiltern(df,liste):
     """
 
     :param df: zu bearbeitendes DataFrame
-    :param liste: Liste mit dem auszuwählenden Spaltennamen
-    :return:
+    :param liste: Liste mit dem Namen der auszuwählenden Spalten
+    :return:gibt die ausgewählten Spalten als Dataframe zurück
     """
     spaltenFiltern_df = df[liste]
     return spaltenFiltern_df
