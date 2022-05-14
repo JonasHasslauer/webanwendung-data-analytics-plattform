@@ -18,27 +18,29 @@ print(filtered_df)
 #Spaltenwert entsprechen/größer/kleiner sind
 
 def zeilenFiltern(df,spaltenname,wert,operator):
+
     if(operator=='>'):
-        df_maske = df['spaltenname'] > wert
+        df_maske = df[spaltenname] > wert
         filtered_df = df[df_maske]
         return filtered_df
     elif (operator == '<'):
-        df_maske = df['spaltenname'] < wert
+        df_maske = df[spaltenname] < wert
         filtered_df = df[df_maske]
         return filtered_df
     elif (operator == '=='):
-        df_maske = df['spaltenname'] == wert
+        df_maske = df[spaltenname] == wert
         filtered_df = df[df_maske]
         return filtered_df
 
 
 
 
-#print(zeilenFilternGroesserWert(df,Alter,50,>))
+print(zeilenFiltern(df,'Alter',53,'=='))
 
 spaltenFiltern_df = df[['Name', 'Alter', 'Gehalt']]
 print(spaltenFiltern_df, "\n")
 
+#mit der Funktion spaltenFiltern können einzelne Spalten ausgegeben werden
 def spaltenFiltern(df,liste):
     spaltenFiltern_df = df[liste]
     return spaltenFiltern_df
