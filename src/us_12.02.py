@@ -6,12 +6,7 @@ df = pd.DataFrame({'Name' : ["Peter", "Karla", "Anne", "Nino", "Andrzej"],
                   index = ['ID-123', 'ID-462', 'ID-111', 'ID-997', 'ID-707'],
                  columns = ['Name', 'Alter', 'Nationalität', 'Gehalt'])
 
-#print(df)
-"""
-df_mask=df['Alter']>50
-filtered_df = df[df_mask]
-print(filtered_df)
-"""
+
 
 
 #mit Hilfe der zeilenFiltern Methode können Zeilen ausgegeben werden, wenn sie einem bestimmten
@@ -42,7 +37,7 @@ def zeilenFiltern(df,spaltenname,wert,operator):
 
 
 
-print(zeilenFiltern(df,'Alter',53,'=='))
+
 
 spaltenFiltern_df = df[['Name', 'Alter', 'Gehalt']]
 print(spaltenFiltern_df, "\n")
@@ -57,3 +52,5 @@ def spaltenFiltern(df,liste):
     """
     spaltenFiltern_df = df[liste]
     return spaltenFiltern_df
+"""liste =['Name','Alter','Gehalt']
+print(spaltenFiltern(df,liste))"""
