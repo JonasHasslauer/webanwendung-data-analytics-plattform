@@ -18,7 +18,14 @@ print(filtered_df)
 #Spaltenwert entsprechen/größer/kleiner sind
 
 def zeilenFiltern(df,spaltenname,wert,operator):
+    """
 
+    :param df: das zu bearbeitende DataFrame
+    :param spaltenname: Überschrift nach der zu sortierenden Spalte
+    :param wert: Spaltenwert nach dem gefiltert werden soll
+    :param operator: </>/==
+    :return:
+    """
     if(operator=='>'):
         df_maske = df[spaltenname] > wert
         filtered_df = df[df_maske]
@@ -42,5 +49,11 @@ print(spaltenFiltern_df, "\n")
 
 #mit der Funktion spaltenFiltern können einzelne Spalten ausgegeben werden
 def spaltenFiltern(df,liste):
+    """
+
+    :param df: zu bearbeitendes DataFrame
+    :param liste: Liste mit dem auszuwählenden Spaltennamen
+    :return:
+    """
     spaltenFiltern_df = df[liste]
     return spaltenFiltern_df
