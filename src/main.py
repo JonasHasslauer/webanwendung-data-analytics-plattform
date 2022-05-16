@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, redirect
 from werkzeug.utils import secure_filename
 import os
+import pandas as pd
 
 from src.accountcontroller import AccountController
 
