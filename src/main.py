@@ -8,8 +8,8 @@ app = Flask(__name__, template_folder="./templates")
 
 ac_controller = AccountController()
 
-app.secret_key = "lelrel"
-folder = "webanwendung-data-analytics-plattform/src/Dateien"
+app.secret_key = "key"
+folder = os.getcwd() + "\\Uploads"
 extensions = set({'csv'})
 
 
@@ -18,7 +18,7 @@ def allowed(filename):
 
 
 @app.route("/")
-def helloworld():
+def homepage():
     return render_template("homepage.html")
 
 
@@ -26,11 +26,6 @@ def helloworld():
 def show_test():
     return "<h1>This is the test page.</h1>"
 
-
-# @app.route("/login", methods=["POST"])
-# def show_test_button():
-#    username = request.form.get("username")
-#    return render_template("login.html", name = username)
 
 @app.route("/createAccount")
 def show_create_account():
@@ -85,15 +80,28 @@ def upload_file1():
     return render_template('success.html')
 
 
-@app.route('/readFile', methods=['POST'])
-def read_file():
-    personen = []
-    with open("Datei.csv", "r") as file:        #die gespeicherte Datei auslesen ??
-        for line in file:
-            vorname, nachname, alter, geschlecht = line.split(",")
-            person = {'vorname': vorname, 'nachname': nachname, 'alter': alter, 'geschlecht': geschlecht}
-            personen.append(person)
-    return render_template('read.html', personen=personen)
+@app.route('/uebersichtsseite', methods=["POST", "GET"])
+def uebersichtseite():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            return redirect(request.url)
+        if allowed(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(folder, filename))
+
+    return render_template('uebersichtsseite.html', Liste=os.listdir("Uploads")) #auf der Übersichtsseite wird temporär nicht die datei angezeigt
+
+
+list = pd.read_csv(os.getcwd() + "/Uploads" + "/Testdatei.csv", sep=";", decimal=".", header=0) #hier muss statt Testdatei.csv filename stehen die ausgewählt wurde bzw auch das temporäre anzeigen lassen
+list.columns.values
+
+@app.route('/detailseite', methods=["POST", "GET"])
+def detailseite():
+    return render_template('detailseite.html', Liste=list.columns.values, bild = "bewerbungen.png")
+
 
 @app.route("/logout", methods=["POST"])
 def logout():
