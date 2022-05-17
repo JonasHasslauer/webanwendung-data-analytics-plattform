@@ -3,6 +3,8 @@ from werkzeug.utils import secure_filename
 import os
 import pandas as pd
 import Datenbank
+import database
+import sqlite3 as sql
 
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
@@ -50,7 +52,8 @@ def login():
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
     if 'username' in session:
-        return render_template('uebersichtsseite.html', username=session['username'], Liste=os.listdir("Uploads"))
+        username = session['username']
+        return render_template('uebersichtsseite.html', username=session['username'], Liste=database.getfilenames(username))
     if request.method == 'POST':
         if 'file' not in request.files:
             return redirect(request.url)
@@ -59,8 +62,15 @@ def uebersichtsseite():
             return redirect(request.url)
         if allowed(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(folder, filename))
-            return render_template('uebersichtsseite.html', Liste=os.listdir("Uploads"))
+            #file.save(os.path.join(folder, filename))
+            #df = pd.read_csv(file)
+            #df.to_sql(filename, sql.connect("Datenbank/"+filename+".db"), schema=None, if_exists='fail', index=True, index_label=None,
+                     # chunksize=None,
+                    #  dtype=None, method=None)
+            database.savefile(file, filename)
+            username = session['username']
+            database.AddConnection(username, filename)
+            return render_template('uebersichtsseite.html')
 
     else:
         return redirect(url_for('login'))
