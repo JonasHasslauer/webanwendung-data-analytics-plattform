@@ -21,12 +21,12 @@ class Datenbank:
         self.cursor.execute(command)
         self.connection.commit()
 
-    def getAllUsernames(self):
+    def getAllUsernamesFromDatabase(self):
         return self.cursor.execute("Select username from Logins").fetchall()
 
     def checkIfUserExists(self, username: str) -> bool:
-        print(self.getAllUsernames())
-        if username.lower() in self.getAllUsernames():
+        print(self.getAllUsernamesFromDatabase())
+        if username.lower() in self.getAllUsernamesFromDatabase():
             return True
         else:
             return False

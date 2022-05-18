@@ -42,15 +42,6 @@ def register():
                 return redirect(url_for("login"))
         else:  # Nutzer muss sich mit anderem Namen registrieren
             return render_template(url_for("register"))
-
-        """if not db.checkIfUserExists(username):
-            if db.addUser(username, firstname, lastname, birthday, password) != -1:
-                return redirect(url_for("index"))
-            else:
-                render_template("register.html")
-        else:
-            render_template(url_for("register"))"""
-
     else:
         return render_template("register.html")
 
