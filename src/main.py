@@ -1,3 +1,5 @@
+import sqlite3
+
 from flask import Flask, render_template, request, session, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
@@ -32,12 +34,22 @@ def register():
         # password_hash = hashedpw.decode("utf-8")
 
         if not db.checkIfUserExists(username):
+            try:
+                db.addUser(username, firstname, lastname, birthday, password)
+                return redirect(url_for("login"))
+            except sqlite3.IntegrityError as e:
+                print("Fehler erschienen: ", e)
+                return redirect(url_for("login"))
+        else:  # Nutzer muss sich mit anderem Namen registrieren
+            return render_template(url_for("register"))
+
+        """if not db.checkIfUserExists(username):
             if db.addUser(username, firstname, lastname, birthday, password) != -1:
                 return redirect(url_for("index"))
             else:
                 render_template("register.html")
         else:
-            render_template(url_for("register"))
+            render_template(url_for("register"))"""
 
     else:
         return render_template("register.html")
