@@ -21,12 +21,22 @@ class Datenbank:
         self.cursor.execute(command)
         self.connection.commit()
 
-    # TODO Methode 'getAllUsers' to check if the user's already created -> addUser
+    def getAllUsers(self):
+        return self.cursor.execute("Select username from Logins").fetchall()
+
+    def checkIfUserExists(self, username: str) -> bool:
+        if username.lower() in self.getAllUsers():
+            for val in self.getAllUsers():
+                print(val)
+            return True
+        else:
+            return False
 
     def addUser(self, username, firstname, lastname, birthday, password):
         hashedPassword = hashlib.sha256(password.encode("utf-8")).hexdigest()
         self.cursor.execute(
-            "INSERT INTO Logins(username,firstname, lastname, birthday,password, accountcreated, lastlogin) VALUES ("
+            "INSERT INTO Logins(username,firstname, lastname, birthday,password, accountcreated, lastlogin) "
+            "VALUES ( "
             "?,?, "
             "?,?,?, current_date, current_timestamp)",
             (username.lower(), firstname, lastname, birthday, hashedPassword))

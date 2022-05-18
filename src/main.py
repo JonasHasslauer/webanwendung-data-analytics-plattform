@@ -10,6 +10,7 @@ folder = os.getcwd() + "\\Uploads"
 extensions = set({'csv'})
 db = Datenbank("Datenbank/my_logins4.db")
 
+
 def allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
 
@@ -27,12 +28,17 @@ def register():
         birthday = request.form.get("birthday")
         username = request.form.get("username")
         password = request.form.get("password")
-        #hashedpw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
-        #password_hash = hashedpw.decode("utf-8")
-        if db.addUser(username, firstname, lastname, birthday, password) != -1:
-            return redirect(url_for("index"))
+        # hashedpw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+        # password_hash = hashedpw.decode("utf-8")
+
+        if not db.checkIfUserExists(username):
+            if db.addUser(username, firstname, lastname, birthday, password) != -1:
+                return redirect(url_for("index"))
+            else:
+                render_template("register.html")
         else:
-            render_template("register.html")
+            render_template(url_for("register"))
+
     else:
         return render_template("register.html")
 
@@ -48,6 +54,7 @@ def login():
         return redirect(url_for('uebersichtsseite'))
     else:
         return redirect(url_for('index'))
+
 
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
@@ -67,6 +74,7 @@ def uebersichtsseite():
     else:
         return redirect(url_for('login'))
 
+
 list = pd.read_csv(os.getcwd() + "/Uploads" + "/Testdatei.csv", sep=";", decimal=".", header=0)
 # hier muss statt Testdatei.csv filename stehen die ausgewählt wurde bzw auch das temporäre anzeigen lassen
 list.columns.values
@@ -75,17 +83,19 @@ list.columns.values
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():
     if 'username' in session:
-        return render_template('detailseite.html',username=session['username'], Liste=list.columns.values, bild="bewerbungen.png")
+        return render_template('detailseite.html', username=session['username'], Liste=list.columns.values,
+                               bild="bewerbungen.png")
     else:
         return redirect(url_for('login'))
+
 
 @app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
     return redirect(url_for("index"))
 
-db.clearData()
 
+db.clearData()
 
 if __name__ == "__main__":
     app.run(debug=True)
