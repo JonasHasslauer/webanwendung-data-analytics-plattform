@@ -42,8 +42,8 @@ class Datenbank:
         self.connection.commit()
         # self.connection.close()
 
-    def changeTimeStamp(self):
-        self.cursor.execute("UPDATE Logins SET lastlogin == current_timestamp")
+    def changeTimeStamp(self, username: str):
+        self.cursor.execute("UPDATE Logins SET lastlogin == current_timestamp WHERE username = ?", [username.lower()])
         self.connection.commit()
         # self.connection.close()
 
