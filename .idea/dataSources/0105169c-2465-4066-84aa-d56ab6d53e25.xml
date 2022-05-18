@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="my_logins4.db">
-  <database-model serializer="dbm" dbms="SQLITE" family-id="SQLITE" format-version="4.32">
+  <database-model serializer="dbm" dbms="SQLITE" family-id="SQLITE" format-version="4.38">
     <root id="1">
       <ServerVersion>3.36.0</ServerVersion>
     </root>
@@ -1319,12 +1319,12 @@
       <Position>6</Position>
     </column>
     <column id="481" parent="473" name="lastlogin">
+      <DataType>TIMESTAMP|0s</DataType>
       <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
     <index id="482" parent="473" name="sqlite_autoindex_Logins_1">
       <ColNames>username</ColNames>
-      <ColumnCollations></ColumnCollations>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>

@@ -2,13 +2,13 @@ from flask import Flask, render_template, request, session, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
 import pandas as pd
-import Datenbank
+from Datenbank import Datenbank
 
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
 folder = os.getcwd() + "\\Uploads"
 extensions = set({'csv'})
-
+db = Datenbank("Datenbank/my_logins4.db")
 
 def allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
@@ -29,8 +29,10 @@ def register():
         password = request.form.get("password")
         #hashedpw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
         #password_hash = hashedpw.decode("utf-8")
-        Datenbank.AddUSER(username, firstname, lastname, birthday, password)
-        return redirect(url_for("index"))
+        if db.addUser(username, firstname, lastname, birthday, password) != -1:
+            return redirect(url_for("index"))
+        else:
+            render_template("register.html")
     else:
         return render_template("register.html")
 
@@ -40,9 +42,9 @@ def login():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
-        if Datenbank.check_User(username, password) == True:
+        if db.checkUsers(password, username):
             session['username'] = username
-            Datenbank.changetimestamp()
+            db.changeTimeStamp()
         return redirect(url_for('uebersichtsseite'))
     else:
         return redirect(url_for('index'))
@@ -82,7 +84,7 @@ def logout():
     session.clear()
     return redirect(url_for("index"))
 
-Datenbank.cleardata()
+db.clearData()
 
 
 if __name__ == "__main__":
