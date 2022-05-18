@@ -21,6 +21,8 @@ class Datenbank:
         self.cursor.execute(command)
         self.connection.commit()
 
+    # TODO Methode 'getAllUsers' to check if the user's already created -> addUser
+
     def addUser(self, username, firstname, lastname, birthday, password):
         hashedPassword = hashlib.sha256(password.encode("utf-8")).hexdigest()
         self.cursor.execute(
