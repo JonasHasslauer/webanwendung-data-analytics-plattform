@@ -1,7 +1,7 @@
 import hashlib
 import sqlite3 as sql
 
-con = sql.connect("Datenbank/my_logins4.db")
+con = sql.connect("Datenbank/my_logins4.db", check_same_thread=False)
 cur = con.cursor()
 CreateTable = "CREATE TABLE if not EXISTS Logins(username VARCHAR(10) UNIQUE PRIMARY KEY not null, firstname VARCHAR(" \
               "100) not null, lastname VARCHAR (100) not null, birthday DATE not null, password BINARY (64)not null, " \

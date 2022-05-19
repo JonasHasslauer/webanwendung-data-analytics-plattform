@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="my_logins4.db">
   <database-model serializer="dbm" dbms="SQLITE" family-id="SQLITE" format-version="4.38">
-    <root id="1"/>
+    <root id="1">
+      <ServerVersion>3.36.0</ServerVersion>
+    </root>
     <collation id="2" parent="1" name="BINARY"/>
     <collation id="3" parent="1" name="NOCASE"/>
     <collation id="4" parent="1" name="RTRIM"/>
@@ -1282,5 +1284,78 @@
     <argument id="472" parent="162">
       <Position>1</Position>
     </argument>
+    <table id="473" parent="163" name="Logins"/>
+    <table id="474" parent="163" name="sqlite_master">
+      <System>1</System>
+    </table>
+    <column id="475" parent="473" name="username">
+      <DataType>VARCHAR(10)|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="476" parent="473" name="firstname">
+      <DataType>VARCHAR(100)|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="477" parent="473" name="lastname">
+      <DataType>VARCHAR(100)|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="478" parent="473" name="birthday">
+      <DataType>DATE|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+    </column>
+    <column id="479" parent="473" name="password">
+      <DataType>BINARY(64)|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+    </column>
+    <column id="480" parent="473" name="accountcreated">
+      <DataType>TIMESTAMP|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+    </column>
+    <column id="481" parent="473" name="lastlogin">
+      <DataType>TIMESTAMP|0s</DataType>
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+    </column>
+    <index id="482" parent="473" name="sqlite_autoindex_Logins_1">
+      <ColNames>username</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <Unique>1</Unique>
+    </index>
+    <key id="483" parent="473">
+      <ColNames>username</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>sqlite_autoindex_Logins_1</UnderlyingIndexName>
+    </key>
+    <key id="484" parent="473">
+      <ColNames>username</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_Logins_1</UnderlyingIndexName>
+    </key>
+    <column id="485" parent="474" name="type">
+      <DataType>text|0s</DataType>
+      <Position>1</Position>
+    </column>
+    <column id="486" parent="474" name="name">
+      <DataType>text|0s</DataType>
+      <Position>2</Position>
+    </column>
+    <column id="487" parent="474" name="tbl_name">
+      <DataType>text|0s</DataType>
+      <Position>3</Position>
+    </column>
+    <column id="488" parent="474" name="rootpage">
+      <DataType>int|0s</DataType>
+      <Position>4</Position>
+    </column>
+    <column id="489" parent="474" name="sql">
+      <DataType>text|0s</DataType>
+      <Position>5</Position>
+    </column>
   </database-model>
 </dataSource>

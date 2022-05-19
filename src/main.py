@@ -1,3 +1,5 @@
+import sqlite3
+
 from flask import Flask, render_template, request, session, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
@@ -29,8 +31,8 @@ def register():
         birthday = request.form.get("birthday")
         username = request.form.get("username")
         password = request.form.get("password")
-        #hashedpw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
-        #password_hash = hashedpw.decode("utf-8")
+        # hashedpw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+        # password_hash = hashedpw.decode("utf-8")
         Datenbank.AddUSER(username, firstname, lastname, birthday, password)
         return redirect(url_for("index"))
     else:
@@ -49,31 +51,17 @@ def login():
     else:
         return redirect(url_for('index'))
 
+
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
-    if 'username' in session:
-        username = session['username']
-        return render_template('uebersichtsseite.html', username=session['username'], Liste=database.getfilenames(username))
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            return redirect(request.url)
+    if request.method == "POST":
         file = request.files['file']
-        if file.filename == '':
-            return redirect(request.url)
-        if allowed(file.filename):
-            filename = secure_filename(file.filename)
-            #file.save(os.path.join(folder, filename))
-            #df = pd.read_csv(file)
-            #df.to_sql(filename, sql.connect("Datenbank/"+filename+".db"), schema=None, if_exists='fail', index=True, index_label=None,
-                     # chunksize=None,
-                    #  dtype=None, method=None)
-            database.savefile(file, filename)
-            username = session['username']
-            database.AddConnection(username, filename)
-            return render_template('uebersichtsseite.html')
+        #TODO check if csv
+        #TODO check if db already exists -> overwrite?
+        file.save("name.csv")
+        pd.read_csv("name.csv").to_sql('filetest', sqlite3.connect("Datenbank/file", check_same_thread=False))
+    return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
 
-    else:
-        return redirect(url_for('login'))
 
 list = pd.read_csv(os.getcwd() + "/Uploads" + "/Testdatei.csv", sep=";", decimal=".", header=0)
 # hier muss statt Testdatei.csv filename stehen die ausgewählt wurde bzw auch das temporäre anzeigen lassen
@@ -83,17 +71,19 @@ list.columns.values
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():
     if 'username' in session:
-        return render_template('detailseite.html',username=session['username'], Liste=list.columns.values, bild="bewerbungen.png")
+        return render_template('detailseite.html', username=session['username'], Liste=list.columns.values,
+                               bild="bewerbungen.png")
     else:
         return redirect(url_for('login'))
+
 
 @app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
     return redirect(url_for("index"))
 
-Datenbank.cleardata()
 
+Datenbank.cleardata()
 
 if __name__ == "__main__":
     app.run(debug=True)
