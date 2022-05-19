@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 import os
 import pandas as pd
 import Datenbank
+from datetime import date
 import database
 import sqlite3 as sql
 
@@ -56,10 +57,10 @@ def login():
 def uebersichtsseite():
     if request.method == "POST":
         file = request.files['file']
-        #TODO check if csv
-        #TODO check if db already exists -> overwrite?
-        file.save("name.csv")
-        pd.read_csv("name.csv").to_sql('filetest', sqlite3.connect("Datenbank/file", check_same_thread=False))
+        # TODO check if csv
+        # TODO check if db already exists -> overwrite?
+        file.save("Uploads/" + file.filename)
+        pd.read_csv("Uploads/" + file.filename).to_sql('filetest', sqlite3.connect("Datenbank/file", check_same_thread=False), if_exists='fail')
     return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
 
 
