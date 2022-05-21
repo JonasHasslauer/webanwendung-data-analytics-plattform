@@ -53,7 +53,7 @@ def login():
         password = request.form['password']
         if db.checkUsers(password, username):
             session['username'] = username
-            db.changeTimeStamp()
+            db.changeTimeStamp(username)
         return redirect(url_for('uebersichtsseite'))
     else:
         return redirect(url_for('index'))
