@@ -5,7 +5,6 @@ from werkzeug.utils import secure_filename
 import os
 import pandas as pd
 import Datenbank
-from datetime import date
 import database
 import sqlite3 as sql
 
@@ -57,10 +56,16 @@ def login():
 def uebersichtsseite():
     if request.method == "POST":
         file = request.files['file']
-        # TODO check if csv
-        # TODO check if db already exists -> overwrite?
-        file.save("Uploads/" + file.filename)
-        pd.read_csv("Uploads/" + file.filename).to_sql('filetest', sqlite3.connect("Datenbank/file", check_same_thread=False), if_exists='fail')
+        #TODO check if csv
+        #if allowed(file.filename):     --> funktioniert noch nciht ganz
+        file.save("name.csv")
+        print(file)
+        print(file.filename)
+        pd.read_csv("name.csv", sep = ';').to_sql(file.filename, sqlite3.connect("Datenbank/file",check_same_thread=False), schema=None, if_exists='replace', index=True, index_label=None, chunksize=None,
+              dtype=None, method=None)
+        #TODO check if db already exists -> overwrite? --> if_exists='replace' fixt das
+        #else:
+            #return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
     return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
 
 
