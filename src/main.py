@@ -71,11 +71,10 @@ def uebersichtsseite():
         file = request.files['file']
         #TODO check if csv
         #if allowed(file.filename):     --> funktioniert noch nicht ganz
-        file.save("name.csv")
-        print(file)
-        print(file.filename)
+        file.save(file.filename)
         pd.read_csv("name.csv", sep = ';').to_sql(file.filename, sqlite3.connect("Datenbank/file",check_same_thread=False), schema=None, if_exists='replace', index=True, index_label=None, chunksize=None,
               dtype=None, method=None)
+        os.remove(file.filename)
         #TODO check if db already exists -> overwrite? --> if_exists='replace' fixt das
         #else:
             #return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
