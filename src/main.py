@@ -1,4 +1,3 @@
-
 import sqlite3
 
 from flask import Flask, render_template, request, session, redirect, url_for
@@ -53,10 +52,12 @@ def login():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
-        if db.checkUsers(password, username):
+        if db.checkUsers(password, username) is True:
             session['username'] = username
             db.changeTimeStamp(username)
-        return redirect(url_for('uebersichtsseite'))
+            return redirect(url_for('uebersichtsseite'))
+        else:
+            return redirect(url_for('index'))
     else:
         return redirect(url_for('index'))
 
