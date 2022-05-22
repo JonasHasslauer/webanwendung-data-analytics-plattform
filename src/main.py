@@ -57,7 +57,7 @@ def uebersichtsseite():
     if request.method == "POST":
         file = request.files['file']
         #TODO check if csv
-        #if allowed(file.filename):     --> funktioniert noch nciht ganz
+        #if allowed(file.filename):     --> funktioniert noch nicht ganz
         file.save("name.csv")
         print(file)
         print(file.filename)
