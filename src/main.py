@@ -1,17 +1,19 @@
+
 import sqlite3
 
 from flask import Flask, render_template, request, session, redirect, url_for
-from werkzeug.utils import secure_filename
+
 import os
 import pandas as pd
+
 from Datenbank import Datenbank
 
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
 folder = os.getcwd() + "\\Uploads"
 extensions = set({'csv'})
-db = Datenbank("Datenbank/my_logins4.db")
 
+db = Datenbank('Datenbank/my_logins4.db')
 
 def allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
@@ -67,15 +69,17 @@ def uebersichtsseite():
         if 'file' not in request.files:
             return redirect(request.url)
         file = request.files['file']
-        if file.filename == '':
-            return redirect(request.url)
-        if allowed(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(folder, filename))
-            return render_template('uebersichtsseite.html', Liste=os.listdir("Uploads"))
-
-    else:
-        return redirect(url_for('login'))
+        #TODO check if csv
+        #if allowed(file.filename):     --> funktioniert noch nicht ganz
+        file.save("name.csv")
+        print(file)
+        print(file.filename)
+        pd.read_csv("name.csv", sep = ';').to_sql(file.filename, sqlite3.connect("Datenbank/file",check_same_thread=False), schema=None, if_exists='replace', index=True, index_label=None, chunksize=None,
+              dtype=None, method=None)
+        #TODO check if db already exists -> overwrite? --> if_exists='replace' fixt das
+        #else:
+            #return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
+    return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
 
 
 list = pd.read_csv(os.getcwd() + "/Uploads" + "/Testdatei.csv", sep=";", decimal=".", header=0)
@@ -85,12 +89,7 @@ list.columns.values
 
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():
-    if 'username' in session:
-        return render_template('detailseite.html', username=session['username'], Liste=list.columns.values,
-                               bild="bewerbungen.png")
-    else:
-        return redirect(url_for('login'))
-
+    return render_template('detailseite.html', Liste=list.columns.values, bild = "bewerbungen.png")
 
 @app.route("/logout", methods=["POST"])
 def logout():
