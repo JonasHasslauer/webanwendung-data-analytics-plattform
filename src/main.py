@@ -14,6 +14,7 @@ extensions = set({'csv'})
 
 db = Datenbank('Datenbank/my_logins4.db')
 
+
 def allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
 
@@ -70,15 +71,14 @@ def uebersichtsseite():
         if 'file' not in request.files:
             return redirect(request.url)
         file = request.files['file']
-        #TODO check if csv
-        #if allowed(file.filename):     --> funktioniert noch nicht ganz
+        # TODO check if csv
+        # if allowed(file.filename):     --> funktioniert noch nicht ganz
         file.save(file.filename)
-        pd.read_csv("name.csv", sep = ';').to_sql(file.filename, sqlite3.connect("Datenbank/file",check_same_thread=False), schema=None, if_exists='replace', index=True, index_label=None, chunksize=None,
-              dtype=None, method=None)
+        pd.read_csv("name.csv", sep=';').to_sql(file.filename,
+                                                sqlite3.connect("Datenbank/file", check_same_thread=False), schema=None,
+                                                if_exists='replace', index=True, index_label=None, chunksize=None,
+                                                dtype=None, method=None)
         os.remove(file.filename)
-        #TODO check if db already exists -> overwrite? --> if_exists='replace' fixt das
-        #else:
-            #return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
     return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
 
 
@@ -89,7 +89,8 @@ list.columns.values
 
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():
-    return render_template('detailseite.html', Liste=list.columns.values, bild = "bewerbungen.png")
+    return render_template('detailseite.html', Liste=list.columns.values, bild="bewerbungen.png")
+
 
 @app.route("/logout", methods=["POST"])
 def logout():
