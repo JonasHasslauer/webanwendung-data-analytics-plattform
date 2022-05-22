@@ -1,15 +1,14 @@
-from flask import Flask, render_template, request, session, redirect
+import sqlite3
+
+from flask import Flask, render_template, request, session, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
 import pandas as pd
-
-
-from src.accountcontroller import AccountController
+import Datenbank
+import database
+import sqlite3 as sql
 
 app = Flask(__name__, template_folder="./templates")
-
-ac_controller = AccountController()
-
 app.secret_key = "key"
 folder = os.getcwd() + "\\Uploads"
 extensions = set({'csv'})
@@ -20,95 +19,77 @@ def allowed(filename):
 
 
 @app.route("/")
-def homepage():
-    return render_template("homepage.html")
+def index():
+    return render_template("login.html")
 
 
-@app.route("/test")
-def show_test():
-    return "<h1>This is the test page.</h1>"
+@app.route("/register", methods=["POST", "GET"])
+def register():
+    if request.method == "POST":
+        firstname = request.form.get("firstname")
+        lastname = request.form.get("lastname")
+        birthday = request.form.get("birthday")
+        username = request.form.get("username")
+        password = request.form.get("password")
+        # hashedpw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+        # password_hash = hashedpw.decode("utf-8")
+        Datenbank.AddUSER(username, firstname, lastname, birthday, password)
+        return redirect(url_for("index"))
+    else:
+        return render_template("register.html")
 
 
-@app.route("/createAccount")
-def show_create_account():
-    return render_template("createAccount.html")
-
-
-@app.route("/submitAccount", methods=["POST"])
-def create_account():
-    firstname = request.form.get("firstname")
-    lastname = request.form.get("lastname")
-    birthday = request.form.get("birthday")
-    username = request.form.get("username")
-    password = request.form.get("password")
-    ac_controller.create_account(firstname=firstname, lastname=lastname, birthday=birthday, username=username,
-                                 password=password)
-    print(ac_controller.get_managed_accounts())
-    ac_controller.print_accounts()
-
-    return render_template("homepage.html")
-
-
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["POST", "GET"])
 def login():
-    entered_username = request.form.get("username")
-    entered_password = request.form.get("password")
-    account = ac_controller.login(username=entered_username, password=entered_password)
-    if account != None:
-        account.print_account()
-        session["username"] = account.username
-        session["firstname"] = account.user.firstname
-        session["lastname"] = account.user.lastname
-        return render_template("account.html", ac=account)
-    return render_template("homepage.html")
-
-
-@app.route('/upload', methods=["POST"])
-def upload_file():
-    return render_template('upload.html')
-
-
-@app.route('/fileUploaded', methods=['GET', 'POST'])
-def upload_file1():
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            return redirect(request.url)
-        if allowed(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(folder, filename))
-    return render_template('success.html')
+    if request.method == "POST":
+        username = request.form['username']
+        password = request.form['password']
+        if Datenbank.check_User(username, password) == True:
+            session['username'] = username
+            Datenbank.changetimestamp()
+        return redirect(url_for('uebersichtsseite'))
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
-def uebersichtseite():
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            return redirect(request.url)
+def uebersichtsseite():
+    if request.method == "POST":
         file = request.files['file']
-        if file.filename == '':
-            return redirect(request.url)
-        if allowed(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(folder, filename))
+        #TODO check if csv
+        #if allowed(file.filename):     --> funktioniert noch nicht ganz
+        file.save("name.csv")
+        print(file)
+        print(file.filename)
+        pd.read_csv("name.csv", sep = ';').to_sql(file.filename, sqlite3.connect("Datenbank/file",check_same_thread=False), schema=None, if_exists='replace', index=True, index_label=None, chunksize=None,
+              dtype=None, method=None)
+        #TODO check if db already exists -> overwrite? --> if_exists='replace' fixt das
+        #else:
+            #return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
+    return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
 
-    return render_template('uebersichtsseite.html', Liste=os.listdir("Uploads")) #auf der Übersichtsseite wird temporär nicht die datei angezeigt
 
-
-list = pd.read_csv(os.getcwd() + "/Uploads" + "/Testdatei.csv", sep=";", decimal=".", header=0) #hier muss statt Testdatei.csv filename stehen die ausgewählt wurde bzw auch das temporäre anzeigen lassen
+list = pd.read_csv(os.getcwd() + "/Uploads" + "/Testdatei.csv", sep=";", decimal=".", header=0)
+# hier muss statt Testdatei.csv filename stehen die ausgewählt wurde bzw auch das temporäre anzeigen lassen
 list.columns.values
+
 
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():
-    return render_template('detailseite.html', Liste=list.columns.values, bild = "bewerbungen.png")
+    if 'username' in session:
+        return render_template('detailseite.html', username=session['username'], Liste=list.columns.values,
+                               bild="bewerbungen.png")
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
-    return render_template("homepage.html")
+    return redirect(url_for("index"))
 
 
-app.run(debug=True)
+Datenbank.cleardata()
+
+if __name__ == "__main__":
+    app.run(debug=True)

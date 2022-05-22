@@ -71,7 +71,7 @@
 
             <p>
                 <!-- Dateiupload -->
-            <form action="http://localhost:5000/uebersichtsseite" method="POST"
+            <form action="/uebersichtsseite" method="post"
                   enctype="multipart/form-data">
                 <input type="file" name="file"/>
                 <input type="submit"/>
@@ -79,71 +79,96 @@
             </p>
             <!-- Anzeige der csv Dateien  Hier muss noch eine Schleife implementiert werden,
                  damit jede hochgeladene Datei in Liste eingefügt wird und nicht nur diese 4 -->
+
             <ul id="ExcelFile">
                 <li>{{Liste[0]}}</li>
                 <li>{{Liste[1]}}</li>
                 <li>{{Liste[2]}}</li>
                 <li>{{Liste[3]}}</li>
+                <li>{{Liste[4]}}</li>
+                <li>{{Liste[5]}}</li>
             </ul>
-            <!-- Sortieralgorythmus -->
             <script>
-                <!-- Funktion zum Aufsteigend sortieren -->
-                <!-- Hier noch sehr viel doppelter Code, muss noch gefixt werden -->
-                function sortListDirAsc() {
+                function ss() {
+                    var arr = ["f", "o", "o", "b", "a", "r"];
+                    for (var i in arr) {
+                        console.log(arr[i]);
+                    }
+                }
+
+                <!-- Sortieralgorythmus -->
+                <script>
+                    <!--
+                    Funktion
+                    zum
+                    Aufsteigend
+                    sortieren -->
+
+                    <!--
+                    Hier
+                    noch
+                    sehr
+                    viel
+                    doppelter
+                    Code, muss
+                    noch
+                    gefixt
+                    werden -->
+                    function sortListDirAsc() {
                     var list, i, switching, b, shouldSwitch, dir, switchcount = 0;
                     list = document.getElementById("ExcelFile");
                     switching = true;
                     <!-- Schleife bis keine Vertauschung mehr gemacht wird -->
                     while (switching) {
-                        switching = false;
-                        b = list.getElementsByTagName("LI");
-                        <!-- Schleife durch alle Elemente der Liste -->
-                        for (i = 0; i < (b.length - 1); i++) {
-                            shouldSwitch = false;
-                            <!-- Prüfen, ob das nächste Element getauscht werden soll -->
-                            if (b[i].innerHTML.toLowerCase() > b[i + 1].innerHTML.toLowerCase()) {
-                                <!-- Wenn Element alphabetisch vor aktuellem Element ist break -->
-                                shouldSwitch = true;
-                                break;
-                            }
-                        }
-                        if (shouldSwitch) {
-                            <!-- Wenn Vertauschung gemacht werden muss, Element als getauscht markieren -->
-                            b[i].parentNode.insertBefore(b[i + 1], b[i]);
-                            switching = true;
-                            <!-- Bei jeder Vertauschung switchcount +1 -->
-                            switchcount++;
-                        }
-                    }
+                    switching = false;
+                    b = list.getElementsByTagName("LI");
+                    <!-- Schleife durch alle Elemente der Liste -->
+                    for (i = 0; i < (b.length - 1); i++) {
+                    shouldSwitch = false;
+                    <!-- Prüfen, ob das nächste Element getauscht werden soll -->
+                    if (b[i].innerHTML.toLowerCase() > b[i + 1].innerHTML.toLowerCase()) {
+                    <!-- Wenn Element alphabetisch vor aktuellem Element ist break -->
+                    shouldSwitch = true;
+                    break;
+                }
+                }
+                    if (shouldSwitch) {
+                    <!-- Wenn Vertauschung gemacht werden muss, Element als getauscht markieren -->
+                    b[i].parentNode.insertBefore(b[i + 1], b[i]);
+                    switching = true;
+                    <!-- Bei jeder Vertauschung switchcount +1 -->
+                    switchcount++;
+                }
+                }
                 }
 
-                <!-- Funktion zum Absteigend sortieren -->
-                function sortListDirDesc() {
+                    <!-- Funktion zum Absteigend sortieren -->
+                    function sortListDirDesc() {
                     var list, i, switching, b, shouldSwitch, switchcount = 0;
                     list = document.getElementById("ExcelFile");
                     switching = true;
                     <!-- Schleife bis keine Vertauschung mehr gemacht wird -->
                     while (switching) {
-                        switching = false;
-                        b = list.getElementsByTagName("LI");
-                        <!-- Schleife durch alle Elemente der Liste -->
-                        for (i = 0; i < (b.length - 1); i++) {
-                            shouldSwitch = false;
-                            <!-- Prüfen, ob das nächste Element getauscht werden soll -->
-                            if (b[i].innerHTML.toLowerCase() < b[i + 1].innerHTML.toLowerCase()) {
-                                <!-- Wenn Element alphabetisch nach aktuellem Element ist break -->
-                                shouldSwitch = true;
-                                break;
-                            }
-                        }
-                        if (shouldSwitch) {
-                            <!-- Wenn Vertauschung gemacht werden muss, Element als getauscht markieren -->
-                            b[i].parentNode.insertBefore(b[i + 1], b[i]);
-                            switching = true;
-                            <!-- Bei jeder Vertauschung switchcount +1 -->
-                            switchcount++;
-                        }
-                    }
+                    switching = false;
+                    b = list.getElementsByTagName("LI");
+                    <!-- Schleife durch alle Elemente der Liste -->
+                    for (i = 0; i < (b.length - 1); i++) {
+                    shouldSwitch = false;
+                    <!-- Prüfen, ob das nächste Element getauscht werden soll -->
+                    if (b[i].innerHTML.toLowerCase() < b[i + 1].innerHTML.toLowerCase()) {
+                    <!-- Wenn Element alphabetisch nach aktuellem Element ist break -->
+                    shouldSwitch = true;
+                    break;
+                }
+                }
+                    if (shouldSwitch) {
+                    <!-- Wenn Vertauschung gemacht werden muss, Element als getauscht markieren -->
+                    b[i].parentNode.insertBefore(b[i + 1], b[i]);
+                    switching = true;
+                    <!-- Bei jeder Vertauschung switchcount +1 -->
+                    switchcount++;
+                }
+                }
                 }
             </script>
             <p>

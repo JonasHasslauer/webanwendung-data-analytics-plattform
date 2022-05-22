@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal" created-in="PY-221.5080.212">
-    <data-source name="File_DB" uuid="c2ae709d-1bb2-4863-af29-c498b21fa88f">
+    <data-source name="my_logins4.db" uuid="0105169c-2465-4066-84aa-d56ab6d53e25">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="SQLITE" exact-version="0" />
+      <schema-mapping />
+    </data-source>
+    <data-source name="test" uuid="49257af7-8424-402b-8d52-99b5aae1b6bf">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="SQLITE" exact-version="0" />
+      <schema-mapping />
+    </data-source>
+    <data-source name="tda.csv" uuid="6c3d7b2d-2020-4578-b24b-5cbe5ebe14c2">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="SQLITE" exact-version="0" />
+      <schema-mapping />
+    </data-source>
+    <data-source name="Verbindung" uuid="1f7424ed-0871-419e-9fde-406a91d7fea7">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="SQLITE" exact-version="0" />
+      <schema-mapping />
+    </data-source>
+    <data-source name="file" uuid="22324629-33f8-4ba6-b162-aebe4c613029">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="SQLITE" exact-version="0" />
+      <schema-mapping />
+    </data-source>
+    <data-source name="file [2]" uuid="fc820264-f7f2-414d-9949-40e96e6712f5">
       <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="SQLITE" exact-version="0" />
       <schema-mapping />
     </data-source>
