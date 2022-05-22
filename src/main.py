@@ -4,14 +4,13 @@ from flask import Flask, render_template, request, session, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
 import pandas as pd
-import Datenbank
-import database
-import sqlite3 as sql
+from Datenbank import Datenbank
 
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
 folder = os.getcwd() + "\\Uploads"
 extensions = set({'csv'})
+db = Datenbank("Datenbank/my_logins4.db")
 
 
 def allowed(filename):
@@ -33,8 +32,16 @@ def register():
         password = request.form.get("password")
         # hashedpw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
         # password_hash = hashedpw.decode("utf-8")
-        Datenbank.AddUSER(username, firstname, lastname, birthday, password)
-        return redirect(url_for("index"))
+
+        if not db.checkIfUserExists(username):
+            try:
+                db.addUser(username, firstname, lastname, birthday, password)
+                return redirect(url_for("login"))
+            except sqlite3.IntegrityError as e:
+                print("Fehler erschienen: ", e)
+                return redirect(url_for("login"))
+        else:  # Nutzer muss sich mit anderem Namen registrieren
+            return render_template(url_for("register"))
     else:
         return render_template("register.html")
 
@@ -44,9 +51,9 @@ def login():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
-        if Datenbank.check_User(username, password) == True:
+        if db.checkUsers(password, username):
             session['username'] = username
-            Datenbank.changetimestamp()
+            db.changeTimeStamp(username)
         return redirect(url_for('uebersichtsseite'))
     else:
         return redirect(url_for('index'))
@@ -54,19 +61,21 @@ def login():
 
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
-    if request.method == "POST":
+    if 'username' in session:
+        return render_template('uebersichtsseite.html', username=session['username'], Liste=os.listdir("Uploads"))
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return redirect(request.url)
         file = request.files['file']
-        #TODO check if csv
-        #if allowed(file.filename):     --> funktioniert noch nicht ganz
-        file.save("name.csv")
-        print(file)
-        print(file.filename)
-        pd.read_csv("name.csv", sep = ';').to_sql(file.filename, sqlite3.connect("Datenbank/file",check_same_thread=False), schema=None, if_exists='replace', index=True, index_label=None, chunksize=None,
-              dtype=None, method=None)
-        #TODO check if db already exists -> overwrite? --> if_exists='replace' fixt das
-        #else:
-            #return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
-    return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
+        if file.filename == '':
+            return redirect(request.url)
+        if allowed(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(folder, filename))
+            return render_template('uebersichtsseite.html', Liste=os.listdir("Uploads"))
+
+    else:
+        return redirect(url_for('login'))
 
 
 list = pd.read_csv(os.getcwd() + "/Uploads" + "/Testdatei.csv", sep=";", decimal=".", header=0)
@@ -89,7 +98,7 @@ def logout():
     return redirect(url_for("index"))
 
 
-Datenbank.cleardata()
+db.clearData()
 
 if __name__ == "__main__":
     app.run(debug=True)
