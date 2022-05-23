@@ -9,11 +9,9 @@ from Datenbank import Datenbank
 
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
-folder = os.getcwd() + "\\Uploads"
 extensions = set({'csv'})
 
 db = Datenbank('Datenbank/my_logins4.db')
-
 
 def allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
@@ -65,31 +63,19 @@ def login():
 
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
-    if 'username' in session:
-        return render_template('uebersichtsseite.html', username=session['username'], Liste=os.listdir("Uploads"))
+    #if 'username' in session:
+     #   return render_template('uebersichtsseite.html', username=session['username'], Liste=["eins", "zwei"])
+
     if request.method == 'POST':
-        if 'file' not in request.files:
-            return redirect(request.url)
         file = request.files['file']
-        # TODO check if csv
-        # if allowed(file.filename):     --> funktioniert noch nicht ganz
-        file.save(file.filename)
-        pd.read_csv("name.csv", sep=';').to_sql(file.filename,
-                                                sqlite3.connect("Datenbank/file", check_same_thread=False), schema=None,
-                                                if_exists='replace', index=True, index_label=None, chunksize=None,
-                                                dtype=None, method=None)
-        os.remove(file.filename)
+        name = file.filename
+        db.saveFile(file, name)
     return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
-
-
-list = pd.read_csv(os.getcwd() + "/Uploads" + "/Testdatei.csv", sep=";", decimal=".", header=0)
-# hier muss statt Testdatei.csv filename stehen die ausgewählt wurde bzw auch das temporäre anzeigen lassen
-list.columns.values
 
 
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():
-    return render_template('detailseite.html', Liste=list.columns.values, bild="bewerbungen.png")
+    return render_template('detailseite.html', Liste=list.columns.values, bild = "bewerbungen.png")
 
 
 @app.route("/logout", methods=["POST"])

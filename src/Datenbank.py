@@ -1,5 +1,7 @@
 import hashlib
 import sqlite3 as sql
+import pandas as pd
+import os
 
 
 class Datenbank:
@@ -63,3 +65,21 @@ class Datenbank:
         self.cursor.execute("DELETE FROM LOGINS WHERE lastlogin < DATETIME('NOW', '-100 minutes')")
         self.connection.commit()
         # self.connection.close()
+
+
+    def saveFile(self, file, name):
+        # TODO check if csv
+        # if allowed(file.filename):     --> funktioniert noch nicht ganz
+        file.save("name.csv")
+        print(file)
+        print(file.filename)
+        pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),
+                                                schema=None, if_exists='replace', index=True, index_label=None,
+                                                chunksize=None,
+                                                dtype=None, method=None)
+        os.remove("name.csv")
+        # TODO check if db already exists -> overwrite? --> if_exists='replace' fixt das --> soll umbenannt und anders abgespeichert werden
+        # else:
+        # return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
+
+
