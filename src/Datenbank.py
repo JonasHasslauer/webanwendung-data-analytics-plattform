@@ -82,4 +82,3 @@ class Datenbank:
         # else:
         # return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
 
-
