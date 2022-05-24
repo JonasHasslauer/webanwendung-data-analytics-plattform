@@ -66,7 +66,6 @@ class Datenbank:
         self.connection.commit()
         # self.connection.close()
 
-
     def saveFile(self, file, name):
         # TODO check if csv
         # if allowed(file.filename):     --> funktioniert noch nicht ganz
@@ -81,4 +80,3 @@ class Datenbank:
         # TODO check if db already exists -> overwrite? --> if_exists='replace' fixt das --> soll umbenannt und anders abgespeichert werden
         # else:
         # return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
-

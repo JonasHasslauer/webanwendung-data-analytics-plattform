@@ -80,14 +80,12 @@
             <!-- Anzeige der csv Dateien  Hier muss noch eine Schleife implementiert werden,
                  damit jede hochgeladene Datei in Liste eingefügt wird und nicht nur diese 4 -->
 
-            <ul id="ExcelFile">
-                <li>{{Liste[0]}}</li>
-                <li>{{Liste[1]}}</li>
-                <li>{{Liste[2]}}</li>
-                <li>{{Liste[3]}}</li>
-                <li>{{Liste[4]}}</li>
-                <li>{{Liste[5]}}</li>
-            </ul>
+            <div class="btn-group-vertical">
+                {% for filenames in filenames %}
+                <button type="button" class="btn btn-light">{{filenames[0]}}</button>
+                {% endfor %}
+            </div>
+
             <script>
                 function ss() {
                     var arr = ["f", "o", "o", "b", "a", "r"];
@@ -184,6 +182,26 @@
         <div class="col-7 bg">
             <h4>Auswahl/Sortierung der Daten</h4>
 
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="thead-dark">
+                    <tr>
+                        {% for columnnames in columnnames %}
+                        <th scope="col">{{columnnames}}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for items in items %}
+                    <tr>
+                        {% for items in items %}
+                        <td>{{items}}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

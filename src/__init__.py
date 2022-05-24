@@ -65,12 +65,19 @@ def login():
 def uebersichtsseite():
     #if 'username' in session:
      #   return render_template('uebersichtsseite.html', username=session['username'], Liste=["eins", "zwei"])
-
+    connection = sqlite3.connect("Datenbank/file")
+    data = connection.cursor()
+    filename = connection.cursor()
+    data.execute('SELECT * FROM Lager')
+    filename.execute('SELECT name FROM sqlite_master WHERE type = "table"')
+    columnnames = [tuple[0] for tuple in data.description]
+    items = data.fetchall()
+    filenames = filename.fetchall()
     if request.method == 'POST':
         file = request.files['file']
         name = file.filename
         db.saveFile(file, name)
-    return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
+    return render_template("uebersichtsseite.html", items=items, filenames=filenames, columnnames=columnnames)
 
 
 @app.route('/detailseite', methods=["POST", "GET"])
