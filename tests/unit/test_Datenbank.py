@@ -1,7 +1,7 @@
-from unittest import TestCase
+import unittest
 
 
-class TestDatenbank(TestCase):
+class TestDatenbank(unittest.TestCase):
     def test_create_login_table(self):
         self.fail()
 
@@ -22,3 +22,7 @@ class TestDatenbank(TestCase):
 
     def test_clear_data(self):
         self.fail()
+
+
+if __name__ == '__main__':
+    unittest.main()
