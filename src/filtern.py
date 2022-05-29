@@ -71,19 +71,14 @@ Einer Legende zufolge soll Feldmarschall Radetzky das Rezept 1857 aus Italien mi
 Prato erwähnte bereits 1879 mehrere italienische Gerichte wie Makkaroni, Risi e bisi und Risotto, aber kein Cotoletta.[6] Teilweise wird auch die ebenso unbelegte Variante genannt, dass eine byzantinische Prinzessin das panierte und gebackene Schnitzel an den Babenberger Hof nach Wien gebracht habe. 
 """
 
-def wordcloudErstellen(text):
-    nichtinteressant = "und von Der das den wir ist die auf im wird"
-    liste_der_unerwuenschten_woerter = nichtinteressant.split()
 
-    STOPWORDS.update(liste_der_unerwuenschten_woerter)
-    x, y = np.ogrid[:1000, :1000]
 
-    mask = (x - 500) ** 2 + (y - 500) ** 2 > 400 ** 2
-    mask = 255 * mask.astype(int)
 
-    wordcloud = WordCloud(background_color="white", width=1920, height=1080, mask=mask).generate(text)
+def wordcloudErstellen(df):
+    text =df.to_string(header=False,index=False)
+    wordcloud = WordCloud(background_color="white", width=1920, height=1080, ).generate(text)
     plt.imshow(wordcloud, interpolation="bilinear")
     plt.axis("off")
     plt.show()
 
-wordcloudErstellen(text_2)
+wordcloudErstellen(df)
