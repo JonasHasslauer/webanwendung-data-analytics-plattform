@@ -7,6 +7,8 @@ import pandas as pd
 
 from Datenbank import Datenbank
 
+from filtern import *
+
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
 extensions = set({'csv'})
@@ -65,19 +67,42 @@ def login():
 def uebersichtsseite():
     #if 'username' in session:
      #   return render_template('uebersichtsseite.html', username=session['username'], Liste=["eins", "zwei"])
-    connection = sqlite3.connect("Datenbank/file")
-    data = connection.cursor()
-    filename = connection.cursor()
-    data.execute('SELECT * FROM Lager')
-    filename.execute('SELECT name FROM sqlite_master WHERE type = "table"')
-    columnnames = [tuple[0] for tuple in data.description]
-    items = data.fetchall()
-    filenames = filename.fetchall()
+    connection = sqlite3.connect("Datenbank/file") #Verbindung zur Datenbank
+    data = connection.cursor() #cursor auf Daten in Datenbank
+    filename = connection.cursor() #cursor auf einzelne Filenames in DB
+    data.execute('SELECT * FROM Lager') #Datenbankabfrage
+    df = pd.read_sql_query("SELECT * from Lager", connection) #Erzeugen von Dataframe
+    df.to_html(header="true", table_id="table") #Dataframe an HTML übergeben
+
+    #Zeilenfilter
     if request.method == 'POST':
-        file = request.files['file']
-        name = file.filename
-        db.saveFile(file, name)
-    return render_template("uebersichtsseite.html", items=items, filenames=filenames, columnnames=columnnames)
+        spalte = request.form.get("spalte") #Eingabe von Website Spalte
+        wert = request.form.get("wert")  # Eingabe von Website Wert
+        operator = request.form.get("operator")  # Eingabe von Website Operator
+        df = zeilenFiltern(df,spalte,wert,operator) #Zeilen werden gefiltert
+        df.to_html(header="true", table_id="table") #Dataframe an HTML übergeben
+
+    #Spaltenfilter
+#    if request.method == 'POST':
+#        spaltenfilter = request.form.get("spaltenfilter") #Eingabe von Website
+#        if spaltenfilter == 'Alle' or None: #Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
+#            df = pd.read_sql_query("SELECT * from Lager", connection) #alle anzeigen
+#            df.to_html(header="true", table_id="table")
+#        else:
+#            filterlist = spaltenfilter.split(',') #Trennt Eingabe in einzelne Spaltennamen
+#            df = spaltenFiltern(df, filterlist) #Spalten werden gefiltert
+#            df.to_html(header="true", table_id="table") #Dataframe an HTML übergeben
+    filename.execute('SELECT name FROM sqlite_master WHERE type = "table"') #Datenbankabfrage für Filenames
+    #columnnames = [tuple[0] for tuple in data.description] #wird nicht benötigt
+    items = data.fetchall() #wird nicht benötigt #wird nicht benötigt
+    filenames = filename.fetchall()
+
+    #if request.method == 'POST': #Dateiupload funkioniert nicht mehr
+     #   file = request.files['file']
+      #  name = file.filename
+       # db.saveFile(file, name)
+
+    return render_template("uebersichtsseite.html", items=items, filenames=filenames, tables=[df.to_html(classes='data')], titles=df.columns.values)
 
 
 @app.route('/detailseite', methods=["POST", "GET"])
