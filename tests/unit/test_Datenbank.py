@@ -1,9 +1,13 @@
+import os
 import unittest
+from src.Datenbank import Datenbank
 
 
 class TestDatenbank(unittest.TestCase):
     def test_create_login_table(self):
-        self.fail()
+        //print(os.path.dirname)
+        db = Datenbank("src/Datenbank/my_logins4.db")
+        self.assertEqual(db.createLoginTable(), True)
 
     def test_get_all_usernames_from_database(self):
         self.fail()

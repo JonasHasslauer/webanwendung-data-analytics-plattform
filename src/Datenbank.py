@@ -22,6 +22,7 @@ class Datenbank:
         command = self.createTable
         self.cursor.execute(command)
         self.connection.commit()
+        return True
 
     def getAllUsernamesFromDatabase(self):
         return self.cursor.execute("Select username from Logins").fetchall()
