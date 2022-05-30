@@ -77,14 +77,19 @@
             </form>
             </p>
 
+            <!-- Buttons erstellen
             <div class="d-grid gap-2">
                 {% for filenames in filenames %}
                 <button type="button" class="btn btn-light" style="text-align:left; padding-left:40px" id="button1"
                         value="{{filenames[0]}}">{{filenames[0]}}
                 </button>
                 {% endfor %}
-            </div>
-
+            </div> -->
+            <form method="POST" action="/uebersichtsseite">
+                <button type="submit" name="Lager" value="Lager" id="Lager">Lager</button>
+                <button type="submit" name="test" value="test" id="test">test</button>
+            </form>
+            <!--
             <script>
                 var x = document.getElementById("button1").value;
                 document.write(x);
@@ -95,7 +100,7 @@
                     var i;
                     for (i = 0; i < 3; i++) {
                         let btn = document.createElement("button");
-                        btn.innerHTML = "{{filenames[2][0]}}";
+                        btn.innerHTML = "{{filenames[0][0]}}";
                         btn.type = "button";
                         btn.class = "btn btn-light";
                         btn.style = "text-align:left; padding-left:40px";
@@ -107,7 +112,7 @@
             </script>
 
             <input type="button" onclick="buttons()" value="Click Me">
-
+-->
         </div>
 
         <!-- Rechte Box zum Sortieren und Auswählen der Daten -->
@@ -155,12 +160,6 @@
             <form method="POST" action="/uebersichtsseite">
                 <input class="form-control" name="spaltenfilter" id=spaltenfilter
                        placeholder="Spalten auswählen [Eingabe alle Anzeigen: Alle] zum Filtern [Eingabe: Spalte1,Spalte2,...]">
-                <button class="btn btn-secondary" type="sumbit">Spalten filtern</button>
-            </form>
-
-            <!--Zeilen filtern-->
-            <p>
-            <form method="POST" action="/uebersichtsseite">
                 <input class="form-control" name="spalte" id=spalte
                        placeholder="Nach welcher Spalte soll gefiltert werden?">
                 <input type="text" class="form-control" name="wert" id=wert placeholder="Sortierungswert?">
@@ -170,9 +169,28 @@
                     <option value=">">></option>
                     <option value="==">==</option>
                 </select>
-                <button class="btn btn-secondary" type="sumbit">Zeilen filtern</button>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="checkbox" id="checkbox">
+                    <label class="form-check-label" for="checkbox">Beide filtern</label>
+                </div>
+                <button class="btn btn-secondary" type="sumbit">Filtern</button>
             </form>
-            </p>
+
+            <!--Zeilen filtern-->
+            <!--   <p>
+               <form method="POST" action="/uebersichtsseite">
+                   <input class="form-control" name="spalte" id=spalte
+                          placeholder="Nach welcher Spalte soll gefiltert werden?">
+                   <input type="text" class="form-control" name="wert" id=wert placeholder="Sortierungswert?">
+                   <select class="form-control" name="operator" id=operator>
+                       <option value="" selected disabled hidden>Operator wählen</option>
+                       <option value="<"><</option>
+                       <option value=">">></option>
+                       <option value="==">==</option>
+                   </select>
+                   <button class="btn btn-secondary" type="sumbit">Zeilen filtern</button>
+               </form>
+               </p> -->
 
             <!--Button Detailseite-->
             <p>

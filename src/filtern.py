@@ -8,7 +8,7 @@ df = pd.DataFrame({'Name': ["Peter", "Karla", "Anne", "Nino", "Andrzej"],
                   index=['ID-123', 'ID-462', 'ID-111', 'ID-997', 'ID-707'],
                   columns=['Name', 'Alter', 'Nationalität', 'Gehalt'])
 
-print(df)
+#print(df)
 # mit Hilfe der zeilenFiltern Methode können Zeilen ausgegeben werden, wenn sie einem bestimmten
 # Spaltenwert entsprechen/größer/kleiner sind
 
@@ -36,8 +36,8 @@ def zeilenFiltern(df, spaltenname, wert, operator):
 
 
 spaltenFiltern_df = df[['Name', 'Alter', 'Gehalt']]
-print(spaltenFiltern_df, "\n")
-print(zeilenFiltern(df,'Alter',30,'<'))
+#print(spaltenFiltern_df, "\n")
+#print(zeilenFiltern(df,'Alter',30,'<'))
 
 
 # mit der Funktion spaltenFiltern können einzelne oder mehere  Spalten ausgegeben werden
