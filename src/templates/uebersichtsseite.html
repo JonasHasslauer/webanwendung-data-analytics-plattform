@@ -77,21 +77,18 @@
             </form>
             </p>
 
-            <!-- Buttons erstellen
+            <!-- Buttons erstellen -->
             <div class="d-grid gap-2">
                 {% for filenames in filenames %}
-                <button type="button" class="btn btn-light" style="text-align:left; padding-left:40px" id="button1"
+                <button type="button" class="btn btn-light" style="text-align:left; padding-left:40px" id="{{filenames[0]}}"
                         value="{{filenames[0]}}">{{filenames[0]}}
                 </button>
                 {% endfor %}
-            </div> -->
-            <form method="POST" action="/uebersichtsseite">
-                <button type="submit" name="Lager" value="Lager" id="Lager">Lager</button>
-                <button type="submit" name="test" value="test" id="test">test</button>
-            </form>
-            <!--
+            </div>
+
+<!--
             <script>
-                var x = document.getElementById("button1").value;
+                var x = document.getElementById('Lager').value;
                 document.write(x);
             </script>
 
@@ -113,32 +110,12 @@
 
             <input type="button" onclick="buttons()" value="Click Me">
 -->
+
         </div>
 
         <!-- Rechte Box zum Sortieren und Auswählen der Daten -->
         <div class="col-7 bg">
             <h4>Auswahl/Sortierung der Daten</h4>
-
-            <!--  <div class="table overflow-scroll" style="height: 375px; width: 750px;">
-                  <table class="table table-bordered">
-                      <thead class="table-secondary">
-                      <tr>
-                          {% for columnnames in columnnames %}
-                          <th scope="col">{{columnnames}}</th>
-                          {% endfor %}
-                      </tr>
-                      </thead>
-                      <tbody>
-                      {% for items in items %}
-                      <tr>
-                          {% for items in items %}
-                          <td>{{items}}</td>
-                          {% endfor %}
-                      </tr>
-                      {% endfor %}
-                      </tbody>
-                  </table>
-              </div> --> <!--Darstellung der Datei als Tabelle aber nicht als Dataframe-->
 
             <div class="table overflow-scroll" style="height: 375px; width: 750px;">
                 <table class="table table-bordered">
@@ -175,22 +152,6 @@
                 </div>
                 <button class="btn btn-secondary" type="sumbit">Filtern</button>
             </form>
-
-            <!--Zeilen filtern-->
-            <!--   <p>
-               <form method="POST" action="/uebersichtsseite">
-                   <input class="form-control" name="spalte" id=spalte
-                          placeholder="Nach welcher Spalte soll gefiltert werden?">
-                   <input type="text" class="form-control" name="wert" id=wert placeholder="Sortierungswert?">
-                   <select class="form-control" name="operator" id=operator>
-                       <option value="" selected disabled hidden>Operator wählen</option>
-                       <option value="<"><</option>
-                       <option value=">">></option>
-                       <option value="==">==</option>
-                   </select>
-                   <button class="btn btn-secondary" type="sumbit">Zeilen filtern</button>
-               </form>
-               </p> -->
 
             <!--Button Detailseite-->
             <p>
