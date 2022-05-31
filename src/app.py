@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, session, redirect, url_for
 import os
 import pandas as pd
 
-from src.Datenbank import Datenbank
+from src.database import Datenbank
 
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"

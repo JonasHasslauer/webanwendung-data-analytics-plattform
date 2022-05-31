@@ -1,9 +1,14 @@
 import unittest
+from src.database import Datenbank
+testdatenbank = Datenbank('src/Datenbank/testdatenbank.db')
 
 
 class TestDatenbank(unittest.TestCase):
     def test_create_login_table(self):
-        self.fail()
+        try:
+            testdatenbank.createLoginTable()
+        except Exception as e:
+            print('fehler'.format(e))
 
     def test_get_all_usernames_from_database(self):
         self.fail()

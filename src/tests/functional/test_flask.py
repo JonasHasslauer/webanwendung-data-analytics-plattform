@@ -1,16 +1,16 @@
 import unittest
-from src.Datenbank import Datenbank
-from src.__init__ import app
+from src.database import Datenbank
+from src.app import app
+import os
 
-
-db = Datenbank('src\\Datenbank\\my_logins4.db')
 
 
 class TestFlask(unittest.TestCase):
     def setUp(self) -> None:
         app.config['TESTING'] = True
+        app.config['WTF_CSRF_ENABLED'] = False
         app.config['DEBUG'] = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://///Users/johan/webanwendung-data-analytics-plattform/src/Datenbank/my_logins4.db"
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('src/Datenbank/my_logins4.db')
 
         self.app = app.test_client()
 
