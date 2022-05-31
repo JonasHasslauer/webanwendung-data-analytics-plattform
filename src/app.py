@@ -86,12 +86,14 @@ def uebersichtsseite():
         if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
             df = pd.read_sql_query("SELECT * from Lager", connection)  # alle anzeigen
             df.to_html(header="true", table_id="table")
+            return render_template("uebersichtsseite.html", filenames=filenames,
+                                   tables=[df.to_html(classes='data')], titles=df.columns.values)
         else:
             filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
             df2 = spaltenFiltern(df1, filterlist)  # Spalten werden gefiltert
             print(df2)
             df2.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
-        return render_template("uebersichtsseite.html", filenames=filenames,
+            return render_template("uebersichtsseite.html", filenames=filenames,
                                tables=[df2.to_html(classes='data')], titles=df2.columns.values)
     # Zeilenfilter
     elif request.method == 'POST' and request.form.get("spalte"):
