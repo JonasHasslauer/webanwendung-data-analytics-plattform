@@ -81,35 +81,9 @@
             <div class="d-grid gap-2">
                 {% for filenames in filenames %}
                 <button type="button" class="btn btn-light" style="text-align:left; padding-left:40px" id="{{filenames[0]}}"
-                        value="{{filenames[0]}}">{{filenames[0]}}
-                </button>
+                        value="{{filenames[0]}}">{{filenames[0]}}</button>
                 {% endfor %}
             </div>
-
-<!--
-            <script>
-                var x = document.getElementById('Lager').value;
-                document.write(x);
-            </script>
-
-            <script type="text/javascript">
-                function buttons() {
-                    var i;
-                    for (i = 0; i < 3; i++) {
-                        let btn = document.createElement("button");
-                        btn.innerHTML = "{{filenames[0][0]}}";
-                        btn.type = "button";
-                        btn.class = "btn btn-light";
-                        btn.style = "text-align:left; padding-left:40px";
-                        btn.id = "button";
-                        btn.value = "{{filenames[0]}}";
-                        document.body.appendChild(btn);
-                    }
-                }
-            </script>
-
-            <input type="button" onclick="buttons()" value="Click Me">
--->
 
         </div>
 

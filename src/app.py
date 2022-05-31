@@ -65,8 +65,8 @@ def login():
 
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
-    if 'username' in session:
-       return render_template('uebersichtsseite.html', username=session['username'], Liste=["eins", "zwei"])
+    #if 'username' in session:
+     #  return render_template('uebersichtsseite.html', username=session['username'], Liste=["eins", "zwei"])
     connection = sqlite3.connect("Datenbank/file")  # Verbindung zur Datenbank
     data = connection.cursor()  # cursor auf Daten in Datenbank
     filename = connection.cursor()  # cursor auf einzelne Filenames in DB
@@ -74,7 +74,6 @@ def uebersichtsseite():
     df = pd.read_sql_query('SELECT * FROM Lager', connection)  # Erzeugen von Dataframe
     df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
     filename.execute('SELECT name FROM sqlite_master WHERE type = "table"')  # Datenbankabfrage für Filenames
-    items = data.fetchall()  # wird nicht benötigt #wird nicht benötigt
     filenames = filename.fetchall()
 
     if request.method == 'POST' and request.form.get("checkbox"):
@@ -87,12 +86,14 @@ def uebersichtsseite():
         if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
             df = pd.read_sql_query("SELECT * from Lager", connection)  # alle anzeigen
             df.to_html(header="true", table_id="table")
+            return render_template("uebersichtsseite.html", filenames=filenames,
+                                   tables=[df.to_html(classes='data')], titles=df.columns.values)
         else:
             filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
             df2 = spaltenFiltern(df1, filterlist)  # Spalten werden gefiltert
             print(df2)
             df2.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
-        return render_template("uebersichtsseite.html", filenames=filenames,
+            return render_template("uebersichtsseite.html", filenames=filenames,
                                tables=[df2.to_html(classes='data')], titles=df2.columns.values)
     # Zeilenfilter
     elif request.method == 'POST' and request.form.get("spalte"):
@@ -117,19 +118,17 @@ def uebersichtsseite():
         return render_template("uebersichtsseite.html", filenames=filenames,
                                tables=[df.to_html(classes='data')], titles=df.columns.values)
 
-    else:
-        return render_template("uebersichtsseite.html", filenames=filenames,
-                               tables=[df.to_html(classes='data')], titles=df.columns.values)
-
-    if request.method == 'POST' and request.files['file']:
+    elif request.method == 'POST' and request.files['file']:
         file = request.files['file']
         name = file.filename
         db.saveFile(file, name)
+        return render_template("uebersichtsseite.html", filenames=filenames,
+                               tables=[df.to_html(classes='data')],
+                               titles=df.columns.values)
 
-    return render_template("uebersichtsseite.html", items=items, filenames=filenames,
-                           tables=[df.to_html(classes='data')],
-                           titles=df.columns.values)
-
+    else:
+        return render_template("uebersichtsseite.html", filenames=filenames,
+                               tables=[df.to_html(classes='data')], titles=df.columns.values)
 
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():

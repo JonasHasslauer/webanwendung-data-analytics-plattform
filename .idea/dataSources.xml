@@ -17,7 +17,7 @@
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\samim\Downloads\file</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\fabia\Downloads\file</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>
@@ -29,7 +29,7 @@
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\samim\webanwendung-data-analytics-plattform\src\Datenbank\file</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\fabia\webanwendung-data-analytics-plattform\src\Datenbank\file</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>
