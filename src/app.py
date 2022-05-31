@@ -65,8 +65,8 @@ def login():
 
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
-    if 'username' in session:
-       return render_template('uebersichtsseite.html', username=session['username'], Liste=["eins", "zwei"])
+    #if 'username' in session:
+     #  return render_template('uebersichtsseite.html', username=session['username'], Liste=["eins", "zwei"])
     connection = sqlite3.connect("Datenbank/file")  # Verbindung zur Datenbank
     data = connection.cursor()  # cursor auf Daten in Datenbank
     filename = connection.cursor()  # cursor auf einzelne Filenames in DB
@@ -74,7 +74,6 @@ def uebersichtsseite():
     df = pd.read_sql_query('SELECT * FROM Lager', connection)  # Erzeugen von Dataframe
     df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
     filename.execute('SELECT name FROM sqlite_master WHERE type = "table"')  # Datenbankabfrage für Filenames
-    items = data.fetchall()  # wird nicht benötigt #wird nicht benötigt
     filenames = filename.fetchall()
 
     if request.method == 'POST' and request.form.get("checkbox"):
@@ -117,19 +116,17 @@ def uebersichtsseite():
         return render_template("uebersichtsseite.html", filenames=filenames,
                                tables=[df.to_html(classes='data')], titles=df.columns.values)
 
-    else:
-        return render_template("uebersichtsseite.html", filenames=filenames,
-                               tables=[df.to_html(classes='data')], titles=df.columns.values)
-
-    if request.method == 'POST' and request.files['file']:
+    elif request.method == 'POST' and request.files['file']:
         file = request.files['file']
         name = file.filename
         db.saveFile(file, name)
+        return render_template("uebersichtsseite.html", filenames=filenames,
+                               tables=[df.to_html(classes='data')],
+                               titles=df.columns.values)
 
-    return render_template("uebersichtsseite.html", items=items, filenames=filenames,
-                           tables=[df.to_html(classes='data')],
-                           titles=df.columns.values)
-
+    else:
+        return render_template("uebersichtsseite.html", filenames=filenames,
+                               tables=[df.to_html(classes='data')], titles=df.columns.values)
 
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():
