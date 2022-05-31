@@ -7,7 +7,7 @@ import pandas as pd
 
 from src.database import Datenbank
 
-from filtern import *
+#from filtern import *
 
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
