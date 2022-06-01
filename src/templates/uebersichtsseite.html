@@ -80,8 +80,10 @@
             <!-- Buttons erstellen -->
             <div class="d-grid gap-2">
                 {% for filenames in filenames %}
-                <button type="button" class="btn btn-light" style="text-align:left; padding-left:40px" id="{{filenames[0]}}"
-                        value="{{filenames[0]}}">{{filenames[0]}}</button>
+                <button type="button" class="btn btn-light" style="text-align:left; padding-left:40px"
+                        id="{{filenames[0]}}"
+                        value="{{filenames[0]}}">{{filenames[0]}}
+                </button>
                 {% endfor %}
             </div>
 
@@ -109,18 +111,25 @@
 
             <!--Spalten filtern-->
             <form method="POST" action="/uebersichtsseite">
-                <input class="form-control" name="spaltenfilter" id=spaltenfilter
-                       placeholder="Spalten auswählen [Eingabe alle Anzeigen: Alle] zum Filtern [Eingabe: Spalte1,Spalte2,...]">
-                <input class="form-control" name="spalte" id=spalte
-                       placeholder="Nach welcher Spalte soll gefiltert werden?">
-                <input type="text" class="form-control" name="wert" id=wert placeholder="Sortierungswert?">
-                <select class="form-control" name="operator" id=operator>
-                    <option value="" selected disabled hidden>Operator wählen</option>
-                    <option value="<"><</option>
-                    <option value=">">></option>
-                    <option value="==">==</option>
-                </select>
+                <p>
+                    <label for="spaltenfilter" class="form-label">Einzelne Spalten filtern:</label>
+                    <input class="form-control" name="spaltenfilter" id=spaltenfilter
+                           placeholder="Spalten auswählen [Eingabe alle Anzeigen: Alle] zum Filtern [Eingabe: Spalte1,Spalte2,...]">
+                </p>
+                <p>
+                    <label for="spalte" class="form-label">Nach Werten filtern:</label>
+                    <input class="form-control" name="spalte" id=spalte
+                           placeholder="Nach welcher Spalte soll gefiltert werden?">
+                    <select class="form-control" name="operator" id=operator>
+                        <option value="" selected disabled hidden>Operator wählen</option>
+                        <option value="<">kleiner</option>
+                        <option value=">">größer</option>
+                        <option value="==">gleich</option>
+                    </select>
+                    <input type="text" class="form-control" name="wert" id=wert placeholder="Sortierungswert?">
                 <div class="form-check">
+                    </p>
+
                     <input class="form-check-input" type="checkbox" name="checkbox" id="checkbox">
                     <label class="form-check-label" for="checkbox">Beide filtern</label>
                 </div>
