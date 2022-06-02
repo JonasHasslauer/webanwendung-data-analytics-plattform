@@ -69,7 +69,6 @@ def uebersichtsseite():
         df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
         filename.execute('SELECT name FROM sqlite_master WHERE type = "table"')  # Datenbankabfrage für Filenames
         filenames = filename.fetchall()
-        databaseObject = None
         filename.close()
 
         if request.method == 'POST' and request.form.get("checkbox"):
@@ -79,7 +78,7 @@ def uebersichtsseite():
             spaltenfilter = request.form.get("spaltenfilter")  # Eingabe von Website
             df1 = zeilenFiltern(df, spalte, wert, operator)  # Zeilen werden gefiltert
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
-                df = pd.read_sql_query("SELECT * from Lager", connection)  # alle anzeigen
+                df = pd.read_sql_query("SELECT * from Lager", databaseObject.connection)  # alle anzeigen
                 df.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[df.to_html(classes='data')], titles=df.columns.values)
@@ -103,7 +102,7 @@ def uebersichtsseite():
         elif request.method == 'POST' and request.form.get("spaltenfilter"):
             spaltenfilter = request.form.get("spaltenfilter")  # Eingabe von Website
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
-                df = pd.read_sql_query("SELECT * from Lager", connection)  # alle anzeigen
+                df = pd.read_sql_query("SELECT * from Lager", databaseObject.connection)  # alle anzeigen
                 df.to_html(header="true", table_id="table")
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
