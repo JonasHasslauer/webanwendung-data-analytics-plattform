@@ -2,8 +2,10 @@ import pandas as pd
 from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
 import numpy as np
+
 # Test Dataframe mit zufälligen Daten
 df = pd.read_csv('test_Csv_Datein/Sacramentorealestatetransactions.csv')
+#print(df)
 
 
 # mit Hilfe der zeilenFiltern Methode können Zeilen ausgegeben werden, wenn sie einem bestimmten
@@ -32,7 +34,6 @@ def zeilenFiltern(df, spaltenname, wert, operator):
         return filtered_df
 
 
-
 # mit der Funktion spaltenFiltern können einzelne oder mehere  Spalten ausgegeben werden
 def spaltenFiltern(df, liste):
     """
@@ -45,12 +46,16 @@ def spaltenFiltern(df, liste):
     return spaltenFiltern_df
 
 
-
 def wordcloudErstellen(df):
-    text =df.to_string(header=False,index=False)
+    """
+
+    :param df: zu bearbeitendes DataFrame
+    """
+    text = df.to_string(header=False, index=False)
     wordcloud = WordCloud(background_color="white", width=1920, height=1080, ).generate(text)
     plt.imshow(wordcloud, interpolation="bilinear")
     plt.axis("off")
     plt.show()
 
-wordcloudErstellen(df)
+
+
