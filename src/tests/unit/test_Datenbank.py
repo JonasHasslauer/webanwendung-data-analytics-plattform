@@ -7,7 +7,7 @@ testdatenbank = Datenbank('src/Datenbank/testdatenbank.db')
 
 class TestDatenbank(unittest.TestCase):
     def test_create_login_table(self):
-        //print(os.path.dirname)
+        # print(os.path.dirname)
         db = Datenbank("src/Datenbank/my_logins4.db")
         self.assertEqual(db.createLoginTable(), True)
 

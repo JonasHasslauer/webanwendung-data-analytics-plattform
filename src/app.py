@@ -12,10 +12,6 @@ extensions = set({'csv'})
 
 db = Datenbank('Datenbank/my_logins4.db')
 
-def allowed(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
-
-
 @app.route("/")
 def index():
     return render_template("login.html")
@@ -35,7 +31,7 @@ def register():
                 db.addUser(username, firstname, lastname, birthday, password)
                 return redirect(url_for("login"))
             except sqlite3.IntegrityError as e:
-                print("Fehler erschienen: ", e)
+                print("Es gab einen Fehler: ", e)
                 return redirect(url_for("login"))
         else:  # Nutzer muss sich mit anderem Namen registrieren
             return render_template(url_for("register"))
