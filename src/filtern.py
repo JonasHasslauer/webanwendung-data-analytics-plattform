@@ -1,14 +1,13 @@
 import pandas as pd
+from wordcloud import WordCloud, STOPWORDS
+import matplotlib.pyplot as plt
+import numpy as np
 
 # Test Dataframe mit zufälligen Daten
-df = pd.DataFrame({'Name': ["Peter", "Karla", "Anne", "Nino", "Andrzej"],
-                   'Alter': [34, 53, 16, 22, 61],
-                   'Nationalität': ["deutsch", "schweizerisch", "deutsch", "italienisch", "polnisch"],
-                   'Gehalt': [3400, 4000, 0, 2100, 2300]},
-                  index=['ID-123', 'ID-462', 'ID-111', 'ID-997', 'ID-707'],
-                  columns=['Name', 'Alter', 'Nationalität', 'Gehalt'])
-
+df = pd.read_csv('test_Csv_Datein/Sacramentorealestatetransactions.csv')
 #print(df)
+
+
 # mit Hilfe der zeilenFiltern Methode können Zeilen ausgegeben werden, wenn sie einem bestimmten
 # Spaltenwert entsprechen/größer/kleiner sind
 
@@ -35,11 +34,6 @@ def zeilenFiltern(df, spaltenname, wert, operator):
         return filtered_df
 
 
-spaltenFiltern_df = df[['Name', 'Alter', 'Gehalt']]
-#print(spaltenFiltern_df, "\n")
-#print(zeilenFiltern(df,'Alter',30,'<'))
-
-
 # mit der Funktion spaltenFiltern können einzelne oder mehere  Spalten ausgegeben werden
 def spaltenFiltern(df, liste):
     """
@@ -52,5 +46,16 @@ def spaltenFiltern(df, liste):
     return spaltenFiltern_df
 
 
-    """liste =['Name','Alter','Gehalt']
-    print(spaltenFiltern(df,liste))"""
+def wordcloudErstellen(df):
+    """
+
+    :param df: zu bearbeitendes DataFrame
+    """
+    text = df.to_string(header=False, index=False)
+    wordcloud = WordCloud(background_color="white", width=1920, height=1080, ).generate(text)
+    plt.imshow(wordcloud, interpolation="bilinear")
+    plt.axis("off")
+    plt.show()
+
+
+
