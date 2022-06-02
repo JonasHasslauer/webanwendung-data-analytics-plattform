@@ -115,7 +115,9 @@ def uebersichtsseite():
         elif request.method == 'POST' and request.files['file']:
             file = request.files['file']
             name = file.filename
-            db.saveFile(file, name)
+            namesplitted = name.split('.')
+            print(namesplitted[0])
+            db.saveFile(file, namesplitted[0])
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[df.to_html(classes='data')],
                                    titles=df.columns.values)
