@@ -10,6 +10,9 @@ app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
 extensions = set({'csv'})
 
+def allowed(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
+
 db = Datenbank('Datenbank/my_logins4.db')
 
 @app.route("/")

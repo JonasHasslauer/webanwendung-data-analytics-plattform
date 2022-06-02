@@ -17,6 +17,7 @@ class Datenbank:
     def __init__(self, database: str):
         self.connection = sql.connect(database, check_same_thread=False)
         self.cursor = self.connection.cursor()
+        self.createLoginTable()
 
     def createLoginTable(self):
         command = self.createTable
