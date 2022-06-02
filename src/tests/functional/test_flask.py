@@ -2,6 +2,7 @@ import unittest
 from src.database import Datenbank
 from src.app import app
 import os
+from src.filtern import *
 
 
 
@@ -10,8 +11,6 @@ class TestFlask(unittest.TestCase):
         app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
         app.config['DEBUG'] = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('src/Datenbank/my_logins4.db')
-
         self.app = app.test_client()
 
 
