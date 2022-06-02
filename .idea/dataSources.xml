@@ -13,17 +13,36 @@
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="file" uuid="fc820264-f7f2-414d-9949-40e96e6712f5">
+    <data-source source="LOCAL" name="file" uuid="73919e5a-1077-40a8-8398-723dadcaaa66">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/src/Datenbank/file</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\fabia\Downloads\file</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>
           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.36.0.3/sqlite-jdbc-3.36.0.3.jar</url>
         </library>
       </libraries>
+    </data-source>
+    <data-source source="LOCAL" name="file [2]" uuid="80f835bc-f565-40f2-b2a6-29cabb89f339">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\fabia\webanwendung-data-analytics-plattform\src\Datenbank\file</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.36.0.3/sqlite-jdbc-3.36.0.3.jar</url>
+        </library>
+      </libraries>
+    </data-source>
+    <data-source source="LOCAL" name="testdatenbank" uuid="09360fee-bf73-4b4e-9626-5d1c1140b452">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/src/Datenbank/testdatenbank.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
 </project>
