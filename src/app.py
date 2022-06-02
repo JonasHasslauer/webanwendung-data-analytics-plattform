@@ -60,15 +60,16 @@ def login():
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
     if 'username' in session:
-        connection = sqlite3.connect("Datenbank/file")  # Verbindung zur Datenbank
-        data = connection.cursor()  # cursor auf Daten in Datenbank
-        filename = connection.cursor()  # cursor auf einzelne Filenames in DB
-        data.execute('SELECT * FROM Lager')
-        df = pd.read_sql_query('SELECT * FROM Lager', connection)  # Erzeugen von Dataframe
+        # connection = sqlite3.connect("Datenbank/file")  # Verbindung zur Datenbank
+        # data = connection.cursor()  # cursor auf Daten in Datenbank
+        # filename = connection.cursor()  # cursor auf einzelne Filenames in DB
+        databaseObject = Datenbank("Datenbank/file")
+        filename = databaseObject.cursor.execute('SELECT * FROM Lager')
+        df = pd.read_sql_query('SELECT * FROM Lager', databaseObject.connection)  # Erzeugen von Dataframe
         df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
         filename.execute('SELECT name FROM sqlite_master WHERE type = "table"')  # Datenbankabfrage für Filenames
         filenames = filename.fetchall()
-        data.close()
+        databaseObject = None
         filename.close()
 
         if request.method == 'POST' and request.form.get("checkbox"):
