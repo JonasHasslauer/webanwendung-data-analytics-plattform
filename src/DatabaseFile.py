@@ -1,0 +1,39 @@
+import sqlite3 as sql
+import pandas as pd
+import os
+
+
+class DatabaseFile:
+    connection = ""
+    cursor = ""
+
+    def __init__(self, database: str):
+        self.connection = sql.connect(database, check_same_thread=False)
+        self.cursor = self.connection.cursor()
+
+    def getAllTableNames(self):
+        command = """SELECT tbl_name
+                     FROM sqlite_master
+                     WHERE type='table'"""
+        exec = self.cursor.execute(command).fetchall()
+        return exec
+
+    def checkIfTableWithNameExists(self):
+        pass
+        # check which user to get the specific database (maliks changes)
+        # check Table names
+
+    def getAllDataToFileFromTable(self, tablename: str) -> pd.DataFrame:
+        command = "SELECT * FROM " + tablename
+        print(command)
+        return pd.read_sql_query(self.cursor.execute(command), self.connection)
+
+    def saveFile(self, file, name):
+        # TODO check if csv
+        file.save("name.csv")
+
+        pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),
+                                                schema=None, if_exists='replace', index=True, index_label=None,
+                                                chunksize=None,
+                                                dtype=None, method=None)
+        os.remove("name.csv")

@@ -2,7 +2,8 @@ import sqlite3
 
 from flask import Flask, render_template, request, session, redirect, url_for
 
-from src.database import Datenbank
+from src.DatabaseUser import DatabaseUser
+from src.DatabaseFile import DatabaseFile
 
 from filtern import *
 
@@ -13,7 +14,7 @@ extensions = set({'csv'})
 def allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
 
-db = Datenbank('Datenbank/my_logins4.db')
+databaseUserObject = DatabaseUser('Datenbank/my_logins4.db')
 
 @app.route("/")
 def index():
@@ -29,9 +30,9 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        if not db.checkIfUserExists(username):
+        if not databaseUserObject.checkIfUserExists(username):
             try:
-                db.addUser(username, firstname, lastname, birthday, password)
+                databaseUserObject.addUser(username, firstname, lastname, birthday, password)
                 return redirect(url_for("login"))
             except sqlite3.IntegrityError as e:
                 print("Es gab einen Fehler: ", e)
@@ -47,9 +48,9 @@ def login():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
-        if db.checkUsers(password, username) is True:
+        if databaseUserObject.checkUsers(password, username) is True:
             session['username'] = username
-            db.changeTimeStamp(username)
+            databaseUserObject.changeTimeStamp(username)
             return redirect(url_for('uebersichtsseite'))
         else:
             return redirect(url_for('index'))
@@ -60,15 +61,15 @@ def login():
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
     if 'username' in session:
-        # connection = sqlite3.connect("Datenbank/file")  # Verbindung zur Datenbank
-        # data = connection.cursor()  # cursor auf Daten in Datenbank
-        # filename = connection.cursor()  # cursor auf einzelne Filenames in DB
-        databaseObject = Datenbank("Datenbank/file")
-        filename = databaseObject.cursor.execute('SELECT * FROM Lager')
-        df = pd.read_sql_query('SELECT * FROM Lager', databaseObject.connection)  # Erzeugen von Dataframe
+
+        databaseFileObject = DatabaseFile("Datenbank/file")
+
+        filename = databaseFileObject.cursor.execute('SELECT * FROM Lager')
+        df = databaseFileObject.getAllDataToFileFromTable("Login")  # Erzeugen von Dataframe
         df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
         filename.execute('SELECT name FROM sqlite_master WHERE type = "table"')  # Datenbankabfrage für Filenames
         filenames = filename.fetchall()
+        print(filenames)
         filename.close()
 
         if request.method == 'POST' and request.form.get("checkbox"):
@@ -78,7 +79,11 @@ def uebersichtsseite():
             spaltenfilter = request.form.get("spaltenfilter")  # Eingabe von Website
             df1 = zeilenFiltern(df, spalte, wert, operator)  # Zeilen werden gefiltert
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
-                df = pd.read_sql_query("SELECT * from Lager", databaseObject.connection)  # alle anzeigen
+
+
+
+
+                df = databaseFileObject.getAllDataToFileFromTable("Logins")  # alle anzeigen
                 df.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[df.to_html(classes='data')], titles=df.columns.values)
@@ -102,7 +107,7 @@ def uebersichtsseite():
         elif request.method == 'POST' and request.form.get("spaltenfilter"):
             spaltenfilter = request.form.get("spaltenfilter")  # Eingabe von Website
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
-                df = pd.read_sql_query("SELECT * from Lager", databaseObject.connection)  # alle anzeigen
+                df = pd.read_sql_query("SELECT * from Lager", databaseFileObject.connection)  # alle anzeigen
                 df.to_html(header="true", table_id="table")
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
@@ -116,7 +121,7 @@ def uebersichtsseite():
             name = file.filename
             namesplitted = name.split('.')
             print(namesplitted[0])
-            db.saveFile(file, namesplitted[0])
+            databaseFileObject.saveFile(file, namesplitted[0])
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[df.to_html(classes='data')],
                                    titles=df.columns.values)
@@ -136,7 +141,7 @@ def logout():
     return redirect(url_for("index"))
 
 
-db.clearData()
+databaseUserObject.clearData()
 
 if __name__ == "__main__":
     app.run(debug=True)
