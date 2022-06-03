@@ -1,5 +1,6 @@
 import sqlite3
 
+import pandas as pd
 from flask import Flask, render_template, request, session, redirect, url_for
 
 from src.DatabaseUser import DatabaseUser
@@ -11,10 +12,13 @@ app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
 extensions = set({'csv'})
 
+
 def allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
 
+
 databaseUserObject = DatabaseUser('Datenbank/my_logins4.db')
+
 
 @app.route("/")
 def index():
@@ -63,12 +67,11 @@ def uebersichtsseite():
     if 'username' in session:
 
         databaseFileObject = DatabaseFile("Datenbank/file")
+        filenames = databaseFileObject.getAllTableNames()
 
         filename = databaseFileObject.cursor.execute('SELECT * FROM Lager')
         df = pd.read_sql_query('SELECT * FROM Lager', databaseFileObject.connection)  # Erzeugen von Dataframe
         df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
-        filename.execute('SELECT name FROM sqlite_master WHERE type = "table"')  # Datenbankabfrage für Filenames
-        filenames = filename.fetchall()
         filename.close()
 
         if request.method == 'POST' and request.form.get("checkbox"):
@@ -87,7 +90,7 @@ def uebersichtsseite():
                 df2 = spaltenFiltern(df1, filterlist)  # Spalten werden gefiltert
                 df2.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[df2.to_html(classes='data')], titles=df2.columns.values)
+                                       tables=[df2.to_html(classes='data')], titles=df2.columns.values)
         # Zeilenfilter
         elif request.method == 'POST' and request.form.get("spalte"):
             spalte = request.form.get("spalte")  # Eingabe von Website Spalte
