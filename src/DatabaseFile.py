@@ -25,7 +25,6 @@ class DatabaseFile:
 
     def getAllDataToFileFromTable(self, tablename: str) -> pd.DataFrame:
         command = "SELECT * FROM " + tablename
-        print(command)
         return pd.read_sql_query(self.cursor.execute(command), self.connection)
 
     def saveFile(self, file, name):

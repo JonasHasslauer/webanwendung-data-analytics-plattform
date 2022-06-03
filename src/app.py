@@ -62,6 +62,17 @@ def login():
         return redirect(url_for('index'))
 
 
+@app.route('/uebersichtsseite/<string:table>', methods=["POST", "GET"])
+def specUebersicht(table):
+    databaseFileObject2 = DatabaseFile("Datenbank/file")
+    filenames = databaseFileObject2.getAllTableNames()
+
+    currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseFileObject2.connection)
+
+    return render_template("uebersichtsseite.html", filenames=filenames, tables=[currentDataDF.to_html(classes='data')],
+                           titles=currentDataDF.columns.values)
+
+
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
     if 'username' in session:
@@ -73,6 +84,9 @@ def uebersichtsseite():
         df = pd.read_sql_query('SELECT * FROM Lager', databaseFileObject.connection)  # Erzeugen von Dataframe
         df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
         filename.close()
+
+        if request.form.get("file") == 'file':
+            return redirect(url_for('specUebersicht', table='file'))
 
         if request.method == 'POST' and request.form.get("checkbox"):
             spalte = request.form.get("spalte")  # Eingabe von Website Spalte
@@ -127,6 +141,7 @@ def uebersichtsseite():
         else:
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[df.to_html(classes='data')], titles=df.columns.values)
+
 
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():
