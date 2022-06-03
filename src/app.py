@@ -65,11 +65,10 @@ def uebersichtsseite():
         databaseFileObject = DatabaseFile("Datenbank/file")
 
         filename = databaseFileObject.cursor.execute('SELECT * FROM Lager')
-        df = databaseFileObject.getAllDataToFileFromTable("Login")  # Erzeugen von Dataframe
+        df = pd.read_sql_query('SELECT * FROM Lager', databaseFileObject.connection)  # Erzeugen von Dataframe
         df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
         filename.execute('SELECT name FROM sqlite_master WHERE type = "table"')  # Datenbankabfrage für Filenames
         filenames = filename.fetchall()
-        print(filenames)
         filename.close()
 
         if request.method == 'POST' and request.form.get("checkbox"):
@@ -79,11 +78,7 @@ def uebersichtsseite():
             spaltenfilter = request.form.get("spaltenfilter")  # Eingabe von Website
             df1 = zeilenFiltern(df, spalte, wert, operator)  # Zeilen werden gefiltert
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
-
-
-
-
-                df = databaseFileObject.getAllDataToFileFromTable("Logins")  # alle anzeigen
+                df = pd.read_sql_query("SELECT * from Lager", databaseFileObject.connection)  # alle anzeigen
                 df.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[df.to_html(classes='data')], titles=df.columns.values)
