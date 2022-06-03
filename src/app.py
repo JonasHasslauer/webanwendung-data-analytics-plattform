@@ -65,8 +65,7 @@ def login():
 @app.route('/uebersichtsseite/<string:table>', methods=["POST", "GET"])
 def specUebersicht(table):
     databaseFileObject2 = DatabaseFile("Datenbank/file")
-    filenames = databaseFileObject2.getAllTableNames()
-
+    filenames = databaseFileObject2.getAllTableNamesAsList()
     currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseFileObject2.connection)
 
     return render_template("uebersichtsseite.html", filenames=filenames, tables=[currentDataDF.to_html(classes='data')],
@@ -78,12 +77,9 @@ def uebersichtsseite():
     if 'username' in session:
 
         databaseFileObject = DatabaseFile("Datenbank/file")
-        filenames = databaseFileObject.getAllTableNames()
-
-        filename = databaseFileObject.cursor.execute('SELECT * FROM Lager')
-        df = pd.read_sql_query('SELECT * FROM Lager', databaseFileObject.connection)  # Erzeugen von Dataframe
+        filenames = databaseFileObject.getAllTableNamesAsList()
+        df = pd.read_sql_query("SELECT * FROM " + filenames[0], databaseFileObject.connection)  # Erzeugen von Dataframe
         df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
-        filename.close()
 
         if request.form.get("file") == 'file':
             return redirect(url_for('specUebersicht', table='file'))
@@ -95,7 +91,7 @@ def uebersichtsseite():
             spaltenfilter = request.form.get("spaltenfilter")  # Eingabe von Website
             df1 = zeilenFiltern(df, spalte, wert, operator)  # Zeilen werden gefiltert
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
-                df = pd.read_sql_query("SELECT * from Lager", databaseFileObject.connection)  # alle anzeigen
+                df = pd.read_sql_query("SELECT * from XLager", databaseFileObject.connection)  # alle anzeigen
                 df.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[df.to_html(classes='data')], titles=df.columns.values)
@@ -103,7 +99,7 @@ def uebersichtsseite():
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 df2 = spaltenFiltern(df1, filterlist)  # Spalten werden gefiltert
                 df2.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
-                return render_template("uebersichtsseite.html", filenames=filenames,
+                return render_template("uebersichtsseite.html", filenames=filenames.sort,
                                        tables=[df2.to_html(classes='data')], titles=df2.columns.values)
         # Zeilenfilter
         elif request.method == 'POST' and request.form.get("spalte"):
@@ -119,7 +115,7 @@ def uebersichtsseite():
         elif request.method == 'POST' and request.form.get("spaltenfilter"):
             spaltenfilter = request.form.get("spaltenfilter")  # Eingabe von Website
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
-                df = pd.read_sql_query("SELECT * from Lager", databaseFileObject.connection)  # alle anzeigen
+                df = pd.read_sql_query("SELECT * from XLager", databaseFileObject.connection)  # alle anzeigen
                 df.to_html(header="true", table_id="table")
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
