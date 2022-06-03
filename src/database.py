@@ -3,6 +3,9 @@ import sqlite3 as sql
 import pandas as pd
 import os
 
+from flask import session
+
+
 
 class Datenbank:
     connection = ""
@@ -72,8 +75,9 @@ class Datenbank:
         # TODO check if csv
         # if allowed(file.filename):     --> funktioniert noch nicht ganz
         file.save("name.csv")
-
-        pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),
+        current_username = session['username']
+        print(current_username+"wird gespeichert")
+        pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/"+current_username, check_same_thread=False),
                                                 schema=None, if_exists='replace', index=True, index_label=None,
                                                 chunksize=None,
                                                 dtype=None, method=None)
