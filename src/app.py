@@ -71,6 +71,8 @@ def specUebersicht(table):
     return render_template("uebersichtsseite.html", filenames=filenames, tables=[currentDataDF.to_html(classes='data')],
                            titles=currentDataDF.columns.values)
 
+    # TODO: Es muss hier auch gefiltert werden können
+
 
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
