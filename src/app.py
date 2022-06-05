@@ -6,6 +6,8 @@ from src.database import Datenbank
 
 from filtern import *
 
+from src.Visualization.Chart import BarChart
+
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
 extensions = set({'csv'})
@@ -116,7 +118,7 @@ def uebersichtsseite():
             name = file.filename
             namesplitted = name.split('.')
             print(namesplitted[0])
-            db.saveFile(file, namesplitted[0])
+            databaseObject.saveFile(file,namesplitted[0])
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[df.to_html(classes='data')],
                                    titles=df.columns.values)
@@ -127,7 +129,28 @@ def uebersichtsseite():
 
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():
-    return render_template('detailseite.html', Liste=list, bild="bewerbungen.png")
+    databaseObject = Datenbank("Datenbank/file")
+    filename = databaseObject.cursor.execute('SELECT * FROM Sacramento')
+
+    my_list = ""
+    print("detailseite")
+
+    if request.method == 'POST' and request.form.get("xAchse"):
+        print("bin in if anweisung")
+        xAchse = request.form.get("xAchse")
+        print(xAchse)
+        yAchse = request.form.get("yAchse")
+        df = pd.read_sql_query("SELECT * FROM Sacramento GROUP BY %s", xAchse, databaseObject.connection)
+        my_list = df.columns.values.tolist()
+        print(my_list)
+        ax = df.plot.bar(x=xAchse, y=yAchse).get_figure()
+        ax.savefig('static/name.png')
+        return render_template("detailseite.html", Liste=my_list )
+    else:
+        print("bin im else zweig")
+        return render_template('detailseite.html', Liste=my_list )
+
+
 
 
 @app.route("/logout", methods=["POST"])
