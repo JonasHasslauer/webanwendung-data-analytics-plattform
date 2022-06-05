@@ -88,7 +88,7 @@ class BarChart(Chart):
         plt.title(self.title)
         plt.xlabel(self.labelX)
         plt.ylabel(self.labelY)
-        return plt.show()
+        plt.savefig('static/name.png')
 
 
 class LineChart(Chart):

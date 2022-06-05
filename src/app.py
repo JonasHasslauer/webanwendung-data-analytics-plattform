@@ -8,10 +8,11 @@ from src.DatabaseFile import DatabaseFile
 
 from filtern import *
 
+from src.Visualization.Chart import BarChart
+
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
 extensions = set({'csv'})
-
 
 def allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
@@ -34,9 +35,9 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        if not databaseUserObject.checkIfUserExists(username):
+        if not db.checkIfUserExists(username):
             try:
-                databaseUserObject.addUser(username, firstname, lastname, birthday, password)
+                db.addUser(username, firstname, lastname, birthday, password)
                 return redirect(url_for("login"))
             except sqlite3.IntegrityError as e:
                 print("Es gab einen Fehler: ", e)
@@ -72,6 +73,8 @@ def uebersichtsseite():
         filename = databaseFileObject.cursor.execute('SELECT * FROM Lager')
         df = pd.read_sql_query('SELECT * FROM Lager', databaseFileObject.connection)  # Erzeugen von Dataframe
         df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
+        filename.execute('SELECT name FROM sqlite_master WHERE type = "table"')  # Datenbankabfrage für Filenames
+        filenames = filename.fetchall()
         filename.close()
 
         if request.method == 'POST' and request.form.get("checkbox"):
@@ -90,7 +93,7 @@ def uebersichtsseite():
                 df2 = spaltenFiltern(df1, filterlist)  # Spalten werden gefiltert
                 df2.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[df2.to_html(classes='data')], titles=df2.columns.values)
+                                   tables=[df2.to_html(classes='data')], titles=df2.columns.values)
         # Zeilenfilter
         elif request.method == 'POST' and request.form.get("spalte"):
             spalte = request.form.get("spalte")  # Eingabe von Website Spalte
@@ -130,7 +133,28 @@ def uebersichtsseite():
 
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():
-    return render_template('detailseite.html', Liste=list, bild="bewerbungen.png")
+    databaseObject = Datenbank("Datenbank/file")
+    filename = databaseObject.cursor.execute('SELECT * FROM Sacramento')
+
+    my_list = ""
+    print("detailseite")
+
+    if request.method == 'POST' and request.form.get("xAchse"):
+        print("bin in if anweisung")
+        xAchse = request.form.get("xAchse")
+        print(xAchse)
+        yAchse = request.form.get("yAchse")
+        df = pd.read_sql_query("SELECT * FROM Sacramento GROUP BY %s", xAchse, databaseObject.connection)
+        my_list = df.columns.values.tolist()
+        print(my_list)
+        ax = df.plot.bar(x=xAchse, y=yAchse).get_figure()
+        ax.savefig('static/name.png')
+        return render_template("detailseite.html", Liste=my_list )
+    else:
+        print("bin im else zweig")
+        return render_template('detailseite.html', Liste=my_list )
+
+
 
 
 @app.route("/logout", methods=["POST"])
