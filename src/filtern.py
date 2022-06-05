@@ -3,7 +3,7 @@ from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
 import numpy as np
 import nltk
-
+import langdetect
 
 
 # Test Dataframe mit zufälligen Daten
@@ -74,15 +74,19 @@ def wordartenAnalyse(df):
     """
     Mit hilfe dieser Funktion kann der Inhalt eines Dataframes eier Wordartenanalyse unterzogen werden.
 
-
     :param df: Zu übergebendes DataFrame
+
     """
     #Dataframe wird in String umgewanderlt
     text = df.to_string(header=False, index=False)
+    if(langdetect.detect(text)=='de'):
+        einzelneWoerter = nltk.word_tokenize(text, language='german')
+    else:
+        einzelneWoerter = nltk.word_tokenize(text, language='english')
 
     # Text wird in Wörter zerteilt und die Tokens werden zugeordnet
-    einzelneWoerter = nltk.word_tokenize(text, language='english')
     woerterMitTokenslistOfLists = nltk.pos_tag(einzelneWoerter)
+
     #die List of Lists wird zu einer einfachen Liste umgewandelt
     woerterMitTokensEinfacheListe = [x for xs in woerterMitTokenslistOfLists for x in xs]
 
