@@ -3,7 +3,7 @@ import sqlite3
 import pandas as pd
 from flask import Flask, render_template, request, session, redirect, url_for
 
-from src.DatabaseUser import DatabaseUser
+from src.DatabaseUser import Datenbank
 from src.DatabaseFile import DatabaseFile
 
 from filtern import *
@@ -18,7 +18,7 @@ def allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
 
 
-databaseUserObject = DatabaseUser('Datenbank/my_logins4.db')
+databaseUserObject = Datenbank('Datenbank/my_logins4.db')
 
 
 @app.route("/")
@@ -35,9 +35,9 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        if not db.checkIfUserExists(username):
+        if not databaseUserObject.checkIfUserExists(username):
             try:
-                db.addUser(username, firstname, lastname, birthday, password)
+                databaseUserObject.addUser(username, firstname, lastname, birthday, password)
                 return redirect(url_for("login"))
             except sqlite3.IntegrityError as e:
                 print("Es gab einen Fehler: ", e)
@@ -144,7 +144,8 @@ def detailseite():
         xAchse = request.form.get("xAchse")
         print(xAchse)
         yAchse = request.form.get("yAchse")
-        df = pd.read_sql_query("SELECT * FROM Sacramento GROUP BY %s", xAchse, databaseObject.connection)
+        command = "SELECT * FROM Sacramento GROUP BY " + xAchse
+        df = pd.read_sql_query(command, databaseObject.connection)
         my_list = df.columns.values.tolist()
         print(my_list)
         ax = df.plot.bar(x=xAchse, y=yAchse).get_figure()
