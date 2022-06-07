@@ -8,10 +8,12 @@ import sys
 
 
 # nltk.download()
-
-
+test_df = {'Tiere': ['maus', 'Affe', 'Huhn']}
+test_df=pd.DataFrame(test_df)
 # Test Dataframe mit zufälligen Daten
 df = pd.read_csv('test_Csv_Datein/Sacramentorealestatetransactions.csv')
+df2=pd.read_csv('test_Csv_Datein/kleineTestDatei.csv')
+#df3=pd.read_csv('test_Csv_Datein/LeereCSVDatei.csv')
 #print(df)
 
 
@@ -96,7 +98,8 @@ def wordartenAnalyse(df):
 
         # Text wird in Wörter zerteilt und die Tokens werden zugeordnet
         woerterMitTokenslistOfLists = nltk.pos_tag(einzelneWoerter)
-
+        print(woerterMitTokenslistOfLists)
+        print(langdetect.detect(text))
         #die List of Lists wird zu einer einfachen Liste umgewandelt
         woerterMitTokensEinfacheListe = [x for xs in woerterMitTokenslistOfLists for x in xs]
 
@@ -148,7 +151,7 @@ def wordartenAnalyse(df):
         openingQuotationMark= woerterMitTokensEinfacheListe.count('``')
 
         #Aus den obrigen Daten wird nun ein DataFrame erstellt und danach zurückgegeben
-        wortArten = {'Wortarten:':['dollar','openingParenthesis','closingParenthesis',
+        wortArten = {'Wortarten:':['Dollarzeichen','openingParenthesis','closingParenthesis',
                                    'comma','dash','sentenceTerminator','colon','conjunction',
                                    'numeral','determiner','existentialThere','foreignWord',
                                    'prepositionOrConjunction','adjektivOrdinal','adjektivComperativ',
@@ -161,7 +164,7 @@ def wordartenAnalyse(df):
                                    'verbPastParticiple','verbPresentTense','whDeterminer','whPronun',
                                    'whAdverb','openingQuotationMark','verbPastTenseNotThirdPersonSingular',
                                    'whPronunPossesive','quotationMark'],
-                     'Werte Wortarten:':[dollar,openingParenthesis,closingParenthesis,
+                     'Werte_Wortarten:':[dollar,openingParenthesis,closingParenthesis,
                                          comma,dash,sentenceTerminator,colon,conjunction,
                                          numeral,determiner,existentialThere,foreignWord,
                                          prepositionOrConjunction,adjektivOrdinal,adjektivComperativ,
@@ -176,8 +179,10 @@ def wordartenAnalyse(df):
                                          whPronunPossesive,quotationMark]}
 
         wortArten_df =pd.DataFrame(wortArten)
-        return wortArten_df
+        wortArten_df_nur_zeilen_mit_wert_uerber_null = zeilenFiltern(wortArten_df,'Werte_Wortarten:',0,'>')
+        return wortArten_df_nur_zeilen_mit_wert_uerber_null
     except Exception as e:
         print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
 
-print(wordartenAnalyse(df))
+print(wordartenAnalyse(test_df))
+#print(test_df)
