@@ -73,7 +73,8 @@ def genauerBeschreibungDerWortarten():
 def wordartenAnalyse(df):
     """
     Mit hilfe dieser Funktion kann der Inhalt eines Dataframes eier Wordartenanalyse unterzogen werden.
-
+    Die Sprache des übergebenen DataFrames wird automatisch ermittelt.
+    Falls der Inhalt des DataFrames zu klein oder nicht aussagekräftig ist wird Englisch als Standartwert aangenommen.
     :param df: Zu übergebendes DataFrame
 
     """
