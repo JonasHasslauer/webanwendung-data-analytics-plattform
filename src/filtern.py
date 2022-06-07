@@ -65,8 +65,8 @@ def wordcloudErstellen(df):
 
 def genauerBeschreibungDerWortarten():
     """
-    Unter zu hilfe Nahme dieser Funktion wird die genauer Beschreibung und
-    Definition der Wortarten angezeit
+    Unter zu hilfe nahme dieser Funktion wird die genauer Beschreibung und
+    Definition der Wortarten angezeigt
     """
     nltk.help.upenn_tagset()
 
@@ -74,7 +74,7 @@ def wordartenAnalyse(df):
     """
     Mit hilfe dieser Funktion kann der Inhalt eines Dataframes eier Wordartenanalyse unterzogen werden.
     Die Sprache des übergebenen DataFrames wird automatisch ermittelt.
-    Falls der Inhalt des DataFrames zu klein oder nicht aussagekräftig ist wird Englisch als Standartwert aangenommen.
+    Falls der Inhalt des DataFrames zu klein oder nicht aussagekräftig ist, wird Englisch als Standartwert angenommen.
     :param df: Zu übergebendes DataFrame
 
     """
@@ -139,10 +139,34 @@ def wordartenAnalyse(df):
     openingQuotationMark= woerterMitTokensEinfacheListe.count('``')
 
     #Aus den obrigen Daten wird nun ein DataFrame erstellt und danach zurückgegeben
-    wortArten = {'Wortarten:':['dollar','openingParenthesis','closingParenthesis','comma','dash','sentenceTerminator','colon','conjunction','numeral','determiner','existentialThere','foreignWord','prepositionOrConjunction','adjektivOrdinal','adjektivComperativ','adjectiveSuperlative','listItemMarker','modalAuxiliary','nounCommonSingular','nounProperSingular','nounProperPlural','nounCommonPlural','preDeterminer','genitiveMarker','pronounPersonal','pronounPossesive','adverb','adverbComperative','adverbSuperlative','particle','symbol','to','interjenction','verbBaseForm','verbPastTense','verbPresentParticipleOrGerund','verbPastParticiple','verbPresentTense','whDeterminer','whPronun','whAdverb','openingQuotationMark','verbPastTenseNotThirdPersonSingular','whPronunPossesive','quotationMark'],
-                 'Werte Wortarten:':[dollar,openingParenthesis,closingParenthesis,comma,dash,sentenceTerminator,colon,conjunction,numeral,determiner,existentialThere,foreignWord,prepositionOrConjunction,adjektivOrdinal,adjektivComperativ,adjectiveSuperlative,listItemMarker,modalAuxiliary,nounCommonSingular,noundProperSingular,nounProperPlural,nounCommonPlural,preDeterminer,genitiveMarker,pronounPersonal,pronounPossesive,adverb,adverbComperative,adverbSuperlative,particle,symbol,to,interjenction,verbBaseForm,verbPastTense,verbPresentParticipleOrGerund,verbPastParticiple,verbPresentTense,whDeterminer,whPronun,whAdverb,openingQuotationMark,verbPastTenseNotThirdPersonSingular,whPronunPossesive,quotationMark]}
+    wortArten = {'Wortarten:':['dollar','openingParenthesis','closingParenthesis',
+                               'comma','dash','sentenceTerminator','colon','conjunction',
+                               'numeral','determiner','existentialThere','foreignWord',
+                               'prepositionOrConjunction','adjektivOrdinal','adjektivComperativ',
+                               'adjectiveSuperlative','listItemMarker','modalAuxiliary',
+                               'nounCommonSingular','nounProperSingular','nounProperPlural',
+                               'nounCommonPlural','preDeterminer','genitiveMarker',
+                               'pronounPersonal','pronounPossesive','adverb','adverbComperative',
+                                'adverbSuperlative','particle','symbol','to','interjenction',
+                               'verbBaseForm','verbPastTense','verbPresentParticipleOrGerund',
+                               'verbPastParticiple','verbPresentTense','whDeterminer','whPronun',
+                               'whAdverb','openingQuotationMark','verbPastTenseNotThirdPersonSingular',
+                               'whPronunPossesive','quotationMark'],
+                 'Werte Wortarten:':[dollar,openingParenthesis,closingParenthesis,
+                                     comma,dash,sentenceTerminator,colon,conjunction,
+                                     numeral,determiner,existentialThere,foreignWord,
+                                     prepositionOrConjunction,adjektivOrdinal,adjektivComperativ,
+                                     adjectiveSuperlative,listItemMarker,modalAuxiliary,
+                                     nounCommonSingular,noundProperSingular,nounProperPlural,
+                                     nounCommonPlural,preDeterminer,genitiveMarker,
+                                     pronounPersonal,pronounPossesive,adverb,adverbComperative,
+                                     adverbSuperlative,particle,symbol,to,interjenction,
+                                     verbBaseForm,verbPastTense,verbPresentParticipleOrGerund,
+                                     verbPastParticiple,verbPresentTense,whDeterminer,whPronun,
+                                     whAdverb,openingQuotationMark,verbPastTenseNotThirdPersonSingular,
+                                     whPronunPossesive,quotationMark]}
 
     wortArten_df =pd.DataFrame(wortArten)
     return wortArten_df
 
-
+print(wordartenAnalyse(df))
