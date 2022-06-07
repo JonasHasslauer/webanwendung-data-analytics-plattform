@@ -137,19 +137,19 @@ def detailseite():
     filename = databaseObject.cursor.execute('SELECT * FROM Sacramento')
     print("detailseite")
 
-    if request.method == 'POST' and request.form.get("yAchse"):
-        diagrammart = request.form.get("diagrammart")
-        print(diagrammart)
+    if request.method == 'POST' and request.form.get("xAchse"):
+        diagrammart = request.form.get("diagrammart")   #kriegt aus Frontend, welches Diagrammart geünscht ist
+        print(diagrammart)                              #nur Kontrolle
         if diagrammart == "Balkendiagramm":
-            xAchse = request.form.get("xAchse")
+            xAchse = request.form.get("xAchse")         #kriegt asu Frontend die column names die für x- bzw. y-Achse verwendet werden sollen
             yAchse = request.form.get("yAchse")
             command = "SELECT * FROM Sacramento GROUP BY " + xAchse
-            df = pd.read_sql_query(command, databaseObject.connection)
-            my_list = df.columns.values.tolist()
-            ax = df.plot.bar(x=xAchse, y=yAchse).get_figure()
-            ax.savefig('static/name.png')
+            df = pd.read_sql_query(command, databaseObject.connection)  #wandelt Table in DataFrame um
+            my_list = df.columns.values.tolist()                        #macht Liste aus column names des DataFrames
+            ax = df.plot.bar(x=xAchse, y=yAchse).get_figure()           #erstellt plot mit x- und y-Achse
+            ax.savefig('static/name.png')                               #speichert Bild zwischen, damit es angezeigt werden kann
             return render_template("detailseite.html", Liste=my_list )
-        elif diagrammart == "Tortendiagramm":
+        elif diagrammart == "Tortendiagramm":                           #macht noch keinen Sinn, zählt nicht, kann nur ein column entgegen nehmen
             xAchse = request.form.get("xAchse")
             yAchse = request.form.get("yAchse")
             command = "SELECT * FROM Sacramento GROUP BY " + xAchse
@@ -167,12 +167,20 @@ def detailseite():
             ax = df.plot.line(x=xAchse, y=yAchse).get_figure()
             ax.savefig('static/name.png')
             return render_template("detailseite.html", Liste=my_list)
+        elif diagrammart == "Wordcloud":
+            xAchse = request.form.get("xAchse")
+            yAchse = request.form.get("yAchse")
+            command = "SELECT * FROM Sacramento GROUP BY " + xAchse
+            df = pd.read_sql_query(command, databaseObject.connection)
+            my_list = df.columns.values.tolist()
+            wordcloudErstellen(df)                                      #ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
+            return render_template("detailseite.html", Liste=my_list)
     else:
         print("bin im else zweig")
         command = "SELECT * FROM Sacramento"
         df = pd.read_sql_query(command, databaseObject.connection)
-        my_list = df.columns.values.tolist()
-        return render_template('detailseite.html', Liste=my_list )
+        my_list = df.columns.values.tolist()                        #erstellt Liste aus column names für Dropdowns (höchstens 15)
+        return render_template('detailseite.html', Liste=my_list )  #muss Liste übergeben, für erstes Landing
 
 
 

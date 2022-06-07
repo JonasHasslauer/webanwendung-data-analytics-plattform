@@ -55,7 +55,7 @@ def wordcloudErstellen(df):
     wordcloud = WordCloud(background_color="white", width=1920, height=1080, ).generate(text)
     plt.imshow(wordcloud, interpolation="bilinear")
     plt.axis("off")
-    plt.show()
+    plt.savefig('static/name.png')
 
 
 
