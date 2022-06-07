@@ -135,24 +135,43 @@ def uebersichtsseite():
 def detailseite():
     databaseObject = Datenbank("Datenbank/file")
     filename = databaseObject.cursor.execute('SELECT * FROM Sacramento')
-
-    my_list = ""
     print("detailseite")
 
-    if request.method == 'POST' and request.form.get("xAchse"):
-        print("bin in if anweisung")
-        xAchse = request.form.get("xAchse")
-        print(xAchse)
-        yAchse = request.form.get("yAchse")
-        command = "SELECT * FROM Sacramento GROUP BY " + xAchse
-        df = pd.read_sql_query(command, databaseObject.connection)
-        my_list = df.columns.values.tolist()
-        print(my_list)
-        ax = df.plot.bar(x=xAchse, y=yAchse).get_figure()
-        ax.savefig('static/name.png')
-        return render_template("detailseite.html", Liste=my_list )
+    if request.method == 'POST' and request.form.get("yAchse"):
+        diagrammart = request.form.get("diagrammart")
+        print(diagrammart)
+        if diagrammart == "Balkendiagramm":
+            xAchse = request.form.get("xAchse")
+            yAchse = request.form.get("yAchse")
+            command = "SELECT * FROM Sacramento GROUP BY " + xAchse
+            df = pd.read_sql_query(command, databaseObject.connection)
+            my_list = df.columns.values.tolist()
+            ax = df.plot.bar(x=xAchse, y=yAchse).get_figure()
+            ax.savefig('static/name.png')
+            return render_template("detailseite.html", Liste=my_list )
+        elif diagrammart == "Tortendiagramm":
+            xAchse = request.form.get("xAchse")
+            yAchse = request.form.get("yAchse")
+            command = "SELECT * FROM Sacramento GROUP BY " + xAchse
+            df = pd.read_sql_query(command, databaseObject.connection)
+            my_list = df.columns.values.tolist()
+            ax = df.plot.pie(y= xAchse).get_figure()
+            ax.savefig('static/name.png')
+            return render_template("detailseite.html", Liste=my_list )
+        elif diagrammart == "Liniendiagramm":
+            xAchse = request.form.get("xAchse")
+            yAchse = request.form.get("yAchse")
+            command = "SELECT * FROM Sacramento GROUP BY " + xAchse
+            df = pd.read_sql_query(command, databaseObject.connection)
+            my_list = df.columns.values.tolist()
+            ax = df.plot.line(x=xAchse, y=yAchse).get_figure()
+            ax.savefig('static/name.png')
+            return render_template("detailseite.html", Liste=my_list)
     else:
         print("bin im else zweig")
+        command = "SELECT * FROM Sacramento"
+        df = pd.read_sql_query(command, databaseObject.connection)
+        my_list = df.columns.values.tolist()
         return render_template('detailseite.html', Liste=my_list )
 
 
