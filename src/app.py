@@ -69,33 +69,35 @@ def specUebersicht(table):
         filenames = databaseFileObject2.getAllTableNamesAsList()
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseFileObject2.connection)
 
+        # Zeilen- und Spaltenfilter kombiniert
         if request.method == 'POST' and request.form.get("checkbox"):
             spalte = request.form.get("spalte")  # Eingabe von Website Spalte
             wert = request.form.get("wert")  # Eingabe von Website Wert
             operator = request.form.get("operator")  # Eingabe von Website Operator
             spaltenfilter = request.form.get("spaltenfilter")  # Eingabe von Website
-            df1 = zeilenFiltern(currentDataDF, spalte, wert, operator)  # Zeilen werden gefiltert
+            zeilenFilterDF = zeilenFiltern(currentDataDF, spalte, wert, operator)  # Zeilen werden gefiltert
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[currentDataDF.to_html(classes='data')], titles=currentDataDF.columns.values)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
-                df2 = spaltenFiltern(df1, filterlist)  # Spalten werden gefiltert
-                df2.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
+                beideFilterDF = spaltenFiltern(zeilenFilterDF, filterlist)  # Spalten werden gefiltert
+                beideFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[df2.to_html(classes='data')], titles=df2.columns.values)
+                                       tables=[beideFilterDF.to_html(classes='data')], titles=beideFilterDF.columns.values, table=table)
 
         # Zeilenfilter
         elif request.method == 'POST' and request.form.get("spalte"):
             spalte = request.form.get("spalte")  # Eingabe von Website Spalte
             wert = request.form.get("wert")  # Eingabe von Website Wert
             operator = request.form.get("operator")  # Eingabe von Website Operator
-            df = zeilenFiltern(currentDataDF, spalte, wert, operator)  # Zeilen werden gefiltert
-            df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
+            zeilenFilterDF = zeilenFiltern(currentDataDF, spalte, wert, operator)  # Zeilen werden gefiltert
+            zeilenFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[df.to_html(classes='data')], titles=df.columns.values)
+                                   tables=[zeilenFilterDF.to_html(classes='data')], titles=zeilenFilterDF.columns.values, table=table)
 
+        # Spaltenfilter
         elif request.method == 'POST' and request.form.get("spaltenfilter"):
             spaltenfilter = request.form.get("spaltenfilter")
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
@@ -104,25 +106,16 @@ def specUebersicht(table):
                                        tables=[currentDataDF.to_html(classes='data')], titles=currentDataDF.columns.values)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
-                df = spaltenFiltern(currentDataDF, filterlist)  # Spalten werden gefiltert
-                df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
+                spaltenFilterDF = spaltenFiltern(currentDataDF, filterlist)  # Spalten werden gefiltert
+                spaltenFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[df.to_html(classes='data')], titles=df.columns.values)
-
-        elif request.method == 'POST' and request.files['file']:
-            file = request.files['file']
-            name = file.filename
-            namesplitted = name.split('.')
-            databaseFileObject.saveFile(file, namesplitted[0])
-            return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[currentDataDF.to_html(classes='data')],
-                                   titles=currentDataDF.columns.values)
+                                       tables=[spaltenFilterDF.to_html(classes='data')], titles=spaltenFilterDF.columns.values, table=table)
 
         else:
             return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[currentDataDF.to_html(classes='data')], titles=currentDataDF.columns.values)
+                                   tables=[currentDataDF.to_html(classes='data')], titles=currentDataDF.columns.values, table=table)
     else:
-        return render_template("login.html")
+        return redirect(url_for('index'))
 
 
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
@@ -130,9 +123,17 @@ def uebersichtsseite():
     if 'username' in session:
         databaseFileObject = DatabaseFile("Datenbank/file")
         filenames = databaseFileObject.getAllTableNamesAsList()
+
+        # Dateiupload
+        if request.method == 'POST' and request.files['file']:
+            file = request.files['file']
+            name = file.filename
+            namesplitted = name.split('.')
+            databaseFileObject.saveFile(file, namesplitted[0])
+            return render_template("uebersichtsseite.html", filenames=filenames)
         return render_template("uebersichtsseite.html", filenames=filenames)
     else:
-        return render_template("login.html")
+        return redirect(url_for('index'))
 
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():
