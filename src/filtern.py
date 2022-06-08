@@ -8,15 +8,11 @@ import sys
 
 
 # nltk.download()
-test_df = {'Tiere': ['maus', 'Affe', 'Huhn']}
+test_df = {'Tiere': ['Maus', 'Affe', 'Huhn']}
 test_df=pd.DataFrame(test_df)
 # Test Dataframe mit zufälligen Daten
 df = pd.read_csv('test_Csv_Datein/Sacramentorealestatetransactions.csv')
-df2=pd.read_csv('test_Csv_Datein/kleineTestDatei.csv')
-#df3=pd.read_csv('test_Csv_Datein/LeereCSVDatei.csv')
 #print(df)
-
-
 
 def zeilenFiltern(df, spaltenname, wert, operator):
     """
@@ -80,7 +76,7 @@ def genauerBeschreibungDerWortarten():
     except Exception as e:
         print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
 
-def wordartenAnalyse(df):
+def wortartenAnalyse(df):
     """
     Mit hilfe dieser Funktion kann der Inhalt eines Dataframes eier Wordartenanalyse unterzogen werden.
     Die Sprache des übergebenen DataFrames wird automatisch ermittelt.
@@ -98,8 +94,8 @@ def wordartenAnalyse(df):
 
         # Text wird in Wörter zerteilt und die Tokens werden zugeordnet
         woerterMitTokenslistOfLists = nltk.pos_tag(einzelneWoerter)
-        print(woerterMitTokenslistOfLists)
-        print(langdetect.detect(text))
+        #print(woerterMitTokenslistOfLists)
+        #print(langdetect.detect(text))
         #die List of Lists wird zu einer einfachen Liste umgewandelt
         woerterMitTokensEinfacheListe = [x for xs in woerterMitTokenslistOfLists for x in xs]
 
@@ -179,10 +175,12 @@ def wordartenAnalyse(df):
                                          whPronunPossesive,quotationMark]}
 
         wortArten_df =pd.DataFrame(wortArten)
+
         wortArten_df_nur_zeilen_mit_wert_uerber_null = zeilenFiltern(wortArten_df,'Werte_Wortarten:',0,'>')
+        wortArten_df_nur_zeilen_mit_wert_uerber_null
         return wortArten_df_nur_zeilen_mit_wert_uerber_null
     except Exception as e:
-        print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
+        print("Oopsidupsi! ", e.__class__, "ist aufgetreten.")
 
-print(wordartenAnalyse(test_df))
-#print(test_df)
+#print(wortartenAnalyse(test_df))
+
