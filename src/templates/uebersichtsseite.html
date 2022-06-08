@@ -74,6 +74,13 @@
                 <input type="file" name="file"/>
                 <button class="btn btn-secondary" type="submit">Senden</button>
                 <button class="btn btn-secondary" type="submit" name="refresh">Reload</button>
+                <select class="form-control" name="seperator" id=seperator>
+                        <option value="" selected disabled hidden>Seperator wählen</option>
+                        <option value=",">,</option>
+                        <option value=";">;</option>
+                    </select>
+                <input type="submit"/>
+                <input type="submit" name="refresh" value="Refresh Tree"/>
             </form>
             </p>
 
@@ -109,7 +116,7 @@
                     <tr>
                         {% for table in tables %}
                         <!--<th scope="col">{{titles[loop.index]}}</th>-->
-                        <th scope="col">{{ table|safe }}</th>
+                        <td>{{ table|safe }}</td>
                         {% endfor %}
                     </tr>
 
@@ -147,7 +154,7 @@
             <!--Button Detailseite-->
             <p>
             <div class="container" align="right">
-                <form method="post" action="/detailseite">
+                <form method="post" action="{{ url_for('detailseite', table=table) }}">
                     <button class="btn btn-secondary" type="submit">Subset speichern</button>
                     <button class="btn btn-primary" style="background-color: #ec6f04; border-color: #ec6f04" type="submit">Detailseite</button>
                 </form>

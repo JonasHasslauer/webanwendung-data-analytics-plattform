@@ -23,7 +23,6 @@
     <nav class="navbar navbar-light" style="background-color: #ec6f04;">
         <div class="container-fluid">
 
-
             <form method="post" action="/login">
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
@@ -43,8 +42,8 @@
                             <a class="nav-link active" aria-current="page" href="#">Home</a>
                         </li>
                         <li class="nav-item">
-                             <form method="post" action="/uebersichtsseite">
-                                <button class="btn btn-secondary" type="submit">Übersichtsseite</button>
+                             <form method="post" action="/uebersichtsseite" >
+                                <button class="btn btn-secondary" type="submit" name="uebersichtsseite" value="uebersichtsseite">Übersichtsseite</button>
                             </form>
                         </li>
                         <li class="nav-item">
@@ -82,69 +81,32 @@
     <h1>Sie befinden sich auf der Detailseite zu Ihrer ausgewählten Datei!</h1>
     <!--Überschrift "Sie befinden <Sich..."-->
 
-<!-- alt
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <div class="btn-group">
-                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                    Auswahl Diagrammtyp
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#">Liniendiagramm</a></li>
-                    <li><a class="dropdown-item" href="#">Balkendiagramm</a></li>
-                    <li><a class="dropdown-item" href="#">Tortendiagramm</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="col">
-            <div class="btn-group">
-                <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown"
-                        aria-expanded="false" type="button">
-                    Auswahl Spalten
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">{{Liste[0]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[1]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[2]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[3]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[4]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[5]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[6]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[7]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[8]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[9]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[10]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[11]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[12]}}</a></li>
 
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#">Separated link</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
--->
 
-    <form method="POST" action="/detailseite">
+    <form method="POST" action="{{ url_for('detailseite', table=table) }}">
         <p>
             <label for="diagrammart" class="form-label">Wählen Sie die Diagrammart</label>
             <select class="form-control" name="diagrammart" id=diagrammart>
                 <option value="" selected disabled hidden>Diagrammart wählen</option>
-                <option value="">Balkendiagramm</option>
-                <option value="">Liniendiagramm</option>
-                <option value="">Tortendiagramm</option>
+                <option value="Balkendiagramm">Balkendiagramm</option>
+                <option value="Liniendiagramm">Liniendiagramm</option>
+                <option value="Tortendiagramm">Tortendiagramm</option>
+                <option value="Wordcloud">Wordcloud</option>
             </select>
         </p>
         <p>
-            <input class="form-control" name="xAchse" id=xAchse
-                           placeholder="Spalte für die x-Achse"/>
-            <input class="form-control" name="yAchse" id=yAchse
-                           placeholder="Spalte für die y-Achse"/>
+            <select class="form-control" name="xAchse" id=xAchse>
+                <option value="" selected disabled hidden>Spalte für x-Achse</option>
+                {% for Liste in Liste %}
+                <option value="{{Liste}}">{{Liste}}</option>
+                {% endfor %}
+            </select>
+            <select class="form-control" name="yAchse" id=yAchse>
+                <option value="" selected disabled hidden>Spalte für y-Achse</option>
+                {% for ListeY in ListeY %}
+                <option value="{{ListeY}}">{{ListeY}}</option>
+                {% endfor %}}
+            </select>
         </p>
         <button class="btn btn-secondary" type="sumbit">Bestätigen</button>
     </form>
@@ -153,7 +115,7 @@
 
 
 
-    <img src="{{ url_for('static', filename='name.png') }}" alt="Bild kann nicht angezeigt werden">
+    <img src="{{ url_for('static', filename='name.png') }}" class="rounded mx-auto d-block" alt="Bild kann nicht angezeigt werden">
 </div>
 
 
