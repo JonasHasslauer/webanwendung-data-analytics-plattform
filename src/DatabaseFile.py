@@ -31,9 +31,14 @@ class DatabaseFile:
     def saveFile(self, file, name):
         # TODO check if csv
         file.save("name.csv")
-
-        pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),
+        pd.read_csv("name.csv", sep=',').to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),
                                                 schema=None, if_exists='replace', index=True, index_label=None,
                                                 chunksize=None,
                                                 dtype=None, method=None)
         os.remove("name.csv")
+
+
+    def saveDataFrame(self, file, name):
+        file.to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),schema=None, if_exists='replace', index=True, index_label=None,
+                                                chunksize=None,
+                                                dtype=None, method=None)

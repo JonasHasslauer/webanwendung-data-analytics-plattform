@@ -142,13 +142,24 @@
                     <label class="form-check-label" for="checkbox">Beide filtern</label>
                 </div>
                 <button class="btn btn-secondary" type="submit">Filtern</button>
+
+
             </form>
+
+        <form method="POST" action="{{ url_for('specUebersicht', table=table) }}">
+            <p>
+                    <label for="subset" class="form-label">Name für Subset</label>
+                    <input class="form-control" name="subset" id=subset
+                           placeholder="Geben Sie den Namen ein, unter dem Sie das Subset speichern möchten">
+                </p>
+            <button class="btn btn-primary" style="background-color: #ec6f04; border-color: #ec6f04" type="submit" value="Subset speichern">Subset speichern</button>
+        </form>
 
             <!--Button Detailseite-->
             <p>
             <div class="container" align="right">
+
                 <form method="post" action="/detailseite">
-                    <button class="btn btn-secondary" type="submit">Subset speichern</button>
                     <button class="btn btn-primary" style="background-color: #ec6f04; border-color: #ec6f04" type="submit">Detailseite</button>
                 </form>
             </div>

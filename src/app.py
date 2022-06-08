@@ -69,6 +69,7 @@ def specUebersicht(table):
         filenames = databaseFileObject2.getAllTableNamesAsList()
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseFileObject2.connection)
 
+
         # Zeilen- und Spaltenfilter kombiniert
         if request.method == 'POST' and request.form.get("checkbox"):
             spalte = request.form.get("spalte")  # Eingabe von Website Spalte
@@ -76,26 +77,28 @@ def specUebersicht(table):
             operator = request.form.get("operator")  # Eingabe von Website Operator
             spaltenfilter = request.form.get("spaltenfilter")  # Eingabe von Website
             zeilenFilterDF = zeilenFiltern(currentDataDF, spalte, wert, operator)  # Zeilen werden gefiltert
+
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[currentDataDF.to_html(classes='data')], titles=currentDataDF.columns.values)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
-                beideFilterDF = spaltenFiltern(zeilenFilterDF, filterlist)  # Spalten werden gefiltert
-                beideFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
+                global newDF
+                newDF = spaltenFiltern(zeilenFilterDF, filterlist)  # Spalten werden gefiltert
+                newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[beideFilterDF.to_html(classes='data')], titles=beideFilterDF.columns.values, table=table)
+                                       tables=[newDF.to_html(classes='data')], titles=newDF.columns.values, table=table)
 
         # Zeilenfilter
         elif request.method == 'POST' and request.form.get("spalte"):
             spalte = request.form.get("spalte")  # Eingabe von Website Spalte
             wert = request.form.get("wert")  # Eingabe von Website Wert
             operator = request.form.get("operator")  # Eingabe von Website Operator
-            zeilenFilterDF = zeilenFiltern(currentDataDF, spalte, wert, operator)  # Zeilen werden gefiltert
-            zeilenFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
+            newDF = zeilenFiltern(currentDataDF, spalte, wert, operator)  # Zeilen werden gefiltert
+            newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[zeilenFilterDF.to_html(classes='data')], titles=zeilenFilterDF.columns.values, table=table)
+                                   tables=[newDF.to_html(classes='data')], titles=newDF.columns.values, table=table)
 
         # Spaltenfilter
         elif request.method == 'POST' and request.form.get("spaltenfilter"):
@@ -106,10 +109,20 @@ def specUebersicht(table):
                                        tables=[currentDataDF.to_html(classes='data')], titles=currentDataDF.columns.values)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
-                spaltenFilterDF = spaltenFiltern(currentDataDF, filterlist)  # Spalten werden gefiltert
-                spaltenFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
+                newDF = spaltenFiltern(currentDataDF, filterlist)  # Spalten werden gefiltert
+                newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[spaltenFilterDF.to_html(classes='data')], titles=spaltenFilterDF.columns.values, table=table)
+                                       tables=[newDF.to_html(classes='data')], titles=newDF.columns.values, table=table)
+
+
+        elif request.method == 'POST' and request.form.get("subset"):
+            DFname = request.form.get("subset")
+            print(newDF)
+            databaseFileObject2.saveDataFrame(newDF, DFname)
+            newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
+            return render_template("uebersichtsseite.html", filenames=filenames,
+                                   tables=[newDF.to_html(classes='data')], titles=newDF.columns.values, table=table)
+
 
         else:
             return render_template("uebersichtsseite.html", filenames=filenames,
