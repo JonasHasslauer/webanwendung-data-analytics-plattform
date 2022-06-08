@@ -4,7 +4,7 @@ import pandas as pd
 import os
 
 
-class Datenbank:
+class DatabaseUser:
     connection = ""
     cursor = ""
 
