@@ -137,8 +137,11 @@ def uebersichtsseite():
         databaseFileObject = DatabaseFile("Datenbank/file")
         filenames = databaseFileObject.getAllTableNamesAsList()
 
+        if request.method == 'POST' and request.form['uebersichtsseite'] == 'uebersichtsseite':
+            return render_template("uebersichtsseite.html", filenames=filenames)
+
         # Dateiupload
-        if request.method == 'POST' and request.files['file']:
+        elif request.method == 'POST' and request.files['file']:
             file = request.files['file']
             name = file.filename
             namesplitted = name.split('.')
@@ -146,7 +149,9 @@ def uebersichtsseite():
             print('seperator')
             databaseFileObject.saveFile(file, namesplitted[0], seperator)
             return render_template("uebersichtsseite.html", filenames=filenames)
-        return render_template("uebersichtsseite.html", filenames=filenames)
+        else:
+            return render_template("uebersichtsseite.html", filenames=filenames)
+
     else:
         return redirect(url_for('index'))
 

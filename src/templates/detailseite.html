@@ -42,10 +42,15 @@
                             <a class="nav-link active" aria-current="page" href="#">Home</a>
                         </li>
                         <li class="nav-item">
-                             <form method="post" action="/uebersichtsseite">
-                                <button class="btn btn-secondary" type="submit">Übersichtsseite</button>
+                             <form method="post" action="/uebersichtsseite" >
+                                <button class="btn btn-secondary" type="submit" name="uebersichtsseite" value="uebersichtsseite">Übersichtsseite</button>
                             </form>
                         </li>
+
+                        <script> var x = 3
+                        console.log(x)
+                        </script>
+
                         <li class="nav-item">
                             <form method="post" action="/logout">
                                 <button class="btn btn-secondary" type="submit">Logout</button>
