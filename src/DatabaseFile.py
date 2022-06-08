@@ -28,11 +28,16 @@ class DatabaseFile:
         command = "SELECT * FROM " + tablename
         return pd.read_sql_query(self.cursor.execute(command), self.connection)
 
-    def saveFile(self, file, name):
+    def saveFile(self, file, name, seperator):
         # TODO check if csv
         file.save("name.csv")
-
-        pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),
+        if seperator == ',':
+            pd.read_csv("name.csv", sep=',').to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),
+                                                schema=None, if_exists='replace', index=True, index_label=None,
+                                                chunksize=None,
+                                                dtype=None, method=None)
+        elif seperator == ';':
+            pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),
                                                 schema=None, if_exists='replace', index=True, index_label=None,
                                                 chunksize=None,
                                                 dtype=None, method=None)

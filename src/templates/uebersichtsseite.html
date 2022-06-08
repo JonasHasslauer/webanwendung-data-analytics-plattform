@@ -66,13 +66,18 @@
         <!-- Linke Box für Hochgeladene Excel Dateien-->
 
         <div class="col-5 bg">
-            <h4>Hochgeladene Excel Dateien</h4>
+            <h4>Hochgeladene csv Dateien</h4>
 
             <p>
                 <!-- Dateiupload -->
             <form action="/uebersichtsseite" method="post"
                   enctype="multipart/form-data">
                 <input type="file" name="file"/>
+                <select class="form-control" name="seperator" id=seperator>
+                        <option value="" selected disabled hidden>Seperator wählen</option>
+                        <option value=",">,</option>
+                        <option value=";">;</option>
+                    </select>
                 <input type="submit"/>
                 <input type="submit" name="refresh" value="Refresh Tree"/>
             </form>
@@ -80,13 +85,13 @@
 
             <!-- Buttons erstellen -->
             <div class="d-grid gap-2">
-                    {% for filenames in filenames %}
-                    <form action="{{ url_for('specUebersicht', table=filenames) }}" method="POST">
-                        <button type="submit" class="btn btn-light" style="text-align:left; padding-left:0px"
-                                id="{{filenames}}"
-                                value="{{filenames}}" name="file">{{filenames}}
-                        </button>
-                    </form>
+                {% for filenames in filenames %}
+                <form action="{{ url_for('specUebersicht', table=filenames) }}" method="POST">
+                    <button type="submit" class="btn btn-light" style="text-align:left; padding-left:0px"
+                            id="{{filenames}}"
+                            value="{{filenames}}" name="file">{{filenames}}
+                    </button>
+                </form>
                 {% endfor %}
             </div>
         </div>
@@ -141,7 +146,7 @@
             <!--Button Detailseite-->
             <p>
             <div class="container" align="right">
-                <form method="post" action="/detailseite">
+                <form method="post" action="{{ url_for('detailseite', table=table) }}">
                     <button class="btn btn-secondary" type="submit">Detailseite</button>
                 </form>
             </div>

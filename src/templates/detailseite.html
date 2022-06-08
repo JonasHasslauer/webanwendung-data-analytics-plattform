@@ -81,56 +81,9 @@
     <h1>Sie befinden sich auf der Detailseite zu Ihrer ausgewählten Datei!</h1>
     <!--Überschrift "Sie befinden <Sich..."-->
 
-<!-- alt
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <div class="btn-group">
-                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                    Auswahl Diagrammtyp
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#">Liniendiagramm</a></li>
-                    <li><a class="dropdown-item" href="#">Balkendiagramm</a></li>
-                    <li><a class="dropdown-item" href="#">Tortendiagramm</a></li>
-                </ul>
-            </div>
-        </div>
 
-        <div class="col">
-            <div class="btn-group">
-                <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown"
-                        aria-expanded="false" type="button">
-                    Auswahl Spalten
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">{{Liste[0]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[1]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[2]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[3]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[4]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[5]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[6]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[7]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[8]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[9]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[10]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[11]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[12]}}</a></li>
 
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#">Separated link</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
--->
-
-    <form method="POST" action="/detailseite">
+    <form method="POST" action="{{ url_for('detailseite', table=table) }}">
         <p>
             <label for="diagrammart" class="form-label">Wählen Sie die Diagrammart</label>
             <select class="form-control" name="diagrammart" id=diagrammart>
