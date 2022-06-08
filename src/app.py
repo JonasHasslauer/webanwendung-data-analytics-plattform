@@ -154,9 +154,7 @@ def uebersichtsseite():
 @app.route('/detailseite/<string:table>', methods=["POST", "GET"])
 def detailseite(table):
     if 'username' in session:
-
         databaseObject = DatabaseFile("Datenbank/file")
-        filenames = databaseObject.getAllTableNamesAsList()
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseObject.connection)
 
         if request.method == 'POST' and request.form.get("xAchse"):

@@ -97,39 +97,15 @@
         <p>
             <select class="form-control" name="xAchse" id=xAchse>
                 <option value="" selected disabled hidden>Spalte für x-Achse</option>
-                <option value="{{Liste[0]}}">{{Liste[0]}}</option>
-                <option value="{{Liste[1]}}">{{Liste[1]}}</option>
-                <option value="{{Liste[2]}}">{{Liste[2]}}</option>
-                <option value="{{Liste[3]}}">{{Liste[3]}}</option>
-                <option value="{{Liste[4]}}">{{Liste[4]}}</option>
-                <option value="{{Liste[5]}}">{{Liste[5]}}</option>
-                <option value="{{Liste[6]}}">{{Liste[6]}}</option>
-                <option value="{{Liste[7]}}">{{Liste[7]}}</option>
-                <option value="{{Liste[8]}}">{{Liste[8]}}</option>
-                <option value="{{Liste[9]}}">{{Liste[9]}}</option>
-                <option value="{{Liste[10]}}">{{Liste[10]}}</option>
-                <option value="{{Liste[10]}}">{{Liste[11]}}</option>
-                <option value="{{Liste[10]}}">{{Liste[12]}}</option>
-                <option value="{{Liste[10]}}">{{Liste[13]}}</option>
-                <option value="{{Liste[10]}}">{{Liste[14]}}</option>
+                {% for Liste in Liste %}
+                <option value="{{Liste}}">{{Liste}}</option>
+                {% endfor %}
             </select>
             <select class="form-control" name="yAchse" id=yAchse>
                 <option value="" selected disabled hidden>Spalte für y-Achse</option>
-                <option value="{{ListeY[0]}}">{{ListeY[0]}}</option>
-                <option value="{{ListeY[1]}}">{{ListeY[1]}}</option>
-                <option value="{{ListeY[2]}}">{{ListeY[2]}}</option>
-                <option value="{{ListeY[3]}}">{{ListeY[3]}}</option>
-                <option value="{{ListeY[4]}}">{{ListeY[4]}}</option>
-                <option value="{{ListeY[5]}}">{{ListeY[5]}}</option>
-                <option value="{{ListeY[6]}}">{{ListeY[6]}}</option>
-                <option value="{{ListeY[7]}}">{{ListeY[7]}}</option>
-                <option value="{{ListeY[8]}}">{{ListeY[8]}}</option>
-                <option value="{{ListeY[9]}}">{{ListeY[9]}}</option>
-                <option value="{{ListeY[10]}}">{{ListeY[10]}}</option>
-                <option value="{{ListeY[10]}}">{{ListeY[11]}}</option>
-                <option value="{{ListeY[10]}}">{{ListeY[12]}}</option>
-                <option value="{{ListeY[10]}}">{{ListeY[13]}}</option>
-                <option value="{{ListeY[10]}}">{{ListeY[14]}}</option>
+                {% for ListeY in ListeY %}
+                <option value="{{ListeY}}">{{ListeY}}</option>
+                {% endfor %}}
             </select>
         </p>
         <button class="btn btn-secondary" type="sumbit">Bestätigen</button>
