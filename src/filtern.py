@@ -11,7 +11,7 @@ df = pd.read_csv('test_Csv_Datein/Sacramentorealestatetransactions.csv')
 # mit Hilfe der zeilenFiltern Methode können Zeilen ausgegeben werden, wenn sie einem bestimmten
 # Spaltenwert entsprechen/größer/kleiner sind
 
-def zeilenFiltern(df, spaltenname, wert, operator):
+def zeilenFiltern(df, spaltenname, wert: int, operator):
     """
 
     :param df: das zu bearbeitende DataFrame

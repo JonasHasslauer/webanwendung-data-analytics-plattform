@@ -42,3 +42,9 @@ class DatabaseFile:
                                                 chunksize=None,
                                                 dtype=None, method=None)
         os.remove("name.csv")
+
+
+    def saveDataFrame(self, file, name):
+        file.to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),schema=None, if_exists='replace', index=True, index_label=None,
+                                                chunksize=None,
+                                                dtype=None, method=None)
