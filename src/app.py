@@ -73,6 +73,7 @@ def specUebersicht(table):
         databaseFileObject2 = DatabaseFile("Datenbank/file")
         filenames = databaseFileObject2.getAllTableNamesAsList()
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseFileObject2.connection)
+        print(currentDataDF)
 
         # Zeilen- und Spaltenfilter kombiniert
         if request.method == 'POST' and request.form.get("checkbox"):
@@ -84,14 +85,14 @@ def specUebersicht(table):
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[currentDataDF.to_html(classes='data')],
+                                       tables=[currentDataDF.to_html(classes='data', index = False)],
                                        titles=currentDataDF.columns.values)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 beideFilterDF = spaltenFiltern(zeilenFilterDF, filterlist)  # Spalten werden gefiltert
                 beideFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[beideFilterDF.to_html(classes='data')],
+                                       tables=[beideFilterDF.to_html(classes='data', index = False)],
                                        titles=beideFilterDF.columns.values, table=table)
 
 
@@ -103,7 +104,7 @@ def specUebersicht(table):
             zeilenFilterDF = zeilenFiltern(currentDataDF, spalte, wert, operator)  # Zeilen werden gefiltert
             zeilenFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[zeilenFilterDF.to_html(classes='data')],
+                                   tables=[zeilenFilterDF.to_html(classes='data', index = False)],
                                    titles=zeilenFilterDF.columns.values, table=table)
 
         # Spaltenfilter
@@ -112,19 +113,19 @@ def specUebersicht(table):
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[currentDataDF.to_html(classes='data')],
+                                       tables=[currentDataDF.to_html(classes='data', index = False)],
                                        titles=currentDataDF.columns.values)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 spaltenFilterDF = spaltenFiltern(currentDataDF, filterlist)  # Spalten werden gefiltert
                 spaltenFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[spaltenFilterDF.to_html(classes='data')],
+                                       tables=[spaltenFilterDF.to_html(classes='data', index = False)],
                                        titles=spaltenFilterDF.columns.values, table=table)
 
         else:
             return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[currentDataDF.to_html(classes='data')], titles=currentDataDF.columns.values,
+                                   tables=[currentDataDF.to_html(classes='data', index = False)], titles=currentDataDF.columns.values,
                                    table=table)
     else:
         return redirect(url_for('index'))
@@ -212,6 +213,9 @@ def detailseite(table):
             currentDataDF.to_html(header="true", table_id="table")
             return render_template("detailseite.html", Liste=my_list,
                                    ListeY=ListeInt, table=table)  # muss Liste übergeben, für erstes Landing
+
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route("/logout", methods=["POST"])

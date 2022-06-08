@@ -102,13 +102,11 @@
 
             <div class="table overflow-scroll" style="height: 375px; width: 750px;">
                 <table class="table table-bordered">
-
                     <tbody>
-
                     <tr>
                         {% for table in tables %}
                         <!--<th scope="col">{{titles[loop.index]}}</th>-->
-                        <th scope="col">{{ table|safe }}</th>
+                        <td>{{ table|safe }}</td>
                         {% endfor %}
                     </tr>
 
