@@ -3,22 +3,21 @@ import sqlite3
 import pandas as pd
 from flask import Flask, render_template, request, session, redirect, url_for
 
-from src.DatabaseUser import Datenbank
+from src.DatabaseUser import DatabaseUser
 from src.DatabaseFile import DatabaseFile
 
 from filtern import *
-
-from src.Visualization.Chart import BarChart
 
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
 extensions = set({'csv'})
 
+
 def allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
 
 
-databaseUserObject = Datenbank('Datenbank/my_logins4.db')
+databaseUserObject = DatabaseUser('Datenbank/my_logins4.db')
 
 
 @app.route("/")
@@ -63,99 +62,82 @@ def login():
         return redirect(url_for('index'))
 
 
-@app.route('/uebersichtsseite', methods=["POST", "GET"])
-def uebersichtsseite():
+@app.route('/uebersichtsseite/<string:table>', methods=["POST", "GET"])
+def specUebersicht(table):
     if 'username' in session:
+        databaseFileObject2 = DatabaseFile("Datenbank/file")
+        filenames = databaseFileObject2.getAllTableNamesAsList()
+        currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseFileObject2.connection)
 
-        databaseFileObject = DatabaseFile("Datenbank/file")
-        filenames = databaseFileObject.getAllTableNames()
-
-        filename = databaseFileObject.cursor.execute('SELECT * FROM Lager')
-        df = pd.read_sql_query('SELECT * FROM Lager', databaseFileObject.connection)  # Erzeugen von Dataframe
-        df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
-        filename.execute('SELECT name FROM sqlite_master WHERE type = "table"')  # Datenbankabfrage für Filenames
-        filenames = filename.fetchall()
-        filename.close()
-
+        # Zeilen- und Spaltenfilter kombiniert
         if request.method == 'POST' and request.form.get("checkbox"):
             spalte = request.form.get("spalte")  # Eingabe von Website Spalte
             wert = request.form.get("wert")  # Eingabe von Website Wert
             operator = request.form.get("operator")  # Eingabe von Website Operator
             spaltenfilter = request.form.get("spaltenfilter")  # Eingabe von Website
-            df1 = zeilenFiltern(df, spalte, wert, operator)  # Zeilen werden gefiltert
+            zeilenFilterDF = zeilenFiltern(currentDataDF, spalte, wert, operator)  # Zeilen werden gefiltert
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
-                df = pd.read_sql_query("SELECT * from Lager", databaseFileObject.connection)  # alle anzeigen
-                df.to_html(header="true", table_id="table")
+                currentDataDF.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[df.to_html(classes='data')], titles=df.columns.values)
+                                       tables=[currentDataDF.to_html(classes='data')], titles=currentDataDF.columns.values)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
-                df2 = spaltenFiltern(df1, filterlist)  # Spalten werden gefiltert
-                df2.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
+                beideFilterDF = spaltenFiltern(zeilenFilterDF, filterlist)  # Spalten werden gefiltert
+                beideFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[df2.to_html(classes='data')], titles=df2.columns.values)
+                                       tables=[beideFilterDF.to_html(classes='data')], titles=beideFilterDF.columns.values, table=table)
+
         # Zeilenfilter
         elif request.method == 'POST' and request.form.get("spalte"):
             spalte = request.form.get("spalte")  # Eingabe von Website Spalte
             wert = request.form.get("wert")  # Eingabe von Website Wert
             operator = request.form.get("operator")  # Eingabe von Website Operator
-            df = zeilenFiltern(df, spalte, wert, operator)  # Zeilen werden gefiltert
-            df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
+            zeilenFilterDF = zeilenFiltern(currentDataDF, spalte, wert, operator)  # Zeilen werden gefiltert
+            zeilenFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[df.to_html(classes='data')], titles=df.columns.values)
+                                   tables=[zeilenFilterDF.to_html(classes='data')], titles=zeilenFilterDF.columns.values, table=table)
 
         # Spaltenfilter
         elif request.method == 'POST' and request.form.get("spaltenfilter"):
-            spaltenfilter = request.form.get("spaltenfilter")  # Eingabe von Website
+            spaltenfilter = request.form.get("spaltenfilter")
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
-                df = pd.read_sql_query("SELECT * from Lager", databaseFileObject.connection)  # alle anzeigen
-                df.to_html(header="true", table_id="table")
+                currentDataDF.to_html(header="true", table_id="table")
+                return render_template("uebersichtsseite.html", filenames=filenames,
+                                       tables=[currentDataDF.to_html(classes='data')], titles=currentDataDF.columns.values)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
-                df = spaltenFiltern(df, filterlist)  # Spalten werden gefiltert
-                df.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
-            return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[df.to_html(classes='data')], titles=df.columns.values)
-
-        elif request.method == 'POST' and request.files['file']:
-            file = request.files['file']
-            name = file.filename
-            namesplitted = name.split('.')
-            print(namesplitted[0])
-            databaseFileObject.saveFile(file, namesplitted[0])
-            return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[df.to_html(classes='data')],
-                                   titles=df.columns.values)
+                spaltenFilterDF = spaltenFiltern(currentDataDF, filterlist)  # Spalten werden gefiltert
+                spaltenFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
+                return render_template("uebersichtsseite.html", filenames=filenames,
+                                       tables=[spaltenFilterDF.to_html(classes='data')], titles=spaltenFilterDF.columns.values, table=table)
 
         else:
             return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[df.to_html(classes='data')], titles=df.columns.values)
+                                   tables=[currentDataDF.to_html(classes='data')], titles=currentDataDF.columns.values, table=table)
+    else:
+        return redirect(url_for('index'))
+
+
+@app.route('/uebersichtsseite', methods=["POST", "GET"])
+def uebersichtsseite():
+    if 'username' in session:
+        databaseFileObject = DatabaseFile("Datenbank/file")
+        filenames = databaseFileObject.getAllTableNamesAsList()
+
+        # Dateiupload
+        if request.method == 'POST' and request.files['file']:
+            file = request.files['file']
+            name = file.filename
+            namesplitted = name.split('.')
+            databaseFileObject.saveFile(file, namesplitted[0])
+            return render_template("uebersichtsseite.html", filenames=filenames)
+        return render_template("uebersichtsseite.html", filenames=filenames)
+    else:
+        return redirect(url_for('index'))
 
 @app.route('/detailseite', methods=["POST", "GET"])
 def detailseite():
-    databaseObject = Datenbank("Datenbank/file")
-    filename = databaseObject.cursor.execute('SELECT * FROM Sacramento')
-
-    my_list = ""
-    print("detailseite")
-
-    if request.method == 'POST' and request.form.get("xAchse"):
-        print("bin in if anweisung")
-        xAchse = request.form.get("xAchse")
-        print(xAchse)
-        yAchse = request.form.get("yAchse")
-        command = "SELECT * FROM Sacramento GROUP BY " + xAchse
-        df = pd.read_sql_query(command, databaseObject.connection)
-        my_list = df.columns.values.tolist()
-        print(my_list)
-        ax = df.plot.bar(x=xAchse, y=yAchse).get_figure()
-        ax.savefig('static/name.png')
-        return render_template("detailseite.html", Liste=my_list )
-    else:
-        print("bin im else zweig")
-        return render_template('detailseite.html', Liste=my_list )
-
-
+    return render_template('detailseite.html', Liste=list, bild="bewerbungen.png")
 
 
 @app.route("/logout", methods=["POST"])

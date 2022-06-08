@@ -18,13 +18,12 @@
 <body>
 
 <header>
-    <nav class="navbar navbar-light" style="background-color: #20c997;">
+    <nav class="navbar navbar-light" style="background-color: #ec6f04; margin-bottom: 40px">
         <div class="container-fluid">
-
             <form method="post" action="/login">
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-                    <span class="navbar-toggler-icon"></span>
+                        data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" style="color: white">
+                    <span class="navbar-toggler-icon" style="color: #ffffff"></span>
                 </button>
             </form>
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
@@ -52,7 +51,7 @@
                     </form>
                 </div>
             </div>
-            <a class="navbar-brand" href="#">Team Data Analytics</a>
+            <a class="navbar-brand" href="#" style="color: #ffffff">Team Data Analytics</a>
         </div>
     </nav>
 </header>
@@ -73,27 +72,36 @@
             <form action="/uebersichtsseite" method="post"
                   enctype="multipart/form-data">
                 <input type="file" name="file"/>
-                <input type="submit"/>
+                <button class="btn btn-secondary" type="submit">Senden</button>
+                <button class="btn btn-secondary" type="submit" name="refresh">Reload</button>
             </form>
             </p>
 
             <!-- Buttons erstellen -->
             <div class="d-grid gap-2">
-                {% for filenames in filenames %}
-                <button type="button" class="btn btn-light" style="text-align:left; padding-left:40px"
-                        id="{{filenames[0]}}"
-                        value="{{filenames[0]}}">{{filenames[0]}}
-                </button>
+
+                    {% for filenames in filenames %}
+                    <form action="{{ url_for('specUebersicht', table=filenames) }}" method="POST">
+                        <button type="submit" class="btn btn-outline-secondary" style="padding-left:0; width: 400px; text-align: center"
+                                id="{{filenames}}"
+                                value="{{filenames}}" name="file">{{filenames}}
+                        </button>
+                    </form>
                 {% endfor %}
             </div>
-
         </div>
 
         <!-- Rechte Box zum Sortieren und Auswählen der Daten -->
         <div class="col-7 bg">
-            <h4>Auswahl/Sortierung der Daten</h4>
+            <h4>Auswahl filtern</h4>
+            <div class="btn-group-toggle" data-toggle="buttons" align="right"  style="margin-bottom: 15px">
+              <label class="btn btn-secondary active">
 
-            <div class="table overflow-scroll" style="height: 375px; width: 750px;">
+                <input type="checkbox" checked autocomplete="off">Überschriften
+              </label>
+            </div>
+
+            <div class="table overflow-scroll" style="height: 375px; width: 100%; font-size: small">
                 <table class="table table-bordered">
 
                     <tbody>
@@ -110,7 +118,7 @@
             </div>
 
             <!--Spalten filtern-->
-            <form method="POST" action="/uebersichtsseite">
+            <form method="POST" action="{{ url_for('specUebersicht', table=table) }}">
                 <p>
                     <label for="spaltenfilter" class="form-label">Einzelne Spalten filtern:</label>
                     <input class="form-control" name="spaltenfilter" id=spaltenfilter
@@ -133,16 +141,18 @@
                     <input class="form-check-input" type="checkbox" name="checkbox" id="checkbox">
                     <label class="form-check-label" for="checkbox">Beide filtern</label>
                 </div>
-                <button class="btn btn-secondary" type="sumbit">Filtern</button>
+                <button class="btn btn-secondary" type="submit">Filtern</button>
             </form>
 
             <!--Button Detailseite-->
             <p>
             <div class="container" align="right">
                 <form method="post" action="/detailseite">
-                    <button class="btn btn-secondary" type="submit">Detailseite</button>
+                    <button class="btn btn-secondary" type="submit">Subset speichern</button>
+                    <button class="btn btn-primary" style="background-color: #ec6f04; border-color: #ec6f04" type="submit">Detailseite</button>
                 </form>
             </div>
+
             </p>
         </div>
     </div>
