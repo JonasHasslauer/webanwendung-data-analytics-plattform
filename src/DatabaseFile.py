@@ -11,12 +11,13 @@ class DatabaseFile:
         self.connection = sql.connect(database, check_same_thread=False)
         self.cursor = self.connection.cursor()
 
-    def getAllTableNames(self):
+    def getAllTableNamesAsList(self):
         command = """SELECT tbl_name
                      FROM sqlite_master
-                     WHERE type='table'"""
+                     WHERE type='table' ORDER BY rootpage DESC"""
         exec = self.cursor.execute(command).fetchall()
-        return exec
+        listValues = [item[0] for item in exec]
+        return listValues
 
     def checkIfTableWithNameExists(self):
         pass
@@ -25,7 +26,6 @@ class DatabaseFile:
 
     def getAllDataToFileFromTable(self, tablename: str) -> pd.DataFrame:
         command = "SELECT * FROM " + tablename
-        print(command)
         return pd.read_sql_query(self.cursor.execute(command), self.connection)
 
     def saveFile(self, file, name):

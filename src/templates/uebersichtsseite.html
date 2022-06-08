@@ -74,19 +74,21 @@
                   enctype="multipart/form-data">
                 <input type="file" name="file"/>
                 <input type="submit"/>
+                <input type="submit" name="refresh" value="Refresh Tree"/>
             </form>
             </p>
 
             <!-- Buttons erstellen -->
             <div class="d-grid gap-2">
-                {% for filenames in filenames %}
-                <button type="button" class="btn btn-light" style="text-align:left; padding-left:40px"
-                        id="{{filenames[0]}}"
-                        value="{{filenames[0]}}">{{filenames[0]}}
-                </button>
+                    {% for filenames in filenames %}
+                    <form action="{{ url_for('specUebersicht', table=filenames) }}" method="POST">
+                        <button type="submit" class="btn btn-light" style="text-align:left; padding-left:0px"
+                                id="{{filenames}}"
+                                value="{{filenames}}" name="file">{{filenames}}
+                        </button>
+                    </form>
                 {% endfor %}
             </div>
-
         </div>
 
         <!-- Rechte Box zum Sortieren und Auswählen der Daten -->
@@ -110,7 +112,7 @@
             </div>
 
             <!--Spalten filtern-->
-            <form method="POST" action="/uebersichtsseite">
+            <form method="POST" action="{{ url_for('specUebersicht', table=table) }}">
                 <p>
                     <label for="spaltenfilter" class="form-label">Einzelne Spalten filtern:</label>
                     <input class="form-control" name="spaltenfilter" id=spaltenfilter
