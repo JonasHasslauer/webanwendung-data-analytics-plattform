@@ -80,14 +80,14 @@ def specUebersicht(table):
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[currentDataDF.to_html(classes='data', index = False)],
+                                       tables=[currentDataDF.to_html(classes='data', index=False)],
                                        titles=currentDataDF.columns.values)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 beideFilterDF = spaltenFiltern(zeilenFilterDF, filterlist)  # Spalten werden gefiltert
                 beideFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[beideFilterDF.to_html(classes='data', index = False)],
+                                       tables=[beideFilterDF.to_html(classes='data', index=False)],
                                        titles=beideFilterDF.columns.values, table=table)
 
 
@@ -99,7 +99,7 @@ def specUebersicht(table):
             zeilenFilterDF = zeilenFiltern(currentDataDF, spalte, wert, operator)  # Zeilen werden gefiltert
             zeilenFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[zeilenFilterDF.to_html(classes='data', index = False)],
+                                   tables=[zeilenFilterDF.to_html(classes='data', index=False)],
                                    titles=zeilenFilterDF.columns.values, table=table)
 
         # Spaltenfilter
@@ -108,19 +108,20 @@ def specUebersicht(table):
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[currentDataDF.to_html(classes='data', index = False)],
+                                       tables=[currentDataDF.to_html(classes='data', index=False)],
                                        titles=currentDataDF.columns.values)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 spaltenFilterDF = spaltenFiltern(currentDataDF, filterlist)  # Spalten werden gefiltert
                 spaltenFilterDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[spaltenFilterDF.to_html(classes='data', index = False)],
+                                       tables=[spaltenFilterDF.to_html(classes='data', index=False)],
                                        titles=spaltenFilterDF.columns.values, table=table)
 
         else:
             return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[currentDataDF.to_html(classes='data', index = False)], titles=currentDataDF.columns.values,
+                                   tables=[currentDataDF.to_html(classes='data', index=False)],
+                                   titles=currentDataDF.columns.values,
                                    table=table)
     else:
         return redirect(url_for('index'))
@@ -138,11 +139,13 @@ def uebersichtsseite():
         # Dateiupload
         elif request.method == 'POST' and request.files['file']:
             file = request.files['file']
-            print(file.filename)
             name = file.filename
             namesplitted = name.split('.')
             seperator = request.form.get('seperator')
-            src.DatabaseFile.saveFile(file, namesplitted[0], seperator)
+            if seperator is None:
+                src.DatabaseFile.saveFile(file, namesplitted[0], seperator=",")
+            else:
+                src.DatabaseFile.saveFile(file, namesplitted[0], seperator)
             return render_template("uebersichtsseite.html", filenames=filenames)
         else:
             return render_template("uebersichtsseite.html", filenames=filenames)
@@ -163,7 +166,7 @@ def detailseite(table):
             if diagrammart == "Balkendiagramm":
                 xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse verwendet werden sollen
                 yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table +" GROUP BY " + xAchse
+                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
                 df = pd.read_sql_query(command, databaseObject.connection)  # wandelt Table in DataFrame um
                 my_list = df.columns.values.tolist()  # macht Liste aus column names des DataFrames
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
@@ -185,7 +188,7 @@ def detailseite(table):
             elif diagrammart == "Liniendiagramm":
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table +" GROUP BY " + xAchse
+                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
                 df = pd.read_sql_query(command, databaseObject.connection)
                 my_list = df.columns.values.tolist()
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
@@ -196,7 +199,7 @@ def detailseite(table):
             elif diagrammart == "Wordcloud":
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table +" GROUP BY " + xAchse
+                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
                 df = pd.read_sql_query(command, databaseObject.connection)
                 my_list = df.columns.values.tolist()
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
