@@ -20,7 +20,6 @@ def allowed(filename):
 
 databaseUserObject = DatabaseUser('Datenbank/my_logins4.db')
 
-
 @app.route("/")
 def index():
     return render_template("login.html")
