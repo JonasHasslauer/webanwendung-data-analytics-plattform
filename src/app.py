@@ -3,6 +3,7 @@ import sqlite3
 import pandas as pd
 from flask import Flask, render_template, request, session, redirect, url_for
 
+import src.DatabaseFile
 from src.DatabaseUser import DatabaseUser
 from src.DatabaseFile import DatabaseFile
 
@@ -131,16 +132,17 @@ def uebersichtsseite():
         databaseFileObject = DatabaseFile("Datenbank/file")
         filenames = databaseFileObject.getAllTableNamesAsList()
 
-        if request.method == 'POST' and request.form['uebersichtsseite'] == 'uebersichtsseite':
+        if request.method == 'POST' and request.form.get('submit') == 'Refresh':
             return render_template("uebersichtsseite.html", filenames=filenames)
 
         # Dateiupload
         elif request.method == 'POST' and request.files['file']:
             file = request.files['file']
+            print(file.filename)
             name = file.filename
             namesplitted = name.split('.')
             seperator = request.form.get('seperator')
-            databaseFileObject.saveFile(file, namesplitted[0], seperator)
+            src.DatabaseFile.saveFile(file, namesplitted[0], seperator)
             return render_template("uebersichtsseite.html", filenames=filenames)
         else:
             return render_template("uebersichtsseite.html", filenames=filenames)
