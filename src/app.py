@@ -83,14 +83,15 @@ def specUebersicht(table):
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[
                                            currentDataDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)],
-                                       titles=currentDataDF.columns.values)
+                                       titles=currentDataDF.columns.values, tablename=table)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 global newDF
                 newDF = spaltenFiltern(zeilenFilterDF, filterlist)  # Spalten werden gefiltert
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[newDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)], titles=newDF.columns.values, table=table)
+                                       tables=[newDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)],
+                                       titles=newDF.columns.values, table=table, tablename=table)
 
         # Zeilenfilter
         elif request.method == 'POST' and request.form.get("spalte"):
@@ -100,7 +101,9 @@ def specUebersicht(table):
             newDF = zeilenFiltern(currentDataDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[newDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)], titles=newDF.columns.values, table=table)
+                                   tables=[newDF.to_html(classes='table table-striped text-center', index=False,
+                                                         justify="center", col_space=20)], titles=newDF.columns.values,
+                                                        table=table, tablename=table)
 
         # Spaltenfilter
         elif request.method == 'POST' and request.form.get("spaltenfilter"):
@@ -109,13 +112,14 @@ def specUebersicht(table):
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[currentDataDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)],
-                                       titles=currentDataDF.columns.values)
+                                       titles=currentDataDF.columns.values, tablename=table)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 newDF = spaltenFiltern(currentDataDF, filterlist)  # Spalten werden gefiltert
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[newDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)], titles=newDF.columns.values, table=table)
+                                       tables=[newDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)],
+                                       titles=newDF.columns.values, table=table, tablename=table)
 
 
         elif request.method == 'POST' and request.form.get("subset"):
@@ -124,14 +128,15 @@ def specUebersicht(table):
             databaseFileObject2.saveDataFrame(newDF, DFname)
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[newDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)], titles=newDF.columns.values, table=table)
+                                   tables=[newDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)],
+                                   titles=newDF.columns.values, table=table, tablename=table)
 
 
         else:
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[currentDataDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)],
                                    titles=currentDataDF.columns.values,
-                                   table=table)
+                                   table=table, tablename=table)
     else:
         return redirect(url_for('index'))
 
