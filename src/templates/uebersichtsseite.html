@@ -23,7 +23,7 @@
             <form method="post" action="/login">
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" style="color: white">
-                    <span class="navbar-toggler-icon" style="color: #ffffff"></span>
+                    <span class="navbar-toggler-icon" style ="color: #ffffff"></span>
                 </button>
             </form>
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
@@ -92,7 +92,7 @@
 
                     {% for filenames in filenames %}
                     <form action="{{ url_for('specUebersicht', table=filenames) }}" method="POST">
-                        <button type="submit" class="btn btn-outline-secondary" style="padding-left:0; width: 375px; text-align: center"
+                        <button type="submit" class="btn btn-outline-secondary" style="padding-left:0; height: 35px; width: 375px; text-align: center; font-size: small"
                                 id="{{filenames}}"
                                 value="{{filenames}}" name="file">{{filenames}}
                         </button>
@@ -105,7 +105,7 @@
         <div class="col-7 bg">
             <h3 style="color: #ec6f04; font-style: italic; font-weight: lighter">Filterung der Auswahl</h3>
 
-            <div class="table overflow-scroll" style="height: 375px; width: 100%; font-size: small">
+            <div class="table overflow-scroll" style="height: 500px; width: 100%; font-size: small">
                 <table class="table table-bordered">
 
                     <tbody>
