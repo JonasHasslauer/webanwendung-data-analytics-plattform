@@ -69,16 +69,16 @@
 
             <p>
                 <!-- Dateiupload -->
-            <form action="/uebersichtsseite" method="post"
+            <form action="{{ url_for('specUebersicht', table=table) }}" method="post"
                   enctype="multipart/form-data">
                 <input type="file" name="file"/>
-                <button class="btn btn-secondary" type="submit">Senden</button>
-                <button class="btn btn-secondary" type="submit" name="refresh">Reload</button>
                 <select class="form-control" name="seperator" id=seperator style="margin-bottom: 10px; margin-top: 10px">
                         <option value="" selected disabled hidden>Seperator wählen</option>
                         <option value=",">,</option>
                         <option value=";">;</option>
-                    </select>
+                </select>
+                <button class="btn btn-secondary" type="submit">Senden</button>
+                <button class="btn btn-secondary" type="submit" name="refresh">Reload</button>
             </form>
             </p>
 
@@ -164,7 +164,7 @@
             <p>
             <div class="container" align="right">
 
-                <form method="post" action="/detailseite">
+                <form method="post" action="{{ url_for('detailseite', table=table) }}">
                     <button class="btn btn-primary" style="background-color: #ec6f04; border-color: #ec6f04" type="submit">Detailseite</button>
                 </form>
             </div>
