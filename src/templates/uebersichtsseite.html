@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Übersichtsseite</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 
@@ -15,7 +14,7 @@
             crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body style="padding: 0; margin: 0">
 
 <header>
     <nav class="navbar navbar-light" style="background-color: #ec6f04; margin-bottom: 40px">
@@ -64,7 +63,7 @@
     <div class="row">
         <!-- Linke Box für Hochgeladene Excel Dateien-->
 
-        <div class="col-5 bg">
+        <div class="col-5 bg"">
             <h3 style="color: #ec6f04; font-style: italic; font-weight: lighter">Dateiarchiv</h3>
                 <!-- Dateiupload -->
             <form action="/uebersichtsseite" method="post"
@@ -102,10 +101,10 @@
         </div>
 
         <!-- Rechte Box zum Sortieren und Auswählen der Daten -->
-        <div class="col-7 bg">
+        <div class="col-7 bg" style="margin-left: -100px">
             <h3 style="color: #ec6f04; font-style: italic; font-weight: lighter">Filterung der Auswahl</h3>
             <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d" >Table: '{{tablename}}'</h4>
-            <div class="table overflow-scroll" style="height: 500px; width: 100%; font-size: small">
+            <div class="table overflow-scroll" style="height: 500px; width: 61vW; font-size: small">
                 <table class="table table-bordered">
 
                     <tbody>
