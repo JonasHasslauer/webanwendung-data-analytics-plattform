@@ -74,17 +74,17 @@
                 <input type="file" name="file"/>
 
 
-                <select class="form-control" name="seperator" id=seperator style="margin-bottom: 10px; width: 300px; margin-top: 10px">
+                <select class="form-control" name="seperator" id=seperator style="margin-bottom: 10px; width: 270px; margin-top: 10px">
                         <option value="" selected disabled hidden>Seperator wählen</option>
                         <option value=",">,</option>
                         <option value=";">;</option>
-                    </select>
+                </select>
                 <div class="btn-group-toggle" data-toggle="buttons" align="left"  style="margin-bottom: 15px">
-                    <label class="btn btn-secondary active">
-                        <input type="checkbox" checked autocomplete="off">Überschriften
+                    <label class="btn btn-secondary">
+                        <input type="checkbox" checked autocomplete="off" style="width: 40px">Überschriften
                     </label>
-                    <input class="btn btn-secondary" type="submit" name = "submit" value = "Senden">
-                    <input class="btn btn-secondary" type="submit" name="submit" value ="Refresh">
+                    <input class="btn btn-secondary" type="submit" name = "submit" value = "Senden" style="width: 100px">
+                    <input class="btn btn-secondary" type="submit" name="submit" value ="Refresh" style="width: 100px">
                 </div>
 
             </form>
@@ -95,7 +95,7 @@
 
                     {% for filenames in filenames %}
                     <form action="{{ url_for('specUebersicht', table=filenames) }}" method="POST">
-                        <button type="submit" class="btn btn-outline-secondary" style="padding-left:0; width: 400px; text-align: center"
+                        <button type="submit" class="btn btn-outline-secondary" style="padding-left:0; width: 375px; text-align: center"
                                 id="{{filenames}}"
                                 value="{{filenames}}" name="file">{{filenames}}
                         </button>
@@ -107,12 +107,6 @@
         <!-- Rechte Box zum Sortieren und Auswählen der Daten -->
         <div class="col-7 bg">
             <h4>Auswahl filtern</h4>
-            <div class="btn-group-toggle" data-toggle="buttons" align="right"  style="margin-bottom: 15px">
-              <label class="btn btn-secondary active">
-
-                <input type="checkbox" checked autocomplete="off">Überschriften
-              </label>
-            </div>
 
             <div class="table overflow-scroll" style="height: 375px; width: 100%; font-size: small">
                 <table class="table table-bordered">
@@ -135,49 +129,40 @@
                 <p>
                     <label for="spaltenfilter" class="form-label">Einzelne Spalten filtern:</label>
                     <input class="form-control" name="spaltenfilter" id=spaltenfilter
-                           placeholder="Spalten auswählen [Eingabe alle Anzeigen: Alle] zum Filtern [Eingabe: Spalte1,Spalte2,...]">
+                           placeholder="Spalten auswählen [Eingabe alle Anzeigen: Alle] zum Filtern [Eingabe: Spalte1,Spalte2,...]" style="border-color: #6c757d">
                 </p>
                 <p>
                     <label for="spalte" class="form-label">Nach Werten filtern:</label>
                     <input class="form-control" name="spalte" id=spalte
-                           placeholder="Nach welcher Spalte soll gefiltert werden?">
-                    <select class="form-control" name="operator" id=operator>
+                           placeholder="Nach welcher Spalte soll gefiltert werden?" style="border-color: #6c757d">
+                    <select class="form-control" name="operator" id=operator style="margin-bottom: 10px; margin-top: 10px; border-color: #6c757d">
                         <option value="" selected disabled hidden>Operator wählen</option>
                         <option value="<">kleiner</option>
                         <option value=">">größer</option>
                         <option value="==">gleich</option>
                     </select>
-                    <input type="text" class="form-control" name="wert" id=wert placeholder="Sortierungswert?">
+                    <input type="text" class="form-control" name="wert" id=wert placeholder="Sortierungswert?" style="margin-bottom: 10px; margin-top: 10px; border-color: #6c757d">
                 <div class="form-check">
                     </p>
 
-                    <input class="form-check-input" type="checkbox" name="checkbox" id="checkbox">
+                    <input class="form-check-input" type="checkbox" name="checkbox" id="checkbox" style="border-color: #6c757d">
                     <label class="form-check-label" for="checkbox">Beide filtern</label>
                 </div>
                 <button class="btn btn-secondary" type="submit">Filtern</button>
 
 
             </form>
-
-        <form method="POST" action="{{ url_for('specUebersicht', table=table) }}">
-            <p>
+            <div>
+                <form method="POST" action="{{ url_for('specUebersicht', table=table) }}" align="left">
                     <label for="subset" class="form-label">Name für Subset</label>
                     <input class="form-control" name="subset" id=subset
-                           placeholder="Geben Sie den Namen ein, unter dem Sie das Subset speichern möchten">
-                </p>
-            <button class="btn btn-primary" style="background-color: #ec6f04; border-color: #ec6f04" type="submit" value="Subset speichern">Subset speichern</button>
-        </form>
-
-            <!--Button Detailseite-->
-            <p>
-            <div class="container" align="right">
-
-                <form method="post" action="{{ url_for('detailseite', table=table) }}">
-                    <button class="btn btn-primary" style="background-color: #ec6f04; border-color: #ec6f04" type="submit">Detailseite</button>
+                           placeholder="Geben Sie den Namen ein, unter dem Sie das Subset speichern möchten" style="border-color: #6c757d">
+                    <button class="btn btn-primary" style="background-color: #ec6f04; margin-top: 5px; border-color: #ec6f04" type="submit" value="Subset speichern">Subset speichern</button>
+                </form>
+                <form method="post" action="{{ url_for('detailseite', table=table) }}" align="right">
+                    <button class="btn btn-primary" style="background-color: #ec6f04; border-color: #ec6f04; margin-top: 5px; margin-bottom: 5px" type="submit">Detailseite</button>
                 </form>
             </div>
-
-            </p>
         </div>
     </div>
 </div>
