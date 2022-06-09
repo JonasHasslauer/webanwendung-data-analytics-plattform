@@ -3,6 +3,22 @@ import pandas as pd
 import os
 
 
+def saveFile(file, name, seperator):
+    # TODO check if csv
+    file.save("name.csv")
+    if seperator == ',':
+        pd.read_csv("name.csv", sep=',').to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),
+                                            schema=None, if_exists='replace', index=True, index_label=None,
+                                            chunksize=None,
+                                            dtype=None, method=None)
+    elif seperator == ';':
+        pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),
+                                            schema=None, if_exists='replace', index=True, index_label=None,
+                                            chunksize=None,
+                                            dtype=None, method=None)
+    os.remove("name.csv")
+
+
 class DatabaseFile:
     connection = ""
     cursor = ""

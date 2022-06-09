@@ -3,6 +3,7 @@ import sqlite3
 import pandas as pd
 from flask import Flask, render_template, request, session, redirect, url_for
 
+import src.DatabaseFile
 from src.DatabaseUser import DatabaseUser
 from src.DatabaseFile import DatabaseFile
 
@@ -128,7 +129,8 @@ def specUebersicht(table):
 
         else:
             return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[currentDataDF.to_html(classes='data', index = False)], titles=currentDataDF.columns.values,
+                                   tables=[currentDataDF.to_html(classes='data', index=False)],
+                                   titles=currentDataDF.columns.values,
                                    table=table)
     else:
         return redirect(url_for('index'))
@@ -140,7 +142,10 @@ def uebersichtsseite():
         databaseFileObject = DatabaseFile("Datenbank/file")
         filenames = databaseFileObject.getAllTableNamesAsList()
 
-        if request.method == 'POST' and request.form['uebersichtsseite'] == 'uebersichtsseite':
+        if request.method == 'POST' and request.form.get('submit') == 'Refresh':
+            return render_template("uebersichtsseite.html", filenames=filenames)
+
+        if request.method == 'POST' and request.form.get('uebersichtsseite') == 'uebersichtsseite':
             return render_template("uebersichtsseite.html", filenames=filenames)
 
         # Dateiupload
@@ -149,7 +154,10 @@ def uebersichtsseite():
             name = file.filename
             namesplitted = name.split('.')
             seperator = request.form.get('seperator')
-            databaseFileObject.saveFile(file, namesplitted[0], seperator)
+            if seperator is None:
+                src.DatabaseFile.saveFile(file, namesplitted[0], seperator=",")
+            else:
+                src.DatabaseFile.saveFile(file, namesplitted[0], seperator)
             return render_template("uebersichtsseite.html", filenames=filenames)
         else:
             return render_template("uebersichtsseite.html", filenames=filenames)
@@ -168,9 +176,10 @@ def detailseite(table):
             diagrammart = request.form.get("diagrammart")  # kriegt aus Frontend, welches Diagrammart geünscht ist
             print(diagrammart)  # nur Kontrolle
             if diagrammart == "Balkendiagramm":
-                xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse verwendet werden sollen
+                xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse
+                # verwendet werden sollen
                 yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table +" GROUP BY " + xAchse
+                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
                 df = pd.read_sql_query(command, databaseObject.connection)  # wandelt Table in DataFrame um
                 my_list = df.columns.values.tolist()  # macht Liste aus column names des DataFrames
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
@@ -192,7 +201,7 @@ def detailseite(table):
             elif diagrammart == "Liniendiagramm":
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table +" GROUP BY " + xAchse
+                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
                 df = pd.read_sql_query(command, databaseObject.connection)
                 my_list = df.columns.values.tolist()
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
@@ -203,7 +212,7 @@ def detailseite(table):
             elif diagrammart == "Wordcloud":
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table +" GROUP BY " + xAchse
+                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
                 df = pd.read_sql_query(command, databaseObject.connection)
                 my_list = df.columns.values.tolist()
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
