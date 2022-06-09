@@ -136,6 +136,9 @@ def uebersichtsseite():
         if request.method == 'POST' and request.form.get('submit') == 'Refresh':
             return render_template("uebersichtsseite.html", filenames=filenames)
 
+        if request.method == 'POST' and request.form.get('uebersichtsseite') == 'uebersichtsseite':
+            return render_template("uebersichtsseite.html", filenames=filenames)
+
         # Dateiupload
         elif request.method == 'POST' and request.files['file']:
             file = request.files['file']
@@ -164,7 +167,8 @@ def detailseite(table):
             diagrammart = request.form.get("diagrammart")  # kriegt aus Frontend, welches Diagrammart geünscht ist
             print(diagrammart)  # nur Kontrolle
             if diagrammart == "Balkendiagramm":
-                xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse verwendet werden sollen
+                xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse
+                # verwendet werden sollen
                 yAchse = request.form.get("yAchse")
                 command = "SELECT * FROM " + table + " GROUP BY " + xAchse
                 df = pd.read_sql_query(command, databaseObject.connection)  # wandelt Table in DataFrame um
