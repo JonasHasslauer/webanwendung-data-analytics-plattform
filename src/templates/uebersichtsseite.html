@@ -58,25 +58,23 @@
 
 <div class="container mw-100">
     <!--Überschrift."-->
-    <h1>Übersichtsseite</h1>
+    <h2 style="font-weight: bold">Übersichtsseite</h2>
 
     <!--Grid System-->
     <div class="row">
         <!-- Linke Box für Hochgeladene Excel Dateien-->
 
         <div class="col-5 bg">
-            <h4>Hochgeladene Excel Dateien</h4>
-
-            <p>
+            <h3 style="color: #ec6f04; font-style: italic; font-weight: lighter">Dateiarchiv</h3>
                 <!-- Dateiupload -->
             <form action="/uebersichtsseite" method="post"
                   enctype="multipart/form-data">
                 <input type="file" name="file"/>
 
-
-                <select class="form-control" name="seperator" id=seperator style="margin-bottom: 10px; width: 270px; margin-top: 10px">
-                        <option value="" selected disabled hidden>Seperator wählen</option>
-                        <option value=",">,</option>
+                <!-- <p style="margin-bottom: -2px; font-size: small; color: #6c757d; font-style: italic">Trenner:</p> -->
+                <select class="form-control" name="seperator" id=seperator style="margin-bottom: 10px; width: 270px; margin-top: 10px; color: #6c757d; border-color: #6c757d">
+                        <option value="" disabled hidden>Seperator wählen</option>
+                        <option value="," selected>,</option>
                         <option value=";">;</option>
                 </select>
                 <div class="btn-group-toggle" data-toggle="buttons" align="left"  style="margin-bottom: 15px">
@@ -88,7 +86,6 @@
                 </div>
 
             </form>
-            </p>
 
             <!-- Buttons erstellen -->
             <div class="d-grid gap-2">
@@ -106,7 +103,7 @@
 
         <!-- Rechte Box zum Sortieren und Auswählen der Daten -->
         <div class="col-7 bg">
-            <h4>Auswahl filtern</h4>
+            <h3 style="color: #ec6f04; font-style: italic; font-weight: lighter">Filterung der Auswahl</h3>
 
             <div class="table overflow-scroll" style="height: 375px; width: 100%; font-size: small">
                 <table class="table table-bordered">
@@ -127,12 +124,12 @@
             <!--Spalten filtern-->
             <form method="POST" action="{{ url_for('specUebersicht', table=table) }}">
                 <p>
-                    <label for="spaltenfilter" class="form-label">Einzelne Spalten filtern:</label>
+                    <label for="spaltenfilter" class="form-label" style="font-weight: lighter">Einzelne Spalten filtern:</label>
                     <input class="form-control" name="spaltenfilter" id=spaltenfilter
                            placeholder="Spalten auswählen [Eingabe alle Anzeigen: Alle] zum Filtern [Eingabe: Spalte1,Spalte2,...]" style="border-color: #6c757d">
                 </p>
                 <p>
-                    <label for="spalte" class="form-label">Nach Werten filtern:</label>
+                    <label for="spalte" class="form-label" style="font-weight: lighter">Nach Werten filtern:</label>
                     <input class="form-control" name="spalte" id=spalte
                            placeholder="Nach welcher Spalte soll gefiltert werden?" style="border-color: #6c757d">
                     <select class="form-control" name="operator" id=operator style="margin-bottom: 10px; margin-top: 10px; border-color: #6c757d">
@@ -146,7 +143,7 @@
                     </p>
 
                     <input class="form-check-input" type="checkbox" name="checkbox" id="checkbox" style="border-color: #6c757d">
-                    <label class="form-check-label" for="checkbox">Beide filtern</label>
+                    <label class="form-check-label" for="checkbox" style="font-weight: lighter">Beide filtern</label>
                 </div>
                 <button class="btn btn-secondary" type="submit">Filtern</button>
 
@@ -154,7 +151,7 @@
             </form>
             <div>
                 <form method="POST" action="{{ url_for('specUebersicht', table=table) }}" align="left">
-                    <label for="subset" class="form-label">Name für Subset</label>
+                    <label for="subset" class="form-label" style="font-weight: lighter">Name für Subset</label>
                     <input class="form-control" name="subset" id=subset
                            placeholder="Geben Sie den Namen ein, unter dem Sie das Subset speichern möchten" style="border-color: #6c757d">
                     <button class="btn btn-primary" style="background-color: #ec6f04; margin-top: 5px; border-color: #ec6f04" type="submit" value="Subset speichern">Subset speichern</button>
