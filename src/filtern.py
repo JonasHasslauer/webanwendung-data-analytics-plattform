@@ -8,7 +8,8 @@ import sys
 
 
 # nltk.download()
-test_df = {'Tiere': ['Maus', 'Affe', 'Huhn']}
+test_df = {'Tiere': ['Maus', 'Affe', 'Huhn'],
+           'Werte Tiere':[1,2,3]}
 test_df=pd.DataFrame(test_df)
 # Test Dataframe mit zufälligen Daten
 df = pd.read_csv('test_Csv_Datein/Sacramentorealestatetransactions.csv')
@@ -25,18 +26,25 @@ def zeilenFiltern(df, spaltenname, wert, operator):
     :param operator: </>/==
     :return:gibt die gefilterten Zeilen als neues Dataframe aus
     """
-    if operator == '>':
-        df_maske = df[spaltenname] > wert
-        filtered_df = df[df_maske]
-        return filtered_df
-    elif operator == '<':
-        df_maske = df[spaltenname] < wert
-        filtered_df = df[df_maske]
-        return filtered_df
-    elif operator == '==':
-        df_maske = df[spaltenname] == wert
-        filtered_df = df[df_maske]
-        return filtered_df
+    try:
+        if operator == '>':
+            df_maske = df[spaltenname] > wert
+            filtered_df = df[df_maske]
+            return filtered_df
+        elif operator == '<':
+            df_maske = df[spaltenname] < wert
+            filtered_df = df[df_maske]
+            return filtered_df
+        elif operator == '==':
+            df_maske = df[spaltenname] == wert
+            filtered_df = df[df_maske]
+            return filtered_df
+        elif operator == '!=':
+            df_maske = df[spaltenname] != wert
+            filtered_df = df[df_maske]
+            return filtered_df
+    except Exception as e:
+        print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
 
 
 # mit der Funktion spaltenFiltern können einzelne oder mehrere  Spalten ausgegeben werden
@@ -64,13 +72,13 @@ def wordcloudErstellen(df):
         plt.show()
     except Exception as e:
         print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
-
+    '''
     text = df.to_string(header=False, index=False)
     wordcloud = WordCloud(background_color="white", width=1920, height=1080, ).generate(text)
     plt.imshow(wordcloud, interpolation="bilinear")
     plt.axis("off")
     plt.savefig('static/name.png')
-
+    '''
 
 def genauerBeschreibungDerWortarten():
     """
@@ -100,8 +108,7 @@ def wortartenAnalyse(df):
 
         # Text wird in Wörter zerteilt und die Tokens werden zugeordnet
         woerterMitTokenslistOfLists = nltk.pos_tag(einzelneWoerter)
-        #print(woerterMitTokenslistOfLists)
-        #print(langdetect.detect(text))
+
         #die List of Lists wird zu einer einfachen Liste umgewandelt
         woerterMitTokensEinfacheListe = [x for xs in woerterMitTokenslistOfLists for x in xs]
 
@@ -188,5 +195,6 @@ def wortartenAnalyse(df):
     except Exception as e:
         print("Oopsidupsi! ", e.__class__, "ist aufgetreten.")
 
-print(wortartenAnalyse(test_df))
-
+#print(wortartenAnalyse(df))
+#wordcloudErstellen(df)
+#print(zeilenFiltern(test_df,'Werte Tiere',2,'!='))
