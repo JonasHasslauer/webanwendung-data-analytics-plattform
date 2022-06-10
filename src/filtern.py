@@ -39,7 +39,7 @@ def zeilenFiltern(df, spaltenname, wert, operator):
         return filtered_df
 
 
-# mit der Funktion spaltenFiltern können einzelne oder mehere  Spalten ausgegeben werden
+# mit der Funktion spaltenFiltern können einzelne oder mehrere  Spalten ausgegeben werden
 def spaltenFiltern(df, liste):
     """
     mit der Funktion spaltenFiltern können einzelne oder mehere  Spalten ausgegeben werden
@@ -153,19 +153,19 @@ def wortartenAnalyse(df):
         openingQuotationMark= woerterMitTokensEinfacheListe.count('``')
 
         #Aus den obrigen Daten wird nun ein DataFrame erstellt und danach zurückgegeben
-        wortArten = {'Wortarten:':['Dollarzeichen','openingParenthesis','closingParenthesis',
-                                   'comma','dash','sentenceTerminator','colon','conjunction',
-                                   'numeral','determiner','existentialThere','foreignWord',
-                                   'prepositionOrConjunction','adjektivOrdinal','adjektivComperativ',
-                                   'adjectiveSuperlative','listItemMarker','modalAuxiliary',
-                                   'nounCommonSingular','nounProperSingular','nounProperPlural',
-                                   'nounCommonPlural','preDeterminer','genitiveMarker',
-                                   'pronounPersonal','pronounPossesive','adverb','adverbComperative',
-                                    'adverbSuperlative','particle','symbol','to','interjenction',
-                                   'verbBaseForm','verbPastTense','verbPresentParticipleOrGerund',
-                                   'verbPastParticiple','verbPresentTense','whDeterminer','whPronun',
-                                   'whAdverb','openingQuotationMark','verbPastTenseNotThirdPersonSingular',
-                                   'whPronunPossesive','quotationMark'],
+        wortArten = {'Wortarten:':['Dollarzeichen','öffnende Klammer','schließende Klammer',
+                                   'Komma','Bindestrich','Punkt/Ausrufezeichen/Fragezeichen','Doppelpunkt','Konjunktion',
+                                   'Ziffer','Determinator','existentialThere','Wort aus fremder Sprache',
+                                   'Präposition oder Konjunktion','adjektivOrdinal','adjektivComperativ',
+                                   'adjectiveSuperlative','listItemMarker','modales Hilfsmittel',
+                                   'SubstantivCommonSingular','SubstantivProperSingular','SubstantivProperPlural',
+                                   'SubstantivCommonPlural','preDeterminer','Genitiv Marker',
+                                   'Personalpronomen','Possessivpronomen','Adverb','Adverb Comperative',
+                                    'Adverb Superlative','Partikel','Symbol','to','Interjenction',
+                                   'Verb Basis Form','Verb Vergangenheitsform','Verb Präsens Partizip oder Gerundium',
+                                   'Verb Partizip Perfekt','Verb Präsens','wh Determiner','wh Pronomen',
+                                   'wh Adverb','öffnendes Anführungszeichen','Verb Vergangenheitsform nicht dritte Person Singular',
+                                   'wh Possessivpronomen','Anführungszeichen'],
                      'Werte_Wortarten:':[dollar,openingParenthesis,closingParenthesis,
                                          comma,dash,sentenceTerminator,colon,conjunction,
                                          numeral,determiner,existentialThere,foreignWord,
@@ -188,5 +188,5 @@ def wortartenAnalyse(df):
     except Exception as e:
         print("Oopsidupsi! ", e.__class__, "ist aufgetreten.")
 
-#print(wortartenAnalyse(test_df))
+print(wortartenAnalyse(test_df))
 
