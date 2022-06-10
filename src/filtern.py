@@ -39,6 +39,7 @@ def zeilenFiltern(df, spaltenname, wert, operator):
         return filtered_df
 
 
+# mit der Funktion spaltenFiltern können einzelne oder mehere  Spalten ausgegeben werden
 def spaltenFiltern(df, liste):
     """
     mit der Funktion spaltenFiltern können einzelne oder mehere  Spalten ausgegeben werden
@@ -64,6 +65,11 @@ def wordcloudErstellen(df):
     except Exception as e:
         print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
 
+    text = df.to_string(header=False, index=False)
+    wordcloud = WordCloud(background_color="white", width=1920, height=1080, ).generate(text)
+    plt.imshow(wordcloud, interpolation="bilinear")
+    plt.axis("off")
+    plt.savefig('static/name.png')
 
 
 def genauerBeschreibungDerWortarten():

@@ -20,9 +20,8 @@
 <body>
 
 <header>
-    <nav class="navbar navbar-light" style="background-color: #20c997;">
+    <nav class="navbar navbar-light" style="background-color: #ec6f04;">
         <div class="container-fluid">
-
 
             <form method="post" action="/login">
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
@@ -43,8 +42,8 @@
                             <a class="nav-link active" aria-current="page" href="#">Home</a>
                         </li>
                         <li class="nav-item">
-                             <form method="post" action="/uebersichtsseite">
-                                <button class="btn btn-secondary" type="submit">Übersichtsseite</button>
+                             <form method="post" action="/uebersichtsseite" >
+                                <button class="btn btn-secondary" type="submit" name="uebersichtsseite" value="uebersichtsseite">Übersichtsseite</button>
                             </form>
                         </li>
                         <li class="nav-item">
@@ -52,73 +51,60 @@
                                 <button class="btn btn-secondary" type="submit">Logout</button>
                             </form>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                Dropdown
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                        </li>
+
                     </ul>
-                    <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
+
                 </div>
             </div>
-            <a class="navbar-brand" href="#">Team Data Analytics</a>
+            <a class="navbar-brand" href="#" style="color: #ffffff">Team Data Analytics</a>
         </div>
     </nav>
 </header>                          <!--Nav Bar-->
 
-<div class="container">
-    <h1>Sie befinden sich auf der Detailseite zu Ihrer ausgewählten Datei!</h1>
-</div>          <!--Überschrift "Sie befinden <Sich..."-->
+<div class="container mw-100">
+    <h2 style="font-weight: bold">Detailseite</h2>
+    <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d" >Table: '{{tablename}}'</h4>
+    <!--Überschrift "Sie befinden <Sich..."-->
 
 
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <div class="btn-group">
-                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                    Auswahl Diagrammtyp
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#">Liniendiagramm</a></li>
-                    <li><a class="dropdown-item" href="#">Balkendiagramm</a></li>
-                    <li><a class="dropdown-item" href="#">Tortendiagramm</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="col">
-            <div class="btn-group">
-                <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown"
-                        aria-expanded="false" type="button">
-                    Auswahl Spalten
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">{{Liste[0]}}</a></li>          <!--übernimmt Werte aus übergebener Liste-->
-                    <li><a class="dropdown-item" href="#">{{Liste[1]}}</a></li>
-                    <li><a class="dropdown-item" href="#">{{Liste[2]}}</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#">Separated link</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>          <!--2 Dropdowns-->
-<div class="container">
-    <img src= "https://www.w3schools.com/images/lamp.jpg" alt="Bild kann nicht angezeigt werden!" class="img-fluid">
+    <form method="POST" action="{{ url_for('detailseite', table=table) }}">
+        <p>
+            <label for="diagrammart" class="form-label" style="font-weight: lighter">Wählen Sie die Diagrammart und die gewünschten Spalten für das Diagramm</label>
+            <select class="form-control" name="diagrammart" id=diagrammart>
+                <option value="" selected disabled hidden>Diagrammart wählen</option>
+                <option value="Balkendiagramm">Balkendiagramm</option>
+                <option value="Liniendiagramm">Liniendiagramm</option>
+                <option value="Tortendiagramm">Tortendiagramm</option>
+                <option value="Wordcloud">Wordcloud</option>
+            </select>
+        </p>
+        <p>
+            <select class="form-control" name="xAchse" id=xAchse>
+                <option value="" selected disabled hidden>Spalte für x-Achse</option>
+                {% for Liste in Liste %}
+                <option value="{{Liste}}">{{Liste}}</option>
+                {% endfor %}
+            </select>
+            <select class="form-control" name="yAchse" id=yAchse>
+                <option value="" selected disabled hidden>Spalte für y-Achse</option>
+                {% for ListeY in ListeY %}
+                <option value="{{ListeY}}">{{ListeY}}</option>
+                {% endfor %}}
+            </select>
+        </p>
+        <button class="btn btn-secondary" style="background-color: #ffffff; color: #ec6f04;  border-color: #ec6f04; margin-top: 5px; margin-bottom: 5px" type="sumbit">Bestätigen</button>
+        <button class="btn btn-secondary" style="background-color: #ec6f04; color: #ffffff;  border-color: #ec6f04; margin-top: 5px; margin-bottom: 5px" type="sumbit">Bestätigen</button>
+        <button class="btn btn-secondary" " type="sumbit">Bestätigen</button>
+
+    </form>
+
+
+
+
+
+    <img src="{{ url_for('static', filename='name.png') }}" class="rounded mx-auto d-block" width="880" height="660" alt="Bild kann nicht angezeigt werden">
 </div>
+
+
 </body>
 </html>
