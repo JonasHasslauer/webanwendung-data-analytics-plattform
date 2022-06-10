@@ -243,6 +243,9 @@ def detailseite(table):
     else:
         return redirect(url_for('index'))
 
+@app.route("/impressum", methods=["POST", "GET"])
+def impressum():
+    return render_template("impressum.html")
 
 @app.route("/logout", methods=["POST"])
 def logout():

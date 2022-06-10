@@ -47,6 +47,11 @@
                             </form>
                         </li>
                         <li class="nav-item">
+                             <form method="post" action="/impressum" >
+                                <button class="btn btn-secondary" type="submit">Impressum</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
                             <form method="post" action="/logout">
                                 <button class="btn btn-secondary" type="submit">Logout</button>
                             </form>
@@ -102,6 +107,12 @@
     <img src="{{ url_for('static', filename='name.png') }}" class="rounded mx-auto d-block" width="880" height="660" alt="Bild kann nicht angezeigt werden">
 </div>
 
-
+<footer class="mt-auto">
+    <div align="center">
+        <p>
+        <a href="/impressum" class="link-secondary">Impressum</a>
+        </p>
+    </div>
+</footer>
 </body>
 </html>
