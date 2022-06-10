@@ -191,7 +191,7 @@ def detailseite(table):
                 df = pd.read_sql_query(command, databaseObject.connection)  # wandelt Table in DataFrame um
                 my_list = df.columns.values.tolist()  # macht Liste aus column names des DataFrames
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                ax = df.plot.bar(x=xAchse, y=yAchse).get_figure()  # erstellt plot mit x- und y-Achse
+                ax = df.plot.bar(x=xAchse, y=yAchse, ).get_figure()  # erstellt plot mit x- und y-Achse
                 ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table)

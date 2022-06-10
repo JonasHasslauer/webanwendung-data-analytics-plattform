@@ -51,36 +51,19 @@
                                 <button class="btn btn-secondary" type="submit">Logout</button>
                             </form>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                Dropdown
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                        </li>
+
                     </ul>
-                    <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
+
                 </div>
             </div>
-            <a class="navbar-brand" href="#">Team Data Analytics</a>
+            <a class="navbar-brand" href="#" style="color: #ffffff">Team Data Analytics</a>
         </div>
     </nav>
 </header>                          <!--Nav Bar-->
 
-<div class="container">
-    <h1>Sie befinden sich auf der Detailseite zu Ihrer ausgewählten Datei!</h1>
+<div class="container mw-100">
+    <h2 style="font-weight: bold">Detailseite</h2>
     <!--Überschrift "Sie befinden <Sich..."-->
-
 
 
     <form method="POST" action="{{ url_for('detailseite', table=table) }}">
@@ -108,14 +91,15 @@
                 {% endfor %}}
             </select>
         </p>
-        <button class="btn btn-secondary" type="sumbit">Bestätigen</button>
+        <button class="btn btn-secondary" style="background-color: #ffffff; color: #ec6f04;  border-color: #ec6f04; margin-top: 5px; margin-bottom: 5px" type="sumbit">Bestätigen</button>
+        <button class="btn btn-secondary" style="background-color: #ffffff; color: #ec6f04;  border-color: #ec6f04; margin-top: 5px; margin-bottom: 5px" type="sumbit">Bestätigen</button>
     </form>
 
 
 
 
 
-    <img src="{{ url_for('static', filename='name.png') }}" class="rounded mx-auto d-block" alt="Bild kann nicht angezeigt werden">
+    <img src="{{ url_for('static', filename='name.png') }}" class="rounded mx-auto d-block" width="880" height="660" alt="Bild kann nicht angezeigt werden">
 </div>
 
 
