@@ -11,7 +11,7 @@ from filtern import *
 
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
-extensions = set({'csv'})
+extensions = {'csv'}
 
 
 def allowed(filename):
@@ -67,9 +67,10 @@ def login():
 def specUebersicht(table):
     if 'username' in session:
         current_username = session['username']
-        databaseFileObject2 = DatabaseFile("Datenbank/"+current_username)
+        databaseFileObject2 = DatabaseFile("Datenbank/" + current_username)
         filenames = databaseFileObject2.getAllTableNamesAsList()
-        currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseFileObject2.connection)
+        currentDataDF = databaseFileObject2.getAllDataToFileFromTable(table)
+        # currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseFileObject2.connection)
 
         # Zeilen- und Spaltenfilter kombiniert
         if request.method == 'POST' and request.form.get("checkbox"):
@@ -83,7 +84,8 @@ def specUebersicht(table):
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[
-                                           currentDataDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)],
+                                           currentDataDF.to_html(classes='table table-striped text-center', index=False,
+                                                                 justify="center", col_space=20)],
                                        titles=currentDataDF.columns.values, tablename=table)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
@@ -91,7 +93,8 @@ def specUebersicht(table):
                 newDF = spaltenFiltern(zeilenFilterDF, filterlist)  # Spalten werden gefiltert
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[newDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)],
+                                       tables=[newDF.to_html(classes='table table-striped text-center', index=False,
+                                                             justify="center", col_space=20)],
                                        titles=newDF.columns.values, table=table, tablename=table)
 
         # Zeilenfilter
@@ -104,7 +107,7 @@ def specUebersicht(table):
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[newDF.to_html(classes='table table-striped text-center', index=False,
                                                          justify="center", col_space=20)], titles=newDF.columns.values,
-                                                        table=table, tablename=table)
+                                   table=table, tablename=table)
 
         # Spaltenfilter
         elif request.method == 'POST' and request.form.get("spaltenfilter"):
@@ -112,29 +115,33 @@ def specUebersicht(table):
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[currentDataDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)],
+                                       tables=[
+                                           currentDataDF.to_html(classes='table table-striped text-center', index=False,
+                                                                 justify="center", col_space=20)],
                                        titles=currentDataDF.columns.values, tablename=table)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 newDF = spaltenFiltern(currentDataDF, filterlist)  # Spalten werden gefiltert
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
-                                       tables=[newDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)],
+                                       tables=[newDF.to_html(classes='table table-striped text-center', index=False,
+                                                             justify="center", col_space=20)],
                                        titles=newDF.columns.values, table=table, tablename=table)
-
 
         elif request.method == 'POST' and request.form.get("subset"):
             DFname = request.form.get("subset")
             databaseFileObject2.saveDataFrame(newDF, DFname)
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[newDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)],
+                                   tables=[newDF.to_html(classes='table table-striped text-center', index=False,
+                                                         justify="center", col_space=20)],
                                    titles=newDF.columns.values, table=table, tablename=table)
 
 
         else:
             return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[currentDataDF.to_html(classes='table table-striped text-center', index=False, justify="center", col_space=20)],
+                                   tables=[currentDataDF.to_html(classes='table table-striped text-center', index=False,
+                                                                 justify="center", col_space=20)],
                                    titles=currentDataDF.columns.values,
                                    table=table, tablename=table)
     else:
@@ -145,7 +152,7 @@ def specUebersicht(table):
 def uebersichtsseite():
     if 'username' in session:
         current_username = session['username']
-        databaseFileObject = DatabaseFile("Datenbank/"+current_username)
+        databaseFileObject = DatabaseFile("Datenbank/" + current_username)
         filenames = databaseFileObject.getAllTableNamesAsList()
 
         if request.method == 'POST' and request.form.get('submit') == 'Refresh':
@@ -175,7 +182,7 @@ def uebersichtsseite():
 def detailseite(table):
     if 'username' in session:
         current_username = session['username']
-        databaseObject = DatabaseFile("Datenbank/"+current_username)
+        databaseObject = DatabaseFile("Datenbank/" + current_username)
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseObject.connection)
 
         if request.method == 'POST' and request.form.get("xAchse"):
