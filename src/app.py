@@ -66,7 +66,8 @@ def login():
 @app.route('/uebersichtsseite/<string:table>', methods=["POST", "GET"])
 def specUebersicht(table):
     if 'username' in session:
-        databaseFileObject2 = DatabaseFile("Datenbank/file")
+        current_username = session['username']
+        databaseFileObject2 = DatabaseFile("Datenbank/"+current_username)
         filenames = databaseFileObject2.getAllTableNamesAsList()
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseFileObject2.connection)
 
@@ -144,7 +145,8 @@ def specUebersicht(table):
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
     if 'username' in session:
-        databaseFileObject = DatabaseFile("Datenbank/file")
+        current_username = session['username']
+        databaseFileObject = DatabaseFile("Datenbank/"+current_username)
         filenames = databaseFileObject.getAllTableNamesAsList()
 
         if request.method == 'POST' and request.form.get('submit') == 'Refresh':
@@ -160,9 +162,9 @@ def uebersichtsseite():
             namesplitted = name.split('.')
             seperator = request.form.get('seperator')
             if seperator is None:
-                src.DatabaseFile.saveFile(file, namesplitted[0], seperator=",")
+                databaseFileObject.saveFile(file, namesplitted[0], seperator=",")
             else:
-                src.DatabaseFile.saveFile(file, namesplitted[0], seperator)
+                databaseFileObject.saveFile(file, namesplitted[0], seperator)
             return render_template("uebersichtsseite.html", filenames=filenames)
         else:
             return render_template("uebersichtsseite.html", filenames=filenames)
@@ -174,7 +176,8 @@ def uebersichtsseite():
 @app.route('/detailseite/<string:table>', methods=["POST", "GET"])
 def detailseite(table):
     if 'username' in session:
-        databaseObject = DatabaseFile("Datenbank/file")
+        current_username = session['username']
+        databaseObject = DatabaseFile("Datenbank/"+current_username)
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseObject.connection)
 
         if request.method == 'POST' and request.form.get("xAchse"):
