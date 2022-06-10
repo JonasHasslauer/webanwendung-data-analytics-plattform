@@ -1,18 +1,15 @@
 import sqlite3 as sql
 import pandas as pd
 import os
+from flask import session
 
-
-def saveFile(file, name, seperator):
+def saveFile(self, file, name):
     # TODO check if csv
+    # if allowed(file.filename):     --> funktioniert noch nicht ganz
     file.save("name.csv")
-    if seperator == ',':
-        pd.read_csv("name.csv", sep=',').to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),
-                                            schema=None, if_exists='replace', index=True, index_label=None,
-                                            chunksize=None,
-                                            dtype=None, method=None)
-    elif seperator == ';':
-        pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),
+    current_username = session['username']
+    print(current_username + "wird gespeichert")
+    pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/" + current_username, check_same_thread=False),
                                             schema=None, if_exists='replace', index=True, index_label=None,
                                             chunksize=None,
                                             dtype=None, method=None)
@@ -43,21 +40,6 @@ class DatabaseFile:
     def getAllDataToFileFromTable(self, tablename: str) -> pd.DataFrame:
         command = "SELECT * FROM " + tablename
         return pd.read_sql_query(self.cursor.execute(command), self.connection)
-
-    def saveFile(self, file, name, seperator):
-        # TODO check if csv
-        file.save("name.csv")
-        if seperator == ',':
-            pd.read_csv("name.csv", sep=',').to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),
-                                                schema=None, if_exists='replace', index=True, index_label=None,
-                                                chunksize=None,
-                                                dtype=None, method=None)
-        elif seperator == ';':
-            pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),
-                                                schema=None, if_exists='replace', index=True, index_label=None,
-                                                chunksize=None,
-                                                dtype=None, method=None)
-        os.remove("name.csv")
 
 
     def saveDataFrame(self, file, name):
