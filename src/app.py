@@ -3,7 +3,6 @@ import sqlite3
 import pandas as pd
 from flask import Flask, render_template, request, session, redirect, url_for
 
-import src.DatabaseFile
 from src.DatabaseUser import DatabaseUser
 from src.DatabaseFile import DatabaseFile
 

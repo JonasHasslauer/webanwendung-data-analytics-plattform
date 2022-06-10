@@ -28,7 +28,7 @@ class DatabaseFile:
 
     def getAllDataToFileFromTable(self, tablename: str) -> pd.DataFrame:
         command = "SELECT * FROM " + tablename
-        return pd.read_sql_query(self.cursor.execute(command), self.connection)
+        return pd.read_sql_query(command, self.connection)
 
     def saveFile(self, file, name, seperator):
         current_username = session['username']
