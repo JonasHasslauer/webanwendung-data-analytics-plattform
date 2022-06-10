@@ -43,6 +43,6 @@ class DatabaseFile:
 
 
     def saveDataFrame(self, file, name):
-        file.to_sql(name, sql.connect("Datenbank/file", check_same_thread=False),schema=None, if_exists='replace', index=True, index_label=None,
+        file.to_sql(name, sql.connect("Datenbank/" + session["username"], check_same_thread=False),schema=None, if_exists='replace', index=True, index_label=None,
                                                 chunksize=None,
                                                 dtype=None, method=None)

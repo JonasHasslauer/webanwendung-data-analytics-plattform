@@ -70,8 +70,3 @@ class DatabaseUser:
         self.cursor.execute("DELETE FROM LOGINS WHERE lastlogin < DATETIME('NOW', '-100 minutes')")
         self.connection.commit()
         # self.connection.close()
-
-
-        # TODO check if db already exists -> overwrite? --> if_exists='replace' fixt das --> soll umbenannt und anders abgespeichert werden
-        # else:
-        # return render_template("uebersichtsseite.html", Liste=["eins", "zwei", "zwei", "zwei"])
