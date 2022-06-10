@@ -245,7 +245,10 @@ def detailseite(table):
 
 @app.route("/impressum", methods=["POST", "GET"])
 def impressum():
-    return render_template("impressum.html")
+    if 'username' in session:
+        return render_template("impressum.html")
+    else:
+        return redirect(url_for('index'))
 
 @app.route("/logout", methods=["POST"])
 def logout():
