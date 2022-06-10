@@ -3,17 +3,6 @@ import pandas as pd
 import os
 from flask import session
 
-def saveFile(self, file, name):
-    # TODO check if csv
-    # if allowed(file.filename):     --> funktioniert noch nicht ganz
-    file.save("name.csv")
-    current_username = session['username']
-    print(current_username + "wird gespeichert")
-    pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/" + current_username, check_same_thread=False),
-                                            schema=None, if_exists='replace', index=True, index_label=None,
-                                            chunksize=None,
-                                            dtype=None, method=None)
-    os.remove("name.csv")
 
 
 class DatabaseFile:
@@ -40,6 +29,27 @@ class DatabaseFile:
     def getAllDataToFileFromTable(self, tablename: str) -> pd.DataFrame:
         command = "SELECT * FROM " + tablename
         return pd.read_sql_query(self.cursor.execute(command), self.connection)
+
+    def saveFile(self, file, name, seperator):
+        current_username = session['username']
+        filename = file.filename
+        namesplitted = filename.split('.')
+        last = namesplitted.pop()
+        if last == 'csv':
+            file.save("name.csv")
+            if seperator == ',':
+                pd.read_csv("name.csv", sep=',').to_sql(name, sql.connect("Datenbank/" + current_username,
+                                                                          check_same_thread=False),
+                                                        schema=None, if_exists='replace', index=True, index_label=None,
+                                                        chunksize=None,
+                                                        dtype=None, method=None)
+            elif seperator == ';':
+                pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/" + current_username,
+                                                                          check_same_thread=False),
+                                                        schema=None, if_exists='replace', index=True, index_label=None,
+                                                        chunksize=None,
+                                                        dtype=None, method=None)
+            os.remove("name.csv")
 
 
     def saveDataFrame(self, file, name):
