@@ -125,7 +125,6 @@ def specUebersicht(table):
 
         elif request.method == 'POST' and request.form.get("subset"):
             DFname = request.form.get("subset")
-
             databaseFileObject2.saveDataFrame(newDF, DFname)
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
@@ -158,8 +157,7 @@ def uebersichtsseite():
         # Dateiupload
         elif request.method == 'POST' and request.files['file']:
             file = request.files['file']
-            name = file.filename
-            namesplitted = name.split('.')
+            namesplitted = file.filename.split('.')
             seperator = request.form.get('seperator')
             if seperator is None:
                 databaseFileObject.saveFile(file, namesplitted[0], seperator=",")
