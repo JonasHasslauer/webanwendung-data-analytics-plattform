@@ -2,6 +2,7 @@ import sqlite3
 
 import pandas as pd
 from flask import Flask, render_template, request, session, redirect, url_for
+import os
 
 from src.DatabaseUser import DatabaseUser
 from src.DatabaseFile import DatabaseFile
@@ -220,7 +221,7 @@ def detailseite(table):
                 ax = df.plot.line(x=xAchse, y=yAchse).get_figure()
                 ax.savefig('static/name.png')
                 currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table)
+                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, tablename=table)
             elif diagrammart == "Wordcloud":
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
@@ -234,6 +235,7 @@ def detailseite(table):
         else:
             command = "SELECT * FROM " + table
             df = pd.read_sql_query(command, databaseObject.connection)
+            os.remove('static/name.png')
             ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
             my_list = df.columns.values.tolist()  # erstellt Liste aus column names für Dropdowns (höchstens 15)
             currentDataDF.to_html(header="true", table_id="table")
