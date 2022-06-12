@@ -10,7 +10,7 @@ import sys
 # nltk.download()
 test_df = {'Tiere': ['Maus', 'Affe', 'Huhn'],
            'Werte Tiere':[1,2,3]}
-test_df=pd.DataFrame(test_df)
+
 # Test Dataframe mit zufälligen Daten
 df = pd.read_csv('test_Csv_Datein/Sacramentorealestatetransactions.csv')
 #print(df)
@@ -82,7 +82,7 @@ def wordcloudErstellen(df):
 
 def genauerBeschreibungDerWortarten():
     """
-    Unter zu hilfe nahme dieser Funktion wird die genauer Beschreibung und
+    Unter zu hilfe nahme dieser Funktion wird die genauere Beschreibung und
     Definition der Wortarten angezeigt
     """
     try:
@@ -101,9 +101,14 @@ def wortartenAnalyse(df):
     try:
         #Dataframe wird in String umgewanderlt
         text = df.to_string(header=False, index=False)
-        if(langdetect.detect(text)=='de'):
-            einzelneWoerter = nltk.word_tokenize(text, language='german')
-        else:
+        #print(text)
+        try:
+            if(langdetect.detect(text)=='de'):
+                einzelneWoerter = nltk.word_tokenize(text, language='german')
+            else:
+                einzelneWoerter = nltk.word_tokenize(text, language='english')
+
+        except Exception as e:
             einzelneWoerter = nltk.word_tokenize(text, language='english')
 
         # Text wird in Wörter zerteilt und die Tokens werden zugeordnet
@@ -113,7 +118,7 @@ def wortartenAnalyse(df):
         woerterMitTokensEinfacheListe = [x for xs in woerterMitTokenslistOfLists for x in xs]
 
         #Die verschiedenen Wordarten werden gezählt
-        dollar = woerterMitTokensEinfacheListe.count('$')
+        dollar = int(woerterMitTokensEinfacheListe.count('$')/2.0)
         quotationMark = woerterMitTokensEinfacheListe.count("''")
         openingParenthesis = woerterMitTokensEinfacheListe.count('(')
         closingParenthesis = woerterMitTokensEinfacheListe.count(')')
@@ -190,8 +195,9 @@ def wortartenAnalyse(df):
         wortArten_df =pd.DataFrame(wortArten)
 
         wortArten_df_nur_zeilen_mit_wert_uerber_null = zeilenFiltern(wortArten_df,'Werte_Wortarten:',0,'>')
-        wortArten_df_nur_zeilen_mit_wert_uerber_null
+
         return wortArten_df_nur_zeilen_mit_wert_uerber_null
     except Exception as e:
         print("Oopsidupsi! ", e.__class__, "ist aufgetreten.")
 
+print(wortartenAnalyse(test_df))
