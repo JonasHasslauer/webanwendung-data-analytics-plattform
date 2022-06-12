@@ -13,6 +13,10 @@ class Test(TestCase):
         #arrange
         test_df = {'Tiere': ['Maus', 'Affe', 'Huhn']}
         test_df = pd.DataFrame(test_df)
+
+        test_df2 = {'Dollar': ['$']}
+        test_df2 = pd.DataFrame(test_df2)
+
         expected=pd.DataFrame({
             'Wortarten:':['nounProperSingular'],
             'Werte_Wortarten:':[3]
