@@ -21,6 +21,10 @@ class Test(TestCase):
             'Wortarten:':['nounProperSingular'],
             'Werte_Wortarten:':[3]
         })
+        expected_2 =pd.DataFrame({
+            'Wortarten:':['Dollarzeichen'],
+            'Werte_Wortarten:':[1]
+        })
         #act
         #assert
-        assert_frame_equal(expected,wortartenAnalyse(test_df))
+        assert_frame_equal(expected_2,wortartenAnalyse(test_df2))
