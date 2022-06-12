@@ -1,16 +1,14 @@
 import pandas as pd
-from wordcloud import WordCloud, STOPWORDS
+from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-import numpy as np
 import nltk
 import langdetect
-import sys
 
 
 # nltk.download()
 test_df = {'Tiere': ['Maus', 'Affe', 'Huhn'],
            'Werte Tiere':[1,2,3]}
-
+test_df = pd.DataFrame(test_df)
 # Test Dataframe mit zufälligen Daten
 df = pd.read_csv('test_Csv_Datein/Sacramentorealestatetransactions.csv')
 #print(df)
