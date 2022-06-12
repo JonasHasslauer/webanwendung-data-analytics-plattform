@@ -195,6 +195,3 @@ def wortartenAnalyse(df):
     except Exception as e:
         print("Oopsidupsi! ", e.__class__, "ist aufgetreten.")
 
-#print(wortartenAnalyse(df))
-#wordcloudErstellen(df)
-#print(zeilenFiltern(test_df,'Werte Tiere',2,'!='))
