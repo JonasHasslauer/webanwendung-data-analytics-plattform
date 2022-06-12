@@ -6,9 +6,11 @@ import langdetect
 
 
 # nltk.download()
-test_df = {'Tiere': ['Maus', 'Affe', 'Huhn'],
-           'Werte Tiere':[1,2,3]}
+test_df = {'Tiere': ['Maus', 'Affe', 'Huhn','Dollar'],
+           'Werte Tiere':[1,2,3,'$']}
 test_df = pd.DataFrame(test_df)
+test_df_2 ={'Dollar':['$']}
+test_df_2 =pd.DataFrame(test_df_2)
 # Test Dataframe mit zufälligen Daten
 df = pd.read_csv('test_Csv_Datein/Sacramentorealestatetransactions.csv')
 #print(df)
@@ -198,4 +200,4 @@ def wortartenAnalyse(df):
     except Exception as e:
         print("Oopsidupsi! ", e.__class__, "ist aufgetreten.")
 
-print(wortartenAnalyse(test_df))
+print(wortartenAnalyse(test_df_2))
