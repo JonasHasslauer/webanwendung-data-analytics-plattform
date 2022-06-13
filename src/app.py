@@ -69,8 +69,7 @@ def specUebersicht(table):
         current_username = session['username']
         databaseFileObject2 = DatabaseFile("Datenbank/" + current_username)
         filenames = databaseFileObject2.getAllTableNamesAsList()
-        currentDataDF = databaseFileObject2.getAllDataToFileFromTable(table)
-        # currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseFileObject2.connection)
+        currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseFileObject2.connection)
 
         # Zeilen- und Spaltenfilter kombiniert
         if request.method == 'POST' and request.form.get("checkbox"):
@@ -150,6 +149,7 @@ def specUebersicht(table):
 
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
+
     if 'username' in session:
         current_username = session['username']
         databaseFileObject = DatabaseFile("Datenbank/" + current_username)
@@ -166,13 +166,17 @@ def uebersichtsseite():
             file = request.files['file']
             namesplitted = file.filename.split('.')
             seperator = request.form.get('seperator')
-            if seperator is None:
-                databaseFileObject.saveFile(file, namesplitted[0], seperator=",")
+            fileExists = databaseFileObject.isFileExisting(namesplitted[0])
+            if not fileExists:
+                if seperator is None:
+                    databaseFileObject.saveFile(file, namesplitted[0], seperator=",")
+                else:
+                    databaseFileObject.saveFile(file, namesplitted[0], seperator)
+                    return render_template("uebersichtsseite.html", filenames=filenames, fileFlag = False)
             else:
-                databaseFileObject.saveFile(file, namesplitted[0], seperator)
-            return render_template("uebersichtsseite.html", filenames=filenames)
+                return render_template("uebersichtsseite.html", filenames=filenames, fileFlag = fileExists)
         else:
-            return render_template("uebersichtsseite.html", filenames=filenames)
+            return render_template("uebersichtsseite.html", filenames=filenames, fileFlag = False)
 
     else:
         return redirect(url_for('index'))

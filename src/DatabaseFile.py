@@ -3,8 +3,6 @@ import pandas as pd
 import os
 from flask import session
 
-
-
 class DatabaseFile:
     connection = ""
     cursor = ""
@@ -29,6 +27,11 @@ class DatabaseFile:
     def getAllDataToFileFromTable(self, tablename: str) -> pd.DataFrame:
         command = "SELECT * FROM " + tablename
         return pd.read_sql_query(command, self.connection)
+
+    def isFileExisting(self, filename: str) -> bool:
+        if filename in self.getAllTableNamesAsList():
+            return True
+        return False
 
     def saveFile(self, file, name, seperator):
         current_username = session['username']
