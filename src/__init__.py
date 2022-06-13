@@ -134,7 +134,7 @@ def specUebersicht(table):
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[newDF.to_html(classes='table table-striped text-center', index=False,
                                                          justify="center", col_space=20)],
-                                   titles=newDF.columns.values, table=table, tablename=table)
+                                   titles=newDF.columns.values, table=table)
 
 
         else:
@@ -204,7 +204,7 @@ def detailseite(table):
                 ax = df.plot.bar(x=xAchse, y=yAchse, ).get_figure()  # erstellt plot mit x- und y-Achse
                 ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
                 currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, tablename=table, showAxis=showAxis)
+                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,  showAxis=showAxis)
             elif diagrammart == "Tortendiagramm":  # macht noch keinen Sinn, zählt nicht, kann nur ein column entgegen nehmen
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
@@ -215,7 +215,7 @@ def detailseite(table):
                 ax = df.plot.pie(y=xAchse).get_figure()
                 ax.savefig('static/name.png')
                 currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, tablename=table, showAxis=showAxis)
+                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis)
             elif diagrammart == "Liniendiagramm":
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
@@ -226,7 +226,7 @@ def detailseite(table):
                 ax = df.plot.line(x=xAchse, y=yAchse).get_figure()
                 ax.savefig('static/name.png')
                 currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, tablename=table, showAxis=showAxis)
+                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis)
             elif diagrammart == "Wordcloud":
                 showAxis = False
                 command = "SELECT * FROM " + table
@@ -235,7 +235,7 @@ def detailseite(table):
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
                 wordcloudErstellen(df)  #ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
                 currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html",table=table, tablename=table, showAxis=showAxis)
+                return render_template("detailseite.html",table=table, showAxis=showAxis)
             elif diagrammart == "Wortartenanalyse":
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
@@ -245,7 +245,7 @@ def detailseite(table):
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
                 wortartenAnalyse(df)  #erstellt Grafik mit Wortartenanalyse
                 currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, tablename=table, showAxis=showAxis)
+                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis)
         else:
             showAxis=True
             command = "SELECT * FROM " + table
@@ -255,7 +255,7 @@ def detailseite(table):
             my_list = df.columns.values.tolist()  # erstellt Liste aus column names für Dropdowns (höchstens 15)
             currentDataDF.to_html(header="true", table_id="table")
             return render_template("detailseite.html", Liste=my_list,
-                                   ListeY=ListeInt, table=table, tablename=table, showAxis=showAxis)  # muss Liste übergeben, für erstes Landing
+                                   ListeY=ListeInt, table=table, showAxis=showAxis)  # muss Liste übergeben, für erstes Landing
 
     else:
         return redirect(url_for('index'))

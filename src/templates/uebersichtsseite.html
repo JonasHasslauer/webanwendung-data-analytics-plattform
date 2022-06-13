@@ -54,13 +54,10 @@
                             </li>
                         </p>
                     </ul>
-                    <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
+
                 </div>
             </div>
-            <a class="navbar-brand" href="#" style="color: #ffffff">Team Data Analytics</a>
+            <a class="navbar-brand" style="color: #ffffff">Team Data Analytics</a>
         </div>
     </nav>
 </header>
@@ -74,7 +71,7 @@
         <!-- Linke Box für Hochgeladene Excel Dateien-->
 
         <div class="col-5 bg">
-            <h3 style="color: #ec6f04; font-style: italic; font-weight: lighter">Dateiarchiv</h3>
+            <h3 style="color: #ec6f04; font-style: italic; font-weight: lighter">Upload</h3>
             <!-- Dateiupload -->
             <form action="/uebersichtsseite" method="post"
                   enctype="multipart/form-data">
@@ -87,9 +84,11 @@
                 </div>
                 {% endif %}
 
+
+
                 <!-- <p style="margin-bottom: -2px; font-size: small; color: #6c757d; font-style: italic">Trenner:</p> -->
                 <select class="form-control" name="seperator" id=seperator
-                        style="margin-bottom: 10px; width: 270px; margin-top: 10px; color: #6c757d; border-color: #6c757d">
+                        style="margin-bottom: 10px; width: 375px; margin-top: 10px; color: #6c757d; border-color: #6c757d">
                     <option value="" disabled hidden>Seperator wählen</option>
                     <option value="," selected>,</option>
                     <option value=";">;</option>
@@ -102,6 +101,8 @@
                     </label>
                     <input class="btn btn-secondary" type="submit" name="submit" value="Refresh" style="width: 80px">
                 </div>
+
+                <h3 style="color: #ec6f04; font-style: italic; font-weight: lighter">Dateiarchiv</h3>
 
             </form>
 
@@ -122,7 +123,7 @@
 
         <!-- Rechte Box zum Sortieren und Auswählen der Daten -->
         <div class="col-7 bg" style="margin-left: -100px">
-            <h3 style="color: #ec6f04; font-style: italic; font-weight: lighter">Filterung der Auswahl</h3>
+            <h3 style="color: #ec6f04; font-style: italic; font-weight: lighter">Selektion der Daten</h3>
             <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Table: '{{tablename}}'</h4>
             <div class="table overflow-scroll" style="height: 500px; width: 61vW; font-size: small">
                 <table class="table table-bordered">
@@ -152,11 +153,12 @@
                     <input class="form-control" name="spalte" id=spalte
                            placeholder="Nach welcher Spalte soll gefiltert werden?" style="border-color: #6c757d">
                     <select class="form-control" name="operator" id=operator
-                            style="margin-bottom: 10px; margin-top: 10px; border-color: #6c757d">
+                            style="margin-bottom: 10px; margin-top: 10px; border-color: #6c757d; color: #6c757d">
                         <option value="" selected disabled hidden>Operator wählen</option>
-                        <option value="<">kleiner</option>
-                        <option value=">">größer</option>
-                        <option value="==">gleich</option>
+                        <option value="<">Kleiner</option>
+                        <option value=">">Größer</option>
+                        <option value="==">Gleich</option>
+                        <option value="!=">Ungleich</option>
                     </select>
                     <input type="text" class="form-control" name="wert" id=wert placeholder="Sortierungswert?"
                            style="margin-bottom: 10px; margin-top: 10px; border-color: #6c757d">
