@@ -22,7 +22,7 @@
             <form method="post" action="/login">
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" style="color: white">
-                    <span class="navbar-toggler-icon" style ="color: #ffffff"></span>
+                    <span class="navbar-toggler-icon" style="color: #ffffff"></span>
                 </button>
             </form>
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
@@ -33,21 +33,26 @@
                             aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                             <form method="post" action="/impressum" >
-                                <button class="btn btn-secondary" type="submit">Impressum</button>
-                            </form>
-                        </li>
-                        <li class="nav-item">
-                            <form method="post" action="/logout">
-                                <button class="btn btn-secondary" type="submit">Logout</button>
-                            </form>
-                        </li>
-
+                    <ul class="navbar-nav justify-content flex-grow-1 pe-3">
+                        <p>
+                            <li class="nav-item">
+                                <form method="post" action="/impressum">
+                                    <button class="btn btn-secondary"
+                                        style="color: #ec6f04; background-color: white; border-color: #ec6f04; width: 360px; height: 35px"
+                                        type="submit">Impressum
+                                    </button>
+                                </form>
+                            </li>
+                        </p>
+                        <p>
+                            <li class="nav-item">
+                                <form method="post" action="/logout">
+                                    <button class="btn btn-secondary" style="color: #ec6f04; background-color: white; border-color: #ec6f04; width: 360px; height: 35px"
+                                        type="submit">Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </p>
                     </ul>
                     <form class="d-flex">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -70,29 +75,32 @@
 
         <div class="col-5 bg">
             <h3 style="color: #ec6f04; font-style: italic; font-weight: lighter">Dateiarchiv</h3>
-                <!-- Dateiupload -->
+            <!-- Dateiupload -->
             <form action="/uebersichtsseite" method="post"
                   enctype="multipart/form-data">
                 <input type="file" name="file"/>
 
                 {% if fileFlag %}
-                    <div>
-                        <h5 style="color: red; font-size: smaller; margin-top: 5px; margin-bottom: 5px; font-weight: bolder">Die Datei existiert bereits und wurde nicht überschrieben</h5>
-                    </div>
+                <div>
+                    <h5 style="color: red; font-size: smaller; margin-top: 5px; margin-bottom: 5px; font-weight: bolder">
+                        Die Datei existiert bereits und wurde nicht überschrieben</h5>
+                </div>
                 {% endif %}
 
                 <!-- <p style="margin-bottom: -2px; font-size: small; color: #6c757d; font-style: italic">Trenner:</p> -->
-                <select class="form-control" name="seperator" id=seperator style="margin-bottom: 10px; width: 270px; margin-top: 10px; color: #6c757d; border-color: #6c757d">
-                        <option value="" disabled hidden>Seperator wählen</option>
-                        <option value="," selected>,</option>
-                        <option value=";">;</option>
+                <select class="form-control" name="seperator" id=seperator
+                        style="margin-bottom: 10px; width: 270px; margin-top: 10px; color: #6c757d; border-color: #6c757d">
+                    <option value="" disabled hidden>Seperator wählen</option>
+                    <option value="," selected>,</option>
+                    <option value=";">;</option>
                 </select>
-                <div class="btn-group-toggle" data-toggle="buttons" align="left"  style="margin-bottom: 15px">
-                    <input class="btn btn-secondary" type="submit" name = "submit" value = "Datei Senden" style="width: 130px">
+                <div class="btn-group-toggle" data-toggle="buttons" align="left" style="margin-bottom: 15px">
+                    <input class="btn btn-secondary" type="submit" name="submit" value="Datei Senden"
+                           style="width: 130px">
                     <label class="btn btn-secondary">
                         <input type="checkbox" checked autocomplete="off" style="width: 30px">Überschriften
                     </label>
-                    <input class="btn btn-secondary" type="submit" name="submit" value ="Refresh" style="width: 80px">
+                    <input class="btn btn-secondary" type="submit" name="submit" value="Refresh" style="width: 80px">
                 </div>
 
             </form>
@@ -100,21 +108,22 @@
             <!-- Buttons erstellen -->
             <div class="d-grid gap-2">
 
-                    {% for filenames in filenames %}
-                    <form action="{{ url_for('specUebersicht', table=filenames) }}" method="POST">
-                        <button type="submit" class="btn btn-outline-secondary" style="padding-left:0; height: 35px; width: 375px; text-align: center; font-size: small"
-                                id="{{filenames}}"
-                                value="{{filenames}}" name="file">{{filenames}}
-                        </button>
-                    </form>
-                    {% endfor %}
+                {% for filenames in filenames %}
+                <form action="{{ url_for('specUebersicht', table=filenames) }}" method="POST">
+                    <button type="submit" class="btn btn-outline-secondary"
+                            style="padding-left:0; height: 35px; width: 375px; text-align: center; font-size: small"
+                            id="{{filenames}}"
+                            value="{{filenames}}" name="file">{{filenames}}
+                    </button>
+                </form>
+                {% endfor %}
             </div>
         </div>
 
         <!-- Rechte Box zum Sortieren und Auswählen der Daten -->
         <div class="col-7 bg" style="margin-left: -100px">
             <h3 style="color: #ec6f04; font-style: italic; font-weight: lighter">Filterung der Auswahl</h3>
-            <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d" >Table: '{{tablename}}'</h4>
+            <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Table: '{{tablename}}'</h4>
             <div class="table overflow-scroll" style="height: 500px; width: 61vW; font-size: small">
                 <table class="table table-bordered">
                     <tbody>
@@ -132,25 +141,30 @@
             <!--Spalten filtern-->
             <form method="POST" action="{{ url_for('specUebersicht', table=table) }}">
                 <p>
-                    <label for="spaltenfilter" class="form-label" style="font-weight: lighter">Einzelne Spalten filtern:</label>
+                    <label for="spaltenfilter" class="form-label" style="font-weight: lighter">Einzelne Spalten
+                        filtern:</label>
                     <input class="form-control" name="spaltenfilter" id=spaltenfilter
-                           placeholder="Spalten auswählen [Eingabe alle Anzeigen: Alle] zum Filtern [Eingabe: Spalte1,Spalte2,...]" style="border-color: #6c757d">
+                           placeholder="Spalten auswählen [Eingabe alle Anzeigen: Alle] zum Filtern [Eingabe: Spalte1,Spalte2,...]"
+                           style="border-color: #6c757d">
                 </p>
                 <p>
                     <label for="spalte" class="form-label" style="font-weight: lighter">Nach Werten filtern:</label>
                     <input class="form-control" name="spalte" id=spalte
                            placeholder="Nach welcher Spalte soll gefiltert werden?" style="border-color: #6c757d">
-                    <select class="form-control" name="operator" id=operator style="margin-bottom: 10px; margin-top: 10px; border-color: #6c757d">
+                    <select class="form-control" name="operator" id=operator
+                            style="margin-bottom: 10px; margin-top: 10px; border-color: #6c757d">
                         <option value="" selected disabled hidden>Operator wählen</option>
                         <option value="<">kleiner</option>
                         <option value=">">größer</option>
                         <option value="==">gleich</option>
                     </select>
-                    <input type="text" class="form-control" name="wert" id=wert placeholder="Sortierungswert?" style="margin-bottom: 10px; margin-top: 10px; border-color: #6c757d">
+                    <input type="text" class="form-control" name="wert" id=wert placeholder="Sortierungswert?"
+                           style="margin-bottom: 10px; margin-top: 10px; border-color: #6c757d">
                 <div class="form-check">
                     </p>
 
-                    <input class="form-check-input" type="checkbox" name="checkbox" id="checkbox" style="border-color: #6c757d">
+                    <input class="form-check-input" type="checkbox" name="checkbox" id="checkbox"
+                           style="border-color: #6c757d">
                     <label class="form-check-label" for="checkbox" style="font-weight: lighter">Beide filtern</label>
                 </div>
                 <button class="btn btn-secondary" type="submit">Filtern</button>
@@ -161,11 +175,18 @@
                 <form method="POST" action="{{ url_for('specUebersicht', table=table) }}" align="left">
                     <label for="subset" class="form-label" style="font-weight: lighter">Name für Subset</label>
                     <input class="form-control" name="subset" id=subset
-                           placeholder="Geben Sie den Namen ein, unter dem Sie das Subset speichern möchten" style="border-color: #6c757d">
-                    <button class="btn btn-primary" style="background-color: #ec6f04; margin-top: 5px; border-color: #ec6f04" type="submit" value="Subset speichern">Subset speichern</button>
+                           placeholder="Geben Sie den Namen ein, unter dem Sie das Subset speichern möchten"
+                           style="border-color: #6c757d">
+                    <button class="btn btn-primary"
+                            style="background-color: #ec6f04; margin-top: 5px; border-color: #ec6f04" type="submit"
+                            value="Subset speichern">Subset speichern
+                    </button>
                 </form>
                 <form method="post" action="{{ url_for('detailseite', table=table) }}" align="right">
-                    <button class="btn btn-primary" style="background-color: #ec6f04; border-color: #ec6f04; margin-top: 5px; margin-bottom: 5px" type="submit">Detailseite</button>
+                    <button class="btn btn-primary"
+                            style="background-color: #ec6f04; border-color: #ec6f04; margin-top: 5px; margin-bottom: 5px"
+                            type="submit">Detailseite
+                    </button>
                 </form>
             </div>
         </div>
@@ -175,7 +196,7 @@
 <footer class="mt-auto">
     <div align="center">
         <p>
-        <a href="/impressum" class="link-secondary">Impressum</a>
+            <a href="/impressum" class="link-secondary">Impressum</a>
         </p>
     </div>
 </footer>

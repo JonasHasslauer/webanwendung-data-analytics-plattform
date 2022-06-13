@@ -11,7 +11,7 @@
     <div class="container-fluid h-custom">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <!-- Grafik -->
-            <div class="col-md-9 col-lg-6 col-xl-5">
+            <div class="col-md-9 col-lg-6 col-xl-4" style="margin-top:30px ">
 
                 <img src="../static/GrafikRegisterpage.jpg"
                      class="img-fluid" alt="Bild kann nicht angezeigt werden">
@@ -23,25 +23,25 @@
                     <p class="fs-1 fw-bold lead mb-0 me-3" style="color: #ec6f04">Team Data Analytics</p>
                 </div>
                 <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                    <p class="fs-2 fw-bold lead mb-0 me-3">Jetzt anmelden</p>
+                    <p class="fs-2 fw-bold lead mb-0 me-3">Jetzt registrieren</p>
                 </div>
 
                 <form method="post" action="/register">
                     <label for="firstname">Vorname:</label>
-                    <input class="form-control" name="firstname" id=firstname placeholder="Vorname" required="required">
+                    <input class="form-control" style="border-color:#6c757d" name="firstname" id=firstname placeholder="Vorname" required="required">
 
                     <label for="lastname">Nachname:</label>
-                    <input class="form-control" name="lastname" id=lastname placeholder="Nachname" required="required">
+                    <input class="form-control" style="border-color:#6c757d" name="lastname" id=lastname placeholder="Nachname" required="required">
 
                     <label for="birthday">Geburtstag:</label>
-                    <input type="date" class="form-control" name="birthday" id=birthday placeholder="Geburtsdatum"
+                    <input type="date" class="form-control" style="border-color:#6c757d" name="birthday" id=birthday placeholder="Geburtsdatum"
                            required="required">
 
                     <label for="username">Username:</label>
-                    <input class="form-control" name="username" id=username placeholder="Username" required="required">
+                    <input class="form-control" style="border-color:#6c757d" name="username" id=username placeholder="Username" required="required">
 
                     <label for="password">Passwort:</label>
-                    <input type="password" class="form-control" name="password" id=password placeholder="Passwort"
+                    <input type="password" style="border-color:#6c757d" class="form-control" name="password" id=password placeholder="Passwort"
                            required="required" minlength="8">
 
                     <div class="text-center text-lg-start mt-4 pt-2">

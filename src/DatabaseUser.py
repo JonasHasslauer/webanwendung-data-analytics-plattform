@@ -67,6 +67,6 @@ class DatabaseUser:
         return False
 
     def clearData(self):
-        self.cursor.execute("DELETE FROM LOGINS WHERE lastlogin < DATETIME('NOW', '-100 minutes')")
+        self.cursor.execute("DELETE FROM LOGINS WHERE lastlogin < DATETIME('NOW', '-2 days')")
         self.connection.commit()
-        # self.connection.close()
+        #self.connection.close()

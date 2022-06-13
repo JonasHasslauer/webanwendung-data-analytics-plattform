@@ -1,6 +1,6 @@
 import unittest
 from src.database import Datenbank
-from src.app import app
+from src.__init__ import app
 import os
 from src.filtern import *
 
