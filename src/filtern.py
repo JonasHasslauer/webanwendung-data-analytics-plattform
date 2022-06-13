@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import nltk
 import langdetect
 import seaborn as sns
+import numpy as np
 
 
 # nltk.download()
