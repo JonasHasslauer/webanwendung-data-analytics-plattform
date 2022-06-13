@@ -6,7 +6,6 @@ import langdetect
 import seaborn as sns
 import numpy as np
 
-
 # nltk.download()
 test_df = {'Tiere': ['Maus', 'Affe', 'Huhn','Dollar'],
            'Werte Tiere':[1,2,3,'$']}
