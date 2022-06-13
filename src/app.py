@@ -243,7 +243,7 @@ def detailseite(table):
                 df = pd.read_sql_query(command, databaseObject.connection)
                 my_list = df.columns.values.tolist()
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                WortArtenDF = wortartenAnalyse(df)  #erstellt Dataframe mit Wortartenanalyse, weiß aber noch nicht wies angezeigt werden soll
+                wortartenAnalyse(df)  #erstellt Grafik mit Wortartenanalyse
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, tablename=table)
         else:
