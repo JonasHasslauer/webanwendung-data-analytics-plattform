@@ -233,7 +233,17 @@ def detailseite(table):
                 df = pd.read_sql_query(command, databaseObject.connection)
                 my_list = df.columns.values.tolist()
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                wordcloudErstellen(df)  # ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
+                wordcloudErstellen(df)  #ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
+                currentDataDF.to_html(header="true", table_id="table")
+                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, tablename=table)
+            elif diagrammart == "Wortartenanalyse":
+                xAchse = request.form.get("xAchse")
+                yAchse = request.form.get("yAchse")
+                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
+                df = pd.read_sql_query(command, databaseObject.connection)
+                my_list = df.columns.values.tolist()
+                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
+                WortArtenDF = wortartenAnalyse(df)  #erstellt Dataframe mit Wortartenanalyse, weiß aber noch nicht wies angezeigt werden soll
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, tablename=table)
         else:

@@ -3,6 +3,7 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import nltk
 import langdetect
+import numpy as np
 
 
 # nltk.download()
@@ -69,16 +70,10 @@ def wordcloudErstellen(df):
         wordcloud = WordCloud(background_color="white", width=1920, height=1080, ).generate(text)
         plt.imshow(wordcloud, interpolation="bilinear")
         plt.axis("off")
-        plt.show()
+        plt.savefig('static/name.png')
     except Exception as e:
         print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
-    '''
-    text = df.to_string(header=False, index=False)
-    wordcloud = WordCloud(background_color="white", width=1920, height=1080, ).generate(text)
-    plt.imshow(wordcloud, interpolation="bilinear")
-    plt.axis("off")
-    plt.savefig('static/name.png')
-    '''
+
 
 def genauerBeschreibungDerWortarten():
     """
