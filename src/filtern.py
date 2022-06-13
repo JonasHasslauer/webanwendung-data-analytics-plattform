@@ -3,6 +3,7 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import nltk
 import langdetect
+import seaborn as sns
 
 
 # nltk.download()
@@ -95,6 +96,7 @@ def wortartenAnalyse(df):
     Mit hilfe dieser Funktion kann der Inhalt eines Dataframes eier Wordartenanalyse unterzogen werden.
     Die Sprache des übergebenen DataFrames wird automatisch ermittelt.
     Falls der Inhalt des DataFrames zu klein oder nicht aussagekräftig ist, wird Englisch als Standartwert angenommen.
+    nach der Amalyse wird ein Diagramm erzeugt und als Bild gespeichert
     :param df: Zu übergebendes DataFrame
 
     """
@@ -196,10 +198,24 @@ def wortartenAnalyse(df):
 
         wortArten_df_nur_zeilen_mit_wert_uerber_null = zeilenFiltern(wortArten_df,'Werte_Wortarten:',0,'>')
 
-        return wortArten_df_nur_zeilen_mit_wert_uerber_null
+
+        #Das Dataframe wird in eine Grafik umgewandelt
+        wortArten_df_nur_zeilen_mit_wert_uerber_null.head()
+
+        sns.set(rc={'figure.figsize': (10, 12)})
+        ax = sns.barplot(y='Wortarten:', x='Werte_Wortarten:', data=wortArten_df_nur_zeilen_mit_wert_uerber_null, palette='rocket')
+
+        initialx = 0
+        for p in ax.patches:
+            ax.text(p.get_width(), initialx + p.get_height() / 8, '{:1.0f}'.format(p.get_width()))
+
+            initialx += 1
+
+        plt.savefig('static/name.png')
+
+
     except Exception as e:
         print("Oopsidupsi! ", e.__class__, "ist aufgetreten.")
 
-print(wortartenAnalyse(test_df_2))
+#print(wortartenAnalyse(test_df_2))
 
-#test
