@@ -201,3 +201,5 @@ def wortartenAnalyse(df):
         print("Oopsidupsi! ", e.__class__, "ist aufgetreten.")
 
 print(wortartenAnalyse(test_df_2))
+
+#test
