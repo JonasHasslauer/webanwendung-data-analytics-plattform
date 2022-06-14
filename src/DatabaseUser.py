@@ -67,9 +67,12 @@ class DatabaseUser:
         return False
 
     def getUser(self,username) -> list:
-        firstname = self.cursor.execute("SELECT firstname from Logins Where username =?", [username]).fetchone()
-        lastname = self.cursor.execute("SELECT lastname from Logins Where username =?", [username]).fetchone()
-        birthday = self.cursor.execute("SELECT birthday from Logins Where username =?", [username]).fetchone()
+        firstnames = self.cursor.execute("SELECT firstname from Logins Where username =?", [username]).fetchone()
+        firstname = firstnames[0]
+        lastnames = self.cursor.execute("SELECT lastname from Logins Where username =?", [username]).fetchone()
+        lastname = lastnames[0]
+        birthdays = self.cursor.execute("SELECT birthday from Logins Where username =?", [username]).fetchone()
+        birthday = birthdays[0]
         return [username, firstname, lastname, birthday]
 
 

@@ -44,10 +44,20 @@
                     <ul class="navbar-nav justify-content flex-grow-1 pe-3">
                         <p>
                             <li class="nav-item">
-                                <h3>Sie sind angemeldet als:</h3>
-                                <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Username: '{{user_list[0]}}'</h4>
-                                <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Name: '{{user_list[1]}} {{user_list[2]}}' </h4>
-                                <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Geburtstag: '{{user_list[3]}}'</h4>
+                                <div class="container px-4">
+                                  <div class="row g-0">
+                                    <div class="col-sm-4 col-md-3">
+                                        <img src="{{ url_for('static', filename='GrafikUser.jpg') }}" class="rounded mx-auto d-block" width="50" height="120"
+                                        alt="Bild nicht verfügbar">
+                                    </div>
+                                    <div class="col-sm-6 col-md-7">
+                                      <h3>Ihr User:</h3>
+                                        <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Username: '{{user_list[0]}}'</h4>
+                                        <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Name: '{{user_list[1]}} {{user_list[2]}}' </h4>
+                                        <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Geburtstag: '{{user_list[3]}}'</h4>
+                                    </div>
+                                  </div>
+                                </div>
                             </li>
                         </p>
                         <p>
