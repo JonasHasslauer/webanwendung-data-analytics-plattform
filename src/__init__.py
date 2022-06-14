@@ -38,11 +38,13 @@ def register():
         if not databaseUserObject.checkIfUserExists(username):
             try:
                 databaseUserObject.addUser(username, firstname, lastname, birthday, password)
+                flash("Account erfolgreich registriert.")
                 return redirect(url_for("login"))
             except sqlite3.IntegrityError as e:
-                print("Es gab einen Fehler: ", e)
-                return redirect(url_for("login"))
+                flash("Benutzername bereits vergeben. Bitte anderen Nutzernamen benutzen.")
+                return redirect(url_for("register"))
         else:  # Nutzer muss sich mit anderem Namen registrieren
+            flash("Benutzername bereits vergeben. Bitte anderen Nutzernamen benutzen.")
             return render_template(url_for("register"))
     else:
         return render_template("register.html")
@@ -58,7 +60,8 @@ def login():
             databaseUserObject.changeTimeStamp(username)
             return redirect(url_for('uebersichtsseite'))
         else:
-            return redirect(url_for('index'))
+            flash("Benutzerdaten überprüfen oder einen Account anlegen.")
+            return redirect(url_for('login'))
     else:
         return redirect(url_for('index'))
 
@@ -284,7 +287,16 @@ def impressum():
 def logout():
     session.clear()
     return redirect(url_for("index"))
+@app.errorhandler(404)
+def page_not_found(error):
+    flash("Die gesuchte URL existiert nicht.")
+    return redirect(url_for('login'))
 
+
+@app.errorhandler(500)
+def page_error(error):
+    flash("Ein Problem ist aufgetreten.")
+    return redirect(url_for('login'))
 
 databaseUserObject.clearData()
 

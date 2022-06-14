@@ -1,7 +1,7 @@
 import sqlite3 as sql
 import pandas as pd
 import os
-from flask import session
+from flask import session, flash
 
 class DatabaseFile:
     connection = ""
@@ -53,7 +53,7 @@ class DatabaseFile:
                                                         chunksize=None,
                                                         dtype=None, method=None)
             os.remove("name.csv")
-
+            flash("Datei erfolgreich hochgeladen.")
 
 
     def saveDataFrame(self, file, name):
