@@ -1,7 +1,7 @@
 import sqlite3
 
 import pandas as pd
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 import os
 
 from src.DatabaseUser import DatabaseUser
