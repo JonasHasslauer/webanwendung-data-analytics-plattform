@@ -2,8 +2,8 @@ import pandas as pd
 from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
 import numpy as np
-import nltk
-import langdetect
+#import nltk
+#import langdetect
 import sys
 
 

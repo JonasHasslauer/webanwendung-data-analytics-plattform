@@ -1,7 +1,10 @@
 import sqlite3
+from datetime import datetime, date
 
+import click
 import pandas as pd
-from flask import Flask, render_template, request, session, redirect, url_for
+
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 
 from src.DatabaseUser import DatabaseUser
 from src.DatabaseFile import DatabaseFile
@@ -35,13 +38,16 @@ def register():
         password = request.form.get("password")
 
         if not databaseUserObject.checkIfUserExists(username):
+
             try:
                 databaseUserObject.addUser(username, firstname, lastname, birthday, password)
+                flash("Account erfolgreich registriert.")
                 return redirect(url_for("login"))
             except sqlite3.IntegrityError as e:
-                print("Es gab einen Fehler: ", e)
-                return redirect(url_for("login"))
+                flash("Benutzername bereits vergeben. Bitte anderen Nutzernamen benutzen.")
+                return redirect(url_for("register"))
         else:  # Nutzer muss sich mit anderem Namen registrieren
+            flash("Benutzername bereits vergeben. Bitte anderen Nutzernamen benutzen.")
             return render_template(url_for("register"))
     else:
         return render_template("register.html")
@@ -57,7 +63,8 @@ def login():
             databaseUserObject.changeTimeStamp(username)
             return redirect(url_for('uebersichtsseite'))
         else:
-            return redirect(url_for('index'))
+            flash("Benutzerdaten überprüfen oder einen Account anlegen.")
+            return redirect(url_for('login'))
     else:
         return redirect(url_for('index'))
 
@@ -66,6 +73,7 @@ def login():
 def specUebersicht(table):
     if 'username' in session:
         current_username = session['username']
+
         databaseFileObject2 = DatabaseFile("Datenbank/" + current_username)
         filenames = databaseFileObject2.getAllTableNamesAsList()
         currentDataDF = databaseFileObject2.getAllDataToFileFromTable(table)
@@ -238,10 +246,12 @@ def detailseite(table):
             my_list = df.columns.values.tolist()  # erstellt Liste aus column names für Dropdowns (höchstens 15)
             currentDataDF.to_html(header="true", table_id="table")
             return render_template("detailseite.html", Liste=my_list,
-                                   ListeY=ListeInt, table=table, tablename=table)  # muss Liste übergeben, für erstes Landing
+                                   ListeY=ListeInt, table=table,
+                                   tablename=table)  # muss Liste übergeben, für erstes Landing
 
     else:
         return redirect(url_for('index'))
+
 
 @app.route("/impressum", methods=["POST", "GET"])
 def impressum():
@@ -250,10 +260,23 @@ def impressum():
     else:
         return redirect(url_for('index'))
 
+
 @app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
     return redirect(url_for("index"))
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    flash("Die gesuchte URL existiert nicht.")
+    return redirect(url_for('login'))
+
+
+@app.errorhandler(500)
+def page_error(error):
+    flash("Ein Problem ist aufgetreten.")
+    return redirect(url_for('login'))
 
 
 databaseUserObject.clearData()
