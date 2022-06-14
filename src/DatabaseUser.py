@@ -66,6 +66,13 @@ class DatabaseUser:
                 return False
         return False
 
+    def getUser(self,username) -> list:
+        firstname = self.cursor.execute("SELECT firstname from Logins Where username =?", [username]).fetchone()
+        lastname = self.cursor.execute("SELECT lastname from Logins Where username =?", [username]).fetchone()
+        birthday = self.cursor.execute("SELECT birthday from Logins Where username =?", [username]).fetchone()
+        return [username, firstname, lastname, birthday]
+
+
     def clearData(self):
         self.cursor.execute("DELETE FROM LOGINS WHERE lastlogin < DATETIME('NOW', '-2 days')")
         self.connection.commit()

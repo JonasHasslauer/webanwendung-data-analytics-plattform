@@ -33,9 +33,14 @@
                 </div>
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
-                        </li>
+                        <p>
+                            <li class="nav-item">
+                                <h3>Sie sind angemeldet als:</h3>
+                                <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Username: '{{user_list[0]}}'</h4>
+                                <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Name: '{{user_list[1]}} {{user_list[2]}}' </h4>
+                                <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Geburtstag: '{{user_list[3]}}'</h4>
+                            </li>
+                        </p>
                         <li class="nav-item">
                             <form method="post" action="/uebersichtsseite">
                                 <button class="btn btn-secondary" type="submit" name="uebersichtsseite"

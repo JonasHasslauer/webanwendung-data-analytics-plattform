@@ -71,6 +71,9 @@ def specUebersicht(table):
         filenames = databaseFileObject2.getAllTableNamesAsList()
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseFileObject2.connection)
 
+        databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
+        user_list = databaseUserObject.getUser(current_username)
+
         # Zeilen- und Spaltenfilter kombiniert
         if request.method == 'POST' and request.form.get("checkbox"):
             spalte = request.form.get("spalte")  # Eingabe von Website Spalte
@@ -85,7 +88,7 @@ def specUebersicht(table):
                                        tables=[
                                            currentDataDF.to_html(classes='table table-striped text-center', index=False,
                                                                  justify="center", col_space=20)],
-                                       titles=currentDataDF.columns.values, tablename=table)
+                                       titles=currentDataDF.columns.values, tablename=table, user_list=user_list)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 global newDF
@@ -94,7 +97,7 @@ def specUebersicht(table):
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[newDF.to_html(classes='table table-striped text-center', index=False,
                                                              justify="center", col_space=20)],
-                                       titles=newDF.columns.values, table=table, tablename=table)
+                                       titles=newDF.columns.values, table=table, tablename=table, user_list=user_list)
 
         # Zeilenfilter
         elif request.method == 'POST' and request.form.get("spalte"):
@@ -106,7 +109,7 @@ def specUebersicht(table):
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[newDF.to_html(classes='table table-striped text-center', index=False,
                                                          justify="center", col_space=20)], titles=newDF.columns.values,
-                                   table=table, tablename=table)
+                                   table=table, tablename=table, user_list=user_list)
 
         # Spaltenfilter
         elif request.method == 'POST' and request.form.get("spaltenfilter"):
@@ -117,7 +120,7 @@ def specUebersicht(table):
                                        tables=[
                                            currentDataDF.to_html(classes='table table-striped text-center', index=False,
                                                                  justify="center", col_space=20)],
-                                       titles=currentDataDF.columns.values, tablename=table)
+                                       titles=currentDataDF.columns.values, tablename=table, user_list=user_list)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 newDF = spaltenFiltern(currentDataDF, filterlist)  # Spalten werden gefiltert
@@ -125,7 +128,7 @@ def specUebersicht(table):
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[newDF.to_html(classes='table table-striped text-center', index=False,
                                                              justify="center", col_space=20)],
-                                       titles=newDF.columns.values, table=table, tablename=table)
+                                       titles=newDF.columns.values, table=table, tablename=table, user_list=user_list)
 
         elif request.method == 'POST' and request.form.get("subset"):
             DFname = request.form.get("subset")
@@ -134,7 +137,7 @@ def specUebersicht(table):
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[newDF.to_html(classes='table table-striped text-center', index=False,
                                                          justify="center", col_space=20)],
-                                   titles=newDF.columns.values, table=table)
+                                   titles=newDF.columns.values, table=table, user_list=user_list)
 
 
         else:
@@ -142,7 +145,7 @@ def specUebersicht(table):
                                    tables=[currentDataDF.to_html(classes='table table-striped text-center', index=False,
                                                                  justify="center", col_space=20)],
                                    titles=currentDataDF.columns.values,
-                                   table=table, tablename=table)
+                                   table=table, tablename=table, user_list=user_list)
     else:
         return redirect(url_for('index'))
 
@@ -155,11 +158,14 @@ def uebersichtsseite():
         databaseFileObject = DatabaseFile("Datenbank/" + current_username)
         filenames = databaseFileObject.getAllTableNamesAsList()
 
+        databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
+        user_list = databaseUserObject.getUser(current_username)
+
         if request.method == 'POST' and request.form.get('submit') == 'Refresh':
-            return render_template("uebersichtsseite.html", filenames=filenames)
+            return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
 
         if request.method == 'POST' and request.form.get('uebersichtsseite') == 'uebersichtsseite':
-            return render_template("uebersichtsseite.html", filenames=filenames)
+            return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
 
         # Dateiupload
         elif request.method == 'POST' and request.files['file']:
@@ -172,11 +178,11 @@ def uebersichtsseite():
                     databaseFileObject.saveFile(file, namesplitted[0], seperator=",")
                 else:
                     databaseFileObject.saveFile(file, namesplitted[0], seperator)
-                    return render_template("uebersichtsseite.html", filenames=filenames, fileFlag = False)
+                    return render_template("uebersichtsseite.html", filenames=filenames, fileFlag = False, user_list=user_list)
             else:
-                return render_template("uebersichtsseite.html", filenames=filenames, fileFlag = fileExists)
+                return render_template("uebersichtsseite.html", filenames=filenames, fileFlag = fileExists, user_list=user_list)
         else:
-            return render_template("uebersichtsseite.html", filenames=filenames, fileFlag = False)
+            return render_template("uebersichtsseite.html", filenames=filenames, fileFlag = False, user_list=user_list)
 
     else:
         return redirect(url_for('index'))
@@ -188,6 +194,10 @@ def detailseite(table):
         current_username = session['username']
         databaseObject = DatabaseFile("Datenbank/" + current_username)
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseObject.connection)
+
+        databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
+        user_list = databaseUserObject.getUser(current_username)
+
         showAxis = True
         if request.method == 'POST' and request.form.get("diagrammart"):
             diagrammart = request.form.get("diagrammart")  # kriegt aus Frontend, welches Diagrammart geünscht ist
@@ -204,7 +214,7 @@ def detailseite(table):
                 ax = df.plot.bar(x=xAchse, y=yAchse, ).get_figure()  # erstellt plot mit x- und y-Achse
                 ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
                 currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,  showAxis=showAxis)
+                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,  showAxis=showAxis, user_list=user_list)
             elif diagrammart == "Tortendiagramm":  # macht noch keinen Sinn, zählt nicht, kann nur ein column entgegen nehmen
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
@@ -215,7 +225,7 @@ def detailseite(table):
                 ax = df.plot.pie(y=xAchse).get_figure()
                 ax.savefig('static/name.png')
                 currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis)
+                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
             elif diagrammart == "Liniendiagramm":
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
@@ -226,7 +236,7 @@ def detailseite(table):
                 ax = df.plot.line(x=xAchse, y=yAchse).get_figure()
                 ax.savefig('static/name.png')
                 currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis)
+                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
             elif diagrammart == "Wordcloud":
                 showAxis = False
                 command = "SELECT * FROM " + table
@@ -235,7 +245,7 @@ def detailseite(table):
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
                 wordcloudErstellen(df)  #ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
                 currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html",table=table, showAxis=showAxis)
+                return render_template("detailseite.html",table=table, showAxis=showAxis, user_list=user_list)
             elif diagrammart == "Wortartenanalyse":
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
@@ -245,7 +255,7 @@ def detailseite(table):
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
                 wortartenAnalyse(df)  #erstellt Grafik mit Wortartenanalyse
                 currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis)
+                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
         else:
             showAxis=True
             command = "SELECT * FROM " + table
@@ -255,7 +265,7 @@ def detailseite(table):
             my_list = df.columns.values.tolist()  # erstellt Liste aus column names für Dropdowns (höchstens 15)
             currentDataDF.to_html(header="true", table_id="table")
             return render_template("detailseite.html", Liste=my_list,
-                                   ListeY=ListeInt, table=table, showAxis=showAxis)  # muss Liste übergeben, für erstes Landing
+                                   ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)  # muss Liste übergeben, für erstes Landing
 
     else:
         return redirect(url_for('index'))
@@ -263,7 +273,10 @@ def detailseite(table):
 @app.route("/impressum", methods=["POST", "GET"])
 def impressum():
     if 'username' in session:
-        return render_template("impressum.html")
+        current_username=session['username']
+        databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
+        user_list = databaseUserObject.getUser(current_username)
+        return render_template("impressum.html", user_list=user_list)
     else:
         return redirect(url_for('index'))
 
