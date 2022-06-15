@@ -1,3 +1,4 @@
+import os
 import sqlite3
 
 from flask import Flask, render_template, request, session, redirect, url_for, flash
@@ -174,7 +175,7 @@ def uebersichtsseite():
             file = request.files['file']
             namesplitted = file.filename.split('.')
             seperator = request.form.get('seperator')
-            fileExists = databaseFileObject.isFileExisting(namesplitted[0])
+            fileExists = databaseFileObject.databaseIsExisting(namesplitted[0])
             if not fileExists:
                 if seperator is None:
                     databaseFileObject.saveFile(file, namesplitted[0], seperator=",")
@@ -284,6 +285,10 @@ def impressum():
 
 @app.route("/logout", methods=["POST"])
 def logout():
+    if request.method == "POST" and request.form.get("delete") == "Account löschen":
+        databaseUserObject.deleteUser("Logins", session['username'])
+        os.remove(os.getcwd() + "/Datenbank/" + session['username'])
+        redirect(url_for('login'))
     session.clear()
     return redirect(url_for("index"))
 
