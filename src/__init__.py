@@ -164,11 +164,11 @@ def uebersichtsseite():
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(current_username)
 
-        if request.method == 'POST' and request.form.get('submit') == 'Refresh':
+        if request.method == 'POST' and (request.form.get('submit') == 'Refresh' or request.form.get('uebersichtsseite') == 'uebersichtsseite'):
             return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
 
-        if request.method == 'POST' and request.form.get('uebersichtsseite') == 'uebersichtsseite':
-            return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
+        # if request.method == 'POST' and request.form.get('uebersichtsseite') == 'uebersichtsseite':
+        #    return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
 
         # Dateiupload
         elif request.method == 'POST' and request.files['file']:
