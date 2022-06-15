@@ -36,10 +36,10 @@ class DatabaseFile:
     def saveFile(self, file, name, seperator):
         current_username = session['username']
         filename = file.filename
-        name = name.replace("-", "_")
         namesplitted = filename.split('.')
         last = namesplitted.pop()
-        name = name.replace("-", " ")
+        name = name.replace("-", "_")
+        name = name.replace(" ", "_")
         if last == 'csv':
             file.save("name.csv")
             if seperator == ',':
