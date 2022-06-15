@@ -200,19 +200,19 @@
 
             </form>
             <div>
-                <form method="POST" action="{{ url_for('specUebersicht', table=table) }}" align="left">
+                <form method="POST" action="{{ url_for('specUebersicht', table=table) }}">
                     <label for="subset" class="form-label" style="font-weight: lighter">Name für Subset</label>
                     <input class="form-control" name="subset" id=subset
                            placeholder="Geben Sie den Namen ein, unter dem Sie das Subset speichern möchten"
                            style="border-color: #6c757d">
                     <button class="btn btn-primary"
-                            style="background-color: #ec6f04; margin-top: 5px; border-color: #ec6f04" type="submit"
+                            style="background-color: #ec6f04; margin-top: 10px; margin-right: 15px; border-color: #ec6f04; float: left" type="submit"
                             value="Subset speichern">Subset speichern
                     </button>
                 </form>
-                <form method="post" action="{{ url_for('detailseite', table=table) }}" align="right">
+                <form method="post" action="{{ url_for('detailseite', table=table) }}">
                     <button class="btn btn-primary"
-                            style="background-color: #ec6f04; border-color: #ec6f04; margin-top: 5px; margin-bottom: 5px"
+                            style="background-color: #ec6f04; border-color: #ec6f04; margin-top: 10px; margin-bottom: 5px; float:left"
                             type="submit">Detailseite
                     </button>
                 </form>
