@@ -155,11 +155,11 @@ def uebersichtsseite():
         databaseFileObject = DatabaseFile("Datenbank/" + current_username)
         filenames = databaseFileObject.getAllTableNamesAsList()
 
-        if request.method == 'POST' and request.form.get('submit') == 'Refresh':
+        if request.method == 'POST' and (request.form.get('submit') == 'Refresh' or request.form.get('uebersichtsseite') == 'uebersichtsseite'):
             return render_template("uebersichtsseite.html", filenames=filenames)
 
-        if request.method == 'POST' and request.form.get('uebersichtsseite') == 'uebersichtsseite':
-            return render_template("uebersichtsseite.html", filenames=filenames)
+        # if request.method == 'POST' and request.form.get('uebersichtsseite') == 'uebersichtsseite':
+        #    return render_template("uebersichtsseite.html", filenames=filenames)
 
         # Dateiupload
         elif request.method == 'POST' and request.files['file']:
