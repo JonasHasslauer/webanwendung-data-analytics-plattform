@@ -38,6 +38,7 @@ class DatabaseFile:
         filename = file.filename
         namesplitted = filename.split('.')
         last = namesplitted.pop()
+        name = name.replace("-", " ")
         if last == 'csv':
             file.save("name.csv")
             if seperator == ',':
