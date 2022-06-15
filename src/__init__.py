@@ -133,7 +133,7 @@ def specUebersicht(table):
                                        titles=newDF.columns.values, table=table, tablename=table, user_list=user_list)
 
         elif request.method == 'POST' and request.form.get("subset"):
-            DFname = "Subset: " +  request.form.get("subset")
+            DFname = "Subset von " + table + ": " +  request.form.get("subset")
             databaseFileObject2.saveDataFrame(newDF, DFname)
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
