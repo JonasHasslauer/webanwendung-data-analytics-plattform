@@ -282,6 +282,14 @@ def impressum():
     else:
         return redirect(url_for('index'))
 
+@app.route("/benutzerhandbuch", methods=["POST"])
+def benutzerhandbuch():
+    if 'username' in session:
+        current_username=session['username']
+        databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
+        user_list = databaseUserObject.getUser(current_username)
+        return render_template("benutzerhandbuch.html", user_list=user_list)
+
 @app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
