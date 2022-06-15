@@ -1,8 +1,7 @@
 import sqlite3
 
-import pandas as pd
 from flask import Flask, render_template, request, session, redirect, url_for, flash
-import os
+
 
 from src.DatabaseUser import DatabaseUser
 from src.DatabaseFile import DatabaseFile
@@ -134,7 +133,7 @@ def specUebersicht(table):
                                        titles=newDF.columns.values, table=table, tablename=table, user_list=user_list)
 
         elif request.method == 'POST' and request.form.get("subset"):
-            DFname = request.form.get("subset")
+            DFname = "Subset: " +  request.form.get("subset")
             databaseFileObject2.saveDataFrame(newDF, DFname)
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
@@ -287,6 +286,8 @@ def impressum():
 def logout():
     session.clear()
     return redirect(url_for("index"))
+
+
 @app.errorhandler(404)
 def page_not_found(error):
     flash("Die gesuchte URL existiert nicht.")
