@@ -222,6 +222,7 @@ def detailseite(table):
                 sns.set(rc={'figure.figsize': (10, 12)})
                 ax = sns.barplot(y=yAchse, x=xAchse, data=df, palette='rocket').get_figure()
 
+                #Werte der XAchse sollen oberhalb der Balken angezeigt werden
                 initialx = 0
                 for p in ax.patches:
                     ax.text(p.get_width(), initialx + p.get_height() / 8, '{:1.0f}'.format(p.get_width()))
