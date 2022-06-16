@@ -8,7 +8,7 @@ from src.DatabaseUser import DatabaseUser
 from src.DatabaseFile import DatabaseFile
 
 from filtern import *
-
+import seaborn as sns
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
 extensions = {'csv'}
@@ -214,7 +214,21 @@ def detailseite(table):
                 df = pd.read_sql_query(command, databaseObject.connection)  # wandelt Table in DataFrame um
                 my_list = df.columns.values.tolist()  # macht Liste aus column names des DataFrames
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                ax = df.plot.bar(x=xAchse, y=yAchse, ).get_figure()  # erstellt plot mit x- und y-Achse
+
+                #ax = df.plot.bar(x=xAchse, y=yAchse, ).get_figure()  # erstellt plot mit x- und y-Achse
+
+                #Das Balkendiagramm wird hier nun mit seaborn erstellt
+                #was dazu führt dass es einen Farbverlauf hín der Palette rocket hat
+                sns.set(rc={'figure.figsize': (10, 12)})
+                ax = sns.barplot(y=yAchse, x=xAchse, data=df, palette='rocket').get_figure()
+
+                initialx = 0
+                for p in ax.patches:
+                    ax.text(p.get_width(), initialx + p.get_height() / 8, '{:1.0f}'.format(p.get_width()))
+
+                    initialx += 1
+
+
                 ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,  showAxis=showAxis, user_list=user_list)
