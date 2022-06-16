@@ -240,7 +240,13 @@ def detailseite(table):
                 df = pd.read_sql_query(command, databaseObject.connection)
                 my_list = df.columns.values.tolist()
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                ax = df.plot.pie(y=xAchse).get_figure()
+
+                #ax = df.plot.pie(y=xAchse).get_figure()
+                colors = sns.color_palette('rocket')
+
+
+                ax=plt.pie(df,  colors=colors, autopct='%.0f%%').get_figure()#wie bekomme ich die labels hin mhhh
+
                 ax.savefig('static/name.png')
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
