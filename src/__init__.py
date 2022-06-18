@@ -257,8 +257,14 @@ def detailseite(table):
                 df = pd.read_sql_query(command, databaseObject.connection)
                 my_list = df.columns.values.tolist()
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                ax = df.plot.line(x=xAchse, y=yAchse).get_figure()
+
+                #ax = df.plot.line(x=xAchse, y=yAchse).get_figure()
+
+                ax = sns.lineplot(x = xAchse, y = yAchse, data=df, hue="gear", palette = "rocket")
+
+
                 ax.savefig('static/name.png')
+
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
             elif diagrammart == "Wordcloud":
