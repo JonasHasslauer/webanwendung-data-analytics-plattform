@@ -3,6 +3,9 @@ import pandas as pd
 import os
 from flask import session, flash
 
+from src import DatabaseUser
+
+
 class DatabaseFile:
     connection = ""
     cursor = ""
@@ -28,8 +31,8 @@ class DatabaseFile:
         command = "SELECT * FROM " + tablename
         return pd.read_sql_query(command, self.connection)
 
-    def isFileExisting(self, filename: str) -> bool:
-        if filename in self.getAllTableNamesAsList():
+    def databaseIsExisting(self, databasename: str) -> bool:
+        if databasename in self.getAllTableNamesAsList():
             return True
         return False
 
@@ -56,7 +59,7 @@ class DatabaseFile:
                                                         dtype=None, method=None)
             os.remove("name.csv")
             flash("Datei erfolgreich hochgeladen.")
-
+        #TODO Was passiert sonst?
 
     def saveDataFrame(self, file, name):
         file.to_sql(name, sql.connect("Datenbank/" + session["username"], check_same_thread=False),schema=None, if_exists='replace', index=True, index_label=None,

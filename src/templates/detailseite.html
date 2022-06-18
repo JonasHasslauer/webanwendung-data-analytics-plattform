@@ -18,13 +18,12 @@
 <body>
 
 <header>
-    <nav class="navbar navbar-light" style="background-color: #ec6f04;">
+    <nav class="navbar navbar-light" style="background-color: #ec6f04; margin-bottom: 40px">
         <div class="container-fluid">
-
             <form method="post" action="/login">
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-                    <span class="navbar-toggler-icon"></span>
+                        data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" style="color: white">
+                    <span class="navbar-toggler-icon" style="color: #ffffff"></span>
                 </button>
             </form>
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
@@ -38,21 +37,25 @@
                     <ul class="navbar-nav justify-content flex-grow-1 pe-3">
                         <p>
                             <li class="nav-item">
-                                <div class="container px-4">
-                                  <div class="row g-0">
-                                    <div class="col-sm-4 col-md-3">
-                                        <img src="{{ url_for('static', filename='GrafikUser.jpg') }}" class="rounded mx-auto d-block" width="50" height="120"
-                                        alt="Bild nicht verfügbar">
-                                    </div>
-                                    <div class="col-sm-6 col-md-7">
-                                      <h3>Ihr User:</h3>
-                                        <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Username: '{{user_list[0]}}'</h4>
-                                        <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Name: '{{user_list[1]}} {{user_list[2]}}' </h4>
-                                        <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Geburtstag: '{{user_list[3]}}'</h4>
-                                    </div>
-                                  </div>
+                        <div class="container px-4">
+                            <div class="row g-0">
+                                <div class="col-sm-4 col-md-3">
+                                    <img src="{{ url_for('static', filename='GrafikUser.jpg') }}"
+                                         class="rounded mx-auto d-block" width="50" height="120"
+                                         alt="Bild nicht verfügbar">
                                 </div>
-                            </li>
+                                <div class="col-sm-6 col-md-7">
+                                    <h3>Ihr User:</h3>
+                                    <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Username:
+                                        '{{user_list[0]}}'</h4>
+                                    <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Name:
+                                        '{{user_list[1]}} {{user_list[2]}}' </h4>
+                                    <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Geburtstag:
+                                        '{{user_list[3]}}'</h4>
+                                </div>
+                            </div>
+                        </div>
+                        </li>
                         </p>
                         <p>
                             <li class="nav-item">
@@ -87,12 +90,18 @@
                                 </form>
                             </li>
                         </p>
-
+                        <p>
+                            <form method="post" action="/logout">
+                                <input class="btn btn-secondary" type="submit" name="delete" value="Account löschen"
+                                       style="color: white; background-color: red; border-color: red; margin-top: 10px; width: 360px; height: 35px">
+                            </form>
+                        </li>
+                        </p>
                     </ul>
 
                 </div>
             </div>
-            <a class="navbar-brand" href="#" style="color: #ffffff">Team Data Analytics</a>
+            <a class="navbar-brand" style="color: #ffffff">Team Data Analytics</a>
         </div>
     </nav>
 </header>                          <!--Nav Bar-->
