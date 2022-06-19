@@ -304,7 +304,20 @@ def detailseite(table):
         except Exception as e:
             #hier soll ein Button eingebaut werden der nur dann angezeit wird wenn ein Fehler bei den Diagrammen aufgetreten ist
 
-            print('Exeption')
+            flash('Leider hat die Eingabe kein gültiges Ergebnis erzeugt.'
+                  " Bitte überprüfen sie Ihre Eingabe")
+
+            return render_template("detailseite.html", Liste=my_list,
+                                   ListeY=ListeInt, table=table, showAxis=showAxis,
+                                   user_list=user_list)  # muss Liste übergeben, für erstes Landing
+
+
+
+
+
+
+
+
     else:
         return redirect(url_for('index'))
 

@@ -82,7 +82,13 @@
         </div>
     </nav>
 </header>                          <!--Nav Bar-->
-
+   {% block content %}
+{% for message in get_flashed_messages()%}
+<div class="alert alert-danger" role="alert">
+  {{message}}
+</div>
+{% endfor %}
+    {%endblock content%}
 <div class="container mw-100">
     <h2 style="font-weight: bold">Detailseite</h2>
     <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Table: '{{table}}'</h4>
