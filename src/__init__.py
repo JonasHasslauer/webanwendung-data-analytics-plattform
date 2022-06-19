@@ -202,101 +202,109 @@ def detailseite(table):
         user_list = databaseUserObject.getUser(current_username)
 
         showAxis = True
-        if request.method == 'POST' and request.form.get("diagrammart"):
-            diagrammart = request.form.get("diagrammart")  # kriegt aus Frontend, welches Diagrammart geünscht ist
-            print(diagrammart)  # nur Kontrolle
-            if diagrammart == "Balkendiagramm":
+
+        #es wird ein try Block um die Diagramm Funktionen gelegt umd die Aufkommenden Exeptions zu fangen
+        try:
+
+            if request.method == 'POST' and request.form.get("diagrammart"):
+                diagrammart = request.form.get("diagrammart")  # kriegt aus Frontend, welches Diagrammart geünscht ist
+                print(diagrammart)  # nur Kontrolle
+                if diagrammart == "Balkendiagramm":
+                    showAxis=True
+                    xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse
+                    # verwendet werden sollen
+                    yAchse = request.form.get("yAchse")
+                    command = "SELECT * FROM " + table + " GROUP BY " + xAchse
+                    df = pd.read_sql_query(command, databaseObject.connection)  # wandelt Table in DataFrame um
+                    my_list = df.columns.values.tolist()  # macht Liste aus column names des DataFrames
+                    ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
+
+                    #ax = df.plot.bar(x=xAchse, y=yAchse, ).get_figure()  # erstellt plot mit x- und y-Achse
+
+                    #Das Balkendiagramm wird hier nun mit seaborn erstellt
+                    #was dazu führt dass es einen Farbverlauf hín der Palette rocket hat
+                    sns.set(rc={'figure.figsize': (10, 12)})
+                    ax = sns.barplot(y=yAchse, x=xAchse, data=df, palette='rocket').get_figure()
+
+                    #Werte der XAchse sollen oberhalb der Balken angezeigt werden
+                    initialx = 0
+                    for p in ax.patches:
+                        ax.text(p.get_width(), initialx + p.get_height() / 8, '{:1.0f}'.format(p.get_width()))
+
+                        initialx += 1
+
+
+                    ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
+                    currentDataDF.to_html(header="true", table_id="table")
+                    return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,  showAxis=showAxis, user_list=user_list)
+                elif diagrammart == "Tortendiagramm":  # macht noch keinen Sinn, zählt nicht, kann nur ein column entgegen nehmen
+                    xAchse = request.form.get("xAchse")
+                    yAchse = request.form.get("yAchse")
+                    command = "SELECT * FROM " + table
+                    df = pd.read_sql_query(command, databaseObject.connection)
+                    my_list = df.columns.values.tolist()
+                    ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
+
+                    #ax = df.plot.pie(y=xAchse).get_figure()
+                    colors = sns.color_palette('rocket')
+
+
+                    ax=plt.pie(df,  colors=colors, autopct='%.0f%%').get_figure()#wie bekomme ich die labels hin mhhh
+
+                    ax.savefig('static/name.png')
+                    currentDataDF.to_html(header="true", table_id="table")
+                    return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
+                elif diagrammart == "Liniendiagramm":
+                    xAchse = request.form.get("xAchse")
+                    yAchse = request.form.get("yAchse")
+                    command = "SELECT * FROM " + table + " GROUP BY " + xAchse
+                    df = pd.read_sql_query(command, databaseObject.connection)
+                    my_list = df.columns.values.tolist()
+                    ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
+
+                    #ax = df.plot.line(x=xAchse, y=yAchse).get_figure()
+
+                    ax = sns.lineplot(x = xAchse, y = yAchse, data=df, hue="gear", palette = "rocket")
+
+
+                    ax.savefig('static/name.png')
+
+                    currentDataDF.to_html(header="true", table_id="table")
+                    return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
+                elif diagrammart == "Wordcloud":
+                    showAxis = False
+                    command = "SELECT * FROM " + table
+                    df = pd.read_sql_query(command, databaseObject.connection)
+                    my_list = df.columns.values.tolist()
+                    ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
+                    wordcloudErstellen(df)  #ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
+                    currentDataDF.to_html(header="true", table_id="table")
+                    return render_template("detailseite.html",table=table, showAxis=showAxis, user_list=user_list)
+                elif diagrammart == "Wortartenanalyse":
+                    xAchse = request.form.get("xAchse")
+                    yAchse = request.form.get("yAchse")
+                    command = "SELECT * FROM " + table + " GROUP BY " + xAchse
+                    df = pd.read_sql_query(command, databaseObject.connection)
+                    my_list = df.columns.values.tolist()
+                    ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
+                    wortartenAnalyse(df)  #erstellt Grafik mit Wortartenanalyse
+                    currentDataDF.to_html(header="true", table_id="table")
+                    return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
+            else:
                 showAxis=True
-                xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse
-                # verwendet werden sollen
-                yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
-                df = pd.read_sql_query(command, databaseObject.connection)  # wandelt Table in DataFrame um
-                my_list = df.columns.values.tolist()  # macht Liste aus column names des DataFrames
-                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-
-                #ax = df.plot.bar(x=xAchse, y=yAchse, ).get_figure()  # erstellt plot mit x- und y-Achse
-
-                #Das Balkendiagramm wird hier nun mit seaborn erstellt
-                #was dazu führt dass es einen Farbverlauf hín der Palette rocket hat
-                sns.set(rc={'figure.figsize': (10, 12)})
-                ax = sns.barplot(y=yAchse, x=xAchse, data=df, palette='rocket').get_figure()
-
-                #Werte der XAchse sollen oberhalb der Balken angezeigt werden
-                initialx = 0
-                for p in ax.patches:
-                    ax.text(p.get_width(), initialx + p.get_height() / 8, '{:1.0f}'.format(p.get_width()))
-
-                    initialx += 1
-
-
-                ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
-                currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,  showAxis=showAxis, user_list=user_list)
-            elif diagrammart == "Tortendiagramm":  # macht noch keinen Sinn, zählt nicht, kann nur ein column entgegen nehmen
-                xAchse = request.form.get("xAchse")
-                yAchse = request.form.get("yAchse")
                 command = "SELECT * FROM " + table
                 df = pd.read_sql_query(command, databaseObject.connection)
-                my_list = df.columns.values.tolist()
+
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-
-                #ax = df.plot.pie(y=xAchse).get_figure()
-                colors = sns.color_palette('rocket')
-
-
-                ax=plt.pie(df,  colors=colors, autopct='%.0f%%').get_figure()#wie bekomme ich die labels hin mhhh
-
-                ax.savefig('static/name.png')
+                my_list = df.columns.values.tolist()  # erstellt Liste aus column names für Dropdowns (höchstens 15)
                 currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
-            elif diagrammart == "Liniendiagramm":
-                xAchse = request.form.get("xAchse")
-                yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
-                df = pd.read_sql_query(command, databaseObject.connection)
-                my_list = df.columns.values.tolist()
-                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
+                return render_template("detailseite.html", Liste=my_list,
+                                       ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)  # muss Liste übergeben, für erstes Landing
 
-                #ax = df.plot.line(x=xAchse, y=yAchse).get_figure()
+        except Exception as e:
+            #hier soll ein Button eingebaut werden der nur dann angezeit wird wenn ein Fehler bei den Diagrammen aufgetreten ist
 
-                ax = sns.lineplot(x = xAchse, y = yAchse, data=df, hue="gear", palette = "rocket")
-
-
-                ax.savefig('static/name.png')
-
-                currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
-            elif diagrammart == "Wordcloud":
-                showAxis = False
-                command = "SELECT * FROM " + table
-                df = pd.read_sql_query(command, databaseObject.connection)
-                my_list = df.columns.values.tolist()
-                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                wordcloudErstellen(df)  #ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
-                currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html",table=table, showAxis=showAxis, user_list=user_list)
-            elif diagrammart == "Wortartenanalyse":
-                xAchse = request.form.get("xAchse")
-                yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
-                df = pd.read_sql_query(command, databaseObject.connection)
-                my_list = df.columns.values.tolist()
-                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                wortartenAnalyse(df)  #erstellt Grafik mit Wortartenanalyse
-                currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
-        else:
-            showAxis=True
-            command = "SELECT * FROM " + table
-            df = pd.read_sql_query(command, databaseObject.connection)
-
-            ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-            my_list = df.columns.values.tolist()  # erstellt Liste aus column names für Dropdowns (höchstens 15)
-            currentDataDF.to_html(header="true", table_id="table")
-            return render_template("detailseite.html", Liste=my_list,
-                                   ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)  # muss Liste übergeben, für erstes Landing
-
+            print('Exeption')
     else:
         return redirect(url_for('index'))
 
