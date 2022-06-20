@@ -1,0 +1,193 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import nltk
+import langdetect
+from filtern import *
+
+
+class Chart:
+
+    databaseObject = ""
+
+    def __init__(self, databaseObject):
+       self.dabaseObject = databaseObject
+
+    def makeBarChart(self, table, xAchse, yAchse):
+        command = "SELECT * FROM " + table + " GROUP BY " + xAchse
+        df = pd.read_sql_query(command, self.databaseObject.connection)  # wandelt Table in DataFrame um
+        ax = df.plot.bar(x=xAchse, y=yAchse, ).get_figure()  # erstellt plot mit x- und y-Achse
+        ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
+
+    def makePieChart(self, table):
+        command = "SELECT * FROM " + table
+        df = pd.read_sql_query(command, self.databaseObject.connection)
+        ax = df.plot.pie().get_figure()
+        ax.savefig('static/name.png')
+
+    def makeLineChart(self, table, xAchse, yAchse):
+        command = "SELECT * FROM " + table + " GROUP BY " + xAchse
+        df = pd.read_sql_query(command, self.databaseObject.connection)
+
+        ax = df.plot.line(x=xAchse, y=yAchse).get_figure()
+        ax.savefig('static/name.png')
+
+    def makeWordCloud(self, table):
+        """
+        Dies Methode erstellt eine WordCloud aus einem Ihr übergebenen DataFrame
+        :param df: zu bearbeitendes DataFrame
+        """
+        try:
+            command = "SELECT * FROM " + table
+            df = pd.read_sql_query(command, self.databaseObject.connection)
+            text = df.to_string(header=False, index=False)
+            wordcloud = WordCloud(background_color="white", width=1920, height=1080, ).generate(text)
+            plt.imshow(wordcloud, interpolation="bilinear")
+            plt.axis("off")
+            plt.savefig('static/name.png')
+        except Exception as e:
+            print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
+
+    def genauerBeschreibungDerWortarten(self):
+        """
+        Unter zu hilfe nahme dieser Funktion wird die genauere Beschreibung und
+        Definition der Wortarten angezeigt
+        """
+        try:
+            nltk.help.upenn_tagset()
+        except Exception as e:
+            print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
+
+
+    def makeWortartenAnalyse(self, table):
+        """
+        Mit hilfe dieser Funktion kann der Inhalt eines Dataframes eier Wordartenanalyse unterzogen werden.
+        Die Sprache des übergebenen DataFrames wird automatisch ermittelt.
+        Falls der Inhalt des DataFrames zu klein oder nicht aussagekräftig ist, wird Englisch als Standartwert angenommen.
+        :param df: Zu übergebendes DataFrame
+
+        """
+        try:
+            command = "SELECT * FROM " + table
+            df = pd.read_sql_query(command, self.databaseObject.connection)
+            # Dataframe wird in String umgewanderlt
+            text = df.to_string(header=False, index=False)
+            # print(text)
+            try:
+                if (langdetect.detect(text) == 'de'):
+                    einzelneWoerter = nltk.word_tokenize(text, language='german')
+                else:
+                    einzelneWoerter = nltk.word_tokenize(text, language='english')
+
+            except Exception as e:
+                einzelneWoerter = nltk.word_tokenize(text, language='english')
+
+            # Text wird in Wörter zerteilt und die Tokens werden zugeordnet
+            woerterMitTokenslistOfLists = nltk.pos_tag(einzelneWoerter)
+
+            # die List of Lists wird zu einer einfachen Liste umgewandelt
+            woerterMitTokensEinfacheListe = [x for xs in woerterMitTokenslistOfLists for x in xs]
+
+            # Die verschiedenen Wordarten werden gezählt
+            dollar = int(woerterMitTokensEinfacheListe.count('$') / 2.0)
+            quotationMark = woerterMitTokensEinfacheListe.count("''")
+            openingParenthesis = woerterMitTokensEinfacheListe.count('(')
+            closingParenthesis = woerterMitTokensEinfacheListe.count(')')
+            comma = woerterMitTokensEinfacheListe.count(',')
+            dash = woerterMitTokensEinfacheListe.count('--')
+            sentenceTerminator = woerterMitTokensEinfacheListe.count('.')
+            colon = woerterMitTokensEinfacheListe.count(':')
+            conjunction = woerterMitTokensEinfacheListe.count('CC')
+            numeral = woerterMitTokensEinfacheListe.count('CD')
+            determiner = woerterMitTokensEinfacheListe.count('DT')
+            existentialThere = woerterMitTokensEinfacheListe.count('EX')
+            foreignWord = woerterMitTokensEinfacheListe.count('FW')
+            prepositionOrConjunction = woerterMitTokensEinfacheListe.count('IN')
+            adjektivOrdinal = woerterMitTokensEinfacheListe.count('JJ')
+            adjektivComperativ = woerterMitTokensEinfacheListe.count('JJR')
+            adjectiveSuperlative = woerterMitTokensEinfacheListe.count('JJS')
+            listItemMarker = woerterMitTokensEinfacheListe.count('LS')
+            modalAuxiliary = woerterMitTokensEinfacheListe.count('MD')
+            nounCommonSingular = woerterMitTokensEinfacheListe.count('NN')
+            noundProperSingular = woerterMitTokensEinfacheListe.count('NNP')
+            nounProperPlural = woerterMitTokensEinfacheListe.count('NNPS')
+            nounCommonPlural = woerterMitTokensEinfacheListe.count('NNS')
+            preDeterminer = woerterMitTokensEinfacheListe.count('PDT')
+            genitiveMarker = woerterMitTokensEinfacheListe.count('POS')
+            pronounPersonal = woerterMitTokensEinfacheListe.count('PRP')
+            pronounPossesive = woerterMitTokensEinfacheListe.count('PRP$')
+            adverb = woerterMitTokensEinfacheListe.count('RB')
+            adverbComperative = woerterMitTokensEinfacheListe.count('RBR')
+            adverbSuperlative = woerterMitTokensEinfacheListe.count('RBS')
+            particle = woerterMitTokensEinfacheListe.count('RP')
+            symbol = woerterMitTokensEinfacheListe.count('SYM')
+            to = woerterMitTokensEinfacheListe.count('TO')
+            interjenction = woerterMitTokensEinfacheListe.count('UH')
+            verbBaseForm = woerterMitTokensEinfacheListe.count('VB')
+            verbPastTense = woerterMitTokensEinfacheListe.count('VBD')
+            verbPresentParticipleOrGerund = woerterMitTokensEinfacheListe.count('VBG')
+            verbPastParticiple = woerterMitTokensEinfacheListe.count('VBN')
+            verbPastTenseNotThirdPersonSingular = woerterMitTokensEinfacheListe.count('VBP')
+            verbPresentTense = woerterMitTokensEinfacheListe.count('VBZ')
+            whDeterminer = woerterMitTokensEinfacheListe.count('WDT')
+            whPronun = woerterMitTokensEinfacheListe.count('WP')
+            whPronunPossesive = woerterMitTokensEinfacheListe.count('WP$')
+            whAdverb = woerterMitTokensEinfacheListe.count('WRB')
+            openingQuotationMark = woerterMitTokensEinfacheListe.count('``')
+
+            # Aus den obrigen Daten wird nun ein DataFrame erstellt und danach zurückgegeben
+            wortArten = {'Wortarten:': ['Dollarzeichen', 'öffnende Klammer', 'schließende Klammer',
+                                        'Komma', 'Bindestrich', 'Punkt/Ausrufezeichen/Fragezeichen', 'Doppelpunkt',
+                                        'Konjunktion',
+                                        'Ziffer', 'Determinator', 'existentialThere', 'Wort aus fremder Sprache',
+                                        'Präposition oder Konjunktion', 'adjektivOrdinal', 'adjektivComperativ',
+                                        'adjectiveSuperlative', 'listItemMarker', 'modales Hilfsmittel',
+                                        'SubstantivCommonSingular', 'SubstantivProperSingular',
+                                        'SubstantivProperPlural',
+                                        'SubstantivCommonPlural', 'preDeterminer', 'Genitiv Marker',
+                                        'Personalpronomen', 'Possessivpronomen', 'Adverb', 'Adverb Comperative',
+                                        'Adverb Superlative', 'Partikel', 'Symbol', 'to', 'Interjenction',
+                                        'Verb Basis Form', 'Verb Vergangenheitsform',
+                                        'Verb Präsens Partizip oder Gerundium',
+                                        'Verb Partizip Perfekt', 'Verb Präsens', 'wh Determiner', 'wh Pronomen',
+                                        'wh Adverb', 'öffnendes Anführungszeichen',
+                                        'Verb Vergangenheitsform nicht dritte Person Singular',
+                                        'wh Possessivpronomen', 'Anführungszeichen'],
+                         'Werte_Wortarten:': [dollar, openingParenthesis, closingParenthesis,
+                                              comma, dash, sentenceTerminator, colon, conjunction,
+                                              numeral, determiner, existentialThere, foreignWord,
+                                              prepositionOrConjunction, adjektivOrdinal, adjektivComperativ,
+                                              adjectiveSuperlative, listItemMarker, modalAuxiliary,
+                                              nounCommonSingular, noundProperSingular, nounProperPlural,
+                                              nounCommonPlural, preDeterminer, genitiveMarker,
+                                              pronounPersonal, pronounPossesive, adverb, adverbComperative,
+                                              adverbSuperlative, particle, symbol, to, interjenction,
+                                              verbBaseForm, verbPastTense, verbPresentParticipleOrGerund,
+                                              verbPastParticiple, verbPresentTense, whDeterminer, whPronun,
+                                              whAdverb, openingQuotationMark, verbPastTenseNotThirdPersonSingular,
+                                              whPronunPossesive, quotationMark]}
+
+            wortArten_df = pd.DataFrame(wortArten)
+
+            wortArten_df_nur_zeilen_mit_wert_uerber_null = zeilenFiltern(wortArten_df, 'Werte_Wortarten:', 0, '>')
+
+            # Das Dataframe wird in eine Grafik umgewandelt
+            wortArten_df_nur_zeilen_mit_wert_uerber_null.head()
+
+            sns.set(rc={'figure.figsize': (10, 12)})
+            ax = sns.barplot(y='Wortarten:', x='Werte_Wortarten:',
+                             data=wortArten_df_nur_zeilen_mit_wert_uerber_null, palette='rocket')
+
+            initialx = 0
+            for p in ax.patches:
+                ax.text(p.get_width(), initialx + p.get_height() / 8, '{:1.0f}'.format(p.get_width()))
+
+                initialx += 1
+            plt.savefig('static/name.png')
+
+
+        except Exception as e:
+            print("Oopsidupsi! ", e.__class__, "ist aufgetreten.")
+
+
+

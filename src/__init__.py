@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, f
 from src.DatabaseUser import DatabaseUser
 from src.DatabaseFile import DatabaseFile
 
+from Chart import *
 from filtern import *
 
 app = Flask(__name__, template_folder="./templates")
@@ -183,7 +184,6 @@ def uebersichtsseite():
         current_username = session['username']
         databaseFileObject = DatabaseFile("Datenbank/" + current_username)
         filenames = databaseFileObject.getAllTableNamesAsList()
-
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(current_username)
 
@@ -224,73 +224,50 @@ def detailseite(table):
         databaseObject = DatabaseFile("Datenbank/" + current_username)
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseObject.connection)
 
+        ChartObject = Chart(databaseObject)
+
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(current_username)
 
-        showAxis = True
         if request.method == 'POST' and request.form.get("diagrammart"):
             diagrammart = request.form.get("diagrammart")  # kriegt aus Frontend, welches Diagrammart geünscht ist
             print(diagrammart)  # nur Kontrolle
+
+            df = pd.read_sql_query("SELECT * FROM " + table, databaseObject.connection)  # wandelt Table in DataFrame um
+            my_list = df.columns.values.tolist()  # macht Liste aus column names des DataFrames
+            ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
+
             if diagrammart == "Balkendiagramm":
-                showAxis = True
                 xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse
                 # verwendet werden sollen
                 yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
-                df = pd.read_sql_query(command, databaseObject.connection)  # wandelt Table in DataFrame um
-                my_list = df.columns.values.tolist()  # macht Liste aus column names des DataFrames
-                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                ax = df.plot.bar(x=xAchse, y=yAchse, ).get_figure()  # erstellt plot mit x- und y-Achse
-                ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
+
+                ChartObject.makeBarChart(table, xAchse, yAchse)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
-                                       showAxis=showAxis, user_list=user_list)
+                                        user_list=user_list)
             elif diagrammart == "Tortendiagramm":  # macht noch keinen Sinn, zählt nicht, kann nur ein column entgegen nehmen
-                xAchse = request.form.get("xAchse")
-                yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table
-                df = pd.read_sql_query(command, databaseObject.connection)
-                my_list = df.columns.values.tolist()
-                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                ax = df.plot.pie(y=xAchse).get_figure()
-                ax.savefig('static/name.png')
+                ChartObject.makePieChart(table)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
-                                       showAxis=showAxis, user_list=user_list)
+                                        user_list=user_list)
             elif diagrammart == "Liniendiagramm":
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
-                df = pd.read_sql_query(command, databaseObject.connection)
-                my_list = df.columns.values.tolist()
-                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                ax = df.plot.line(x=xAchse, y=yAchse).get_figure()
-                ax.savefig('static/name.png')
+                ChartObject.makeLineChart(table, xAchse, yAchse)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
-                                       showAxis=showAxis, user_list=user_list)
+                                        user_list=user_list)
             elif diagrammart == "Wordcloud":
-                showAxis = False
-                command = "SELECT * FROM " + table
-                df = pd.read_sql_query(command, databaseObject.connection)
-                my_list = df.columns.values.tolist()
-                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                wordcloudErstellen(df)  # ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
+                ChartObject.makeWordCloud(table)  # ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
                 currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", table=table, showAxis=showAxis, user_list=user_list)
+                return render_template("detailseite.html", table=table,  user_list=user_list)
             elif diagrammart == "Wortartenanalyse":
-                xAchse = request.form.get("xAchse")
-                yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
-                df = pd.read_sql_query(command, databaseObject.connection)
-                my_list = df.columns.values.tolist()
-                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                wortartenAnalyse(df)  # erstellt Grafik mit Wortartenanalyse
+                ChartObject.makeWortartenAnalyse(table)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
-                                       showAxis=showAxis, user_list=user_list)
+                                        user_list=user_list)
         else:
-            showAxis = True
             command = "SELECT * FROM " + table
             df = pd.read_sql_query(command, databaseObject.connection)
 
@@ -298,7 +275,7 @@ def detailseite(table):
             my_list = df.columns.values.tolist()  # erstellt Liste aus column names für Dropdowns (höchstens 15)
             currentDataDF.to_html(header="true", table_id="table")
             return render_template("detailseite.html", Liste=my_list,
-                                   ListeY=ListeInt, table=table, showAxis=showAxis,
+                                   ListeY=ListeInt, table=table,
                                    user_list=user_list)  # muss Liste übergeben, für erstes Landing
 
     else:

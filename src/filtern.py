@@ -66,31 +66,6 @@ def spaltenFiltern(df, liste):
     return spaltenFiltern_df
 
 
-def wordcloudErstellen(df):
-    """
-    Dies Methode erstellt eine WordCloud aus einem Ihr übergebenen DataFrame
-    :param df: zu bearbeitendes DataFrame
-    """
-    try:
-        text = df.to_string(header=False, index=False)
-        wordcloud = WordCloud(background_color="white", width=1920, height=1080, ).generate(text)
-        plt.imshow(wordcloud, interpolation="bilinear")
-        plt.axis("off")
-        plt.savefig('static/name.png')
-    except Exception as e:
-        print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
-
-
-def genauerBeschreibungDerWortarten():
-    """
-    Unter zu hilfe nahme dieser Funktion wird die genauere Beschreibung und
-    Definition der Wortarten angezeigt
-    """
-    try:
-        nltk.help.upenn_tagset()
-    except Exception as e:
-        print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
-
 def wortartenAnalyse(df):
     """
     Mit hilfe dieser Funktion kann der Inhalt eines Dataframes eier Wordartenanalyse unterzogen werden.
