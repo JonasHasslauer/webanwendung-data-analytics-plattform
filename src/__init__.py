@@ -103,13 +103,14 @@ def specUebersicht(table):
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 global newDF
-                newDF = spaltenFiltern(zeilenFilterDF, filterlist)  # Spalten werden gefiltert
                 zeilen = request.form.get('zeilen')
                 if zeilen:
                     print("Zeilenauswahl")
                     newDF = zeilenAuswählen(newDF, zeilen)
                 else:
                     print(zeilen)
+                newDF = spaltenFiltern(zeilenFilterDF, filterlist)  # Spalten werden gefiltert
+
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[newDF.to_html(classes='table table-striped text-center', index=False,
@@ -121,13 +122,13 @@ def specUebersicht(table):
             spalte = request.form.get("spalte")  # Eingabe von Website Spalte
             wert = request.form.get("wert")  # Eingabe von Website Wert
             operator = request.form.get("operator")  # Eingabe von Website Operator
-            newDF = zeilenFiltern(currentDataDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
             zeilen = request.form.get('zeilen')
             if zeilen:
                 print("Zeilenauswahl")
                 newDF = zeilenAuswählen(newDF, zeilen)
             else:
                 print(zeilen)
+            newDF = zeilenFiltern(currentDataDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[newDF.to_html(classes='table table-striped text-center', index=False,
@@ -146,13 +147,13 @@ def specUebersicht(table):
                                        titles=currentDataDF.columns.values, tablename=table, user_list=user_list)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
-                newDF = spaltenFiltern(currentDataDF, filterlist)  # Spalten werden gefiltert
                 zeilen = request.form.get('zeilen')
                 if zeilen:
                     print("Zeilenauswahl")
                     newDF = zeilenAuswählen(newDF, zeilen)
                 else:
                     print(zeilen)
+                newDF = spaltenFiltern(currentDataDF, filterlist)  # Spalten werden gefiltert
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[newDF.to_html(classes='table table-striped text-center', index=False,
