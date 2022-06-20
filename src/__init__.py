@@ -85,7 +85,14 @@ def specUebersicht(table):
             spaltenfilter = request.form.get("spaltenfilter")  # Eingabe von Website
             zeilenFilterDF = zeilenFiltern(currentDataDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
 
-            if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
+            if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht
+                zeilen=request.form.get("zeilen")
+                if zeilen:
+                    print("Zeilenauswahl")
+                    currentDataDF = zeilenAuswählen(currentDataDF, zeilen)
+                else:
+                    print(zeilen)
+                # TODO: Zeilen auswählen bei Alle oder None
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[
@@ -95,7 +102,14 @@ def specUebersicht(table):
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 global newDF
+                zeilen = request.form.get('zeilen')
+                if zeilen:
+                    print("Zeilenauswahl")
+                    newDF = zeilenAuswählen(newDF, zeilen)
+                else:
+                    print(zeilen)
                 newDF = spaltenFiltern(zeilenFilterDF, filterlist)  # Spalten werden gefiltert
+
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[newDF.to_html(classes='table table-striped text-center', index=False,
@@ -107,6 +121,12 @@ def specUebersicht(table):
             spalte = request.form.get("spalte")  # Eingabe von Website Spalte
             wert = request.form.get("wert")  # Eingabe von Website Wert
             operator = request.form.get("operator")  # Eingabe von Website Operator
+            zeilen = request.form.get('zeilen')
+            if zeilen:
+                print("Zeilenauswahl")
+                newDF = zeilenAuswählen(newDF, zeilen)
+            else:
+                print(zeilen)
             newDF = zeilenFiltern(currentDataDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
@@ -126,6 +146,12 @@ def specUebersicht(table):
                                        titles=currentDataDF.columns.values, tablename=table, user_list=user_list)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
+                zeilen = request.form.get('zeilen')
+                if zeilen:
+                    print("Zeilenauswahl")
+                    newDF = zeilenAuswählen(newDF, zeilen)
+                else:
+                    print(zeilen)
                 newDF = spaltenFiltern(currentDataDF, filterlist)  # Spalten werden gefiltert
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
@@ -134,7 +160,7 @@ def specUebersicht(table):
                                        titles=newDF.columns.values, table=table, tablename=table, user_list=user_list)
 
         elif request.method == 'POST' and request.form.get("subset"):
-            DFname = "Subset von " + table + ": " +  request.form.get("subset")
+            DFname = "SubsetVon" + table + "_" + request.form.get("subset")
             databaseFileObject2.saveDataFrame(newDF, DFname)
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
@@ -155,16 +181,15 @@ def specUebersicht(table):
 
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
-
     if 'username' in session:
         current_username = session['username']
         databaseFileObject = DatabaseFile("Datenbank/" + current_username)
         filenames = databaseFileObject.getAllTableNamesAsList()
-
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(current_username)
 
-        if request.method == 'POST' and (request.form.get('submit') == 'Refresh' or request.form.get('uebersichtsseite') == 'uebersichtsseite'):
+        if request.method == 'POST' and (
+                request.form.get('submit') == 'Refresh' or request.form.get('uebersichtsseite') == 'uebersichtsseite'):
             return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
 
         # if request.method == 'POST' and request.form.get('uebersichtsseite') == 'uebersichtsseite':
@@ -189,6 +214,7 @@ def uebersichtsseite():
 
     else:
         return redirect(url_for('index'))
+
 
 
 @app.route('/detailseite/<string:table>', methods=["POST", "GET"])
