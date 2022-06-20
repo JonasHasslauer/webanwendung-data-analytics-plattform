@@ -197,7 +197,8 @@ def detailseite(table):
         current_username = session['username']
         databaseObject = DatabaseFile("Datenbank/" + current_username)
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseObject.connection)
-
+        my_list = currentDataDF.columns.values.tolist()
+        ListeInt = currentDataDF.select_dtypes(include=np.number).columns.values.tolist()
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(current_username)
 
@@ -306,7 +307,7 @@ def detailseite(table):
                 return render_template("detailseite.html", Liste=my_list,
                                        ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)  # muss Liste übergeben, für erstes Landing
 
-        except (Exception,UnboundLocalError) as e:
+        except (Exception,UnboundLocalError):
             #hier ist eine Anzeige  eingebaut die nur dann angezeit wird wenn ein Fehler bei den Diagrammen aufgetreten ist
 
             flash('Leider hat die Eingabe kein gültiges Ergebnis erzeugt.'
