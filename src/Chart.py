@@ -8,37 +8,39 @@ from filtern import *
 
 class Chart:
 
-    databaseObject = ""
+    databaseObject = ''
+    table = ''
 
-    def __init__(self, databaseObject):
-       self.dabaseObject = databaseObject
+    def __init__(self, databaseObject, table):
+       self.databaseObject = databaseObject
+       self.table = table
 
-    def makeBarChart(self, table, xAchse, yAchse):
-        command = "SELECT * FROM " + table + " GROUP BY " + xAchse
-        df = pd.read_sql_query(command, self.databaseObject.connection)  # wandelt Table in DataFrame um
-        ax = df.plot.bar(x=xAchse, y=yAchse, ).get_figure()  # erstellt plot mit x- und y-Achse
+
+    def makeBarChart(self, xAchse, yAchse):
+        command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
+        df = pd.read_sql_query(command, self.databaseObject.connection)
+        ax = df.plot(kind='bar', x=xAchse, y=yAchse).get_figure()  # erstellt plot mit x- und y-Achse
         ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
 
-    def makePieChart(self, table):
-        command = "SELECT * FROM " + table
+    def makePieChart(self, xAchse, yAchse):
+        command = "SELECT * FROM " + self.table
         df = pd.read_sql_query(command, self.databaseObject.connection)
-        ax = df.plot.pie().get_figure()
+        ax = df.groupby([xAchse]).sum().plot(kind='pie', y=yAchse, autopct='%1.0f%%').get_figure()
         ax.savefig('static/name.png')
 
-    def makeLineChart(self, table, xAchse, yAchse):
-        command = "SELECT * FROM " + table + " GROUP BY " + xAchse
+    def makeLineChart(self, xAchse, yAchse):
+        command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
         df = pd.read_sql_query(command, self.databaseObject.connection)
-
-        ax = df.plot.line(x=xAchse, y=yAchse).get_figure()
+        ax = df.plot(kind='line', x=xAchse, y=yAchse).get_figure()
         ax.savefig('static/name.png')
 
-    def makeWordCloud(self, table):
+    def makeWordCloud(self):
         """
         Dies Methode erstellt eine WordCloud aus einem Ihr übergebenen DataFrame
         :param df: zu bearbeitendes DataFrame
         """
         try:
-            command = "SELECT * FROM " + table
+            command = "SELECT * FROM " + self.table
             df = pd.read_sql_query(command, self.databaseObject.connection)
             text = df.to_string(header=False, index=False)
             wordcloud = WordCloud(background_color="white", width=1920, height=1080, ).generate(text)
@@ -59,7 +61,7 @@ class Chart:
             print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
 
 
-    def makeWortartenAnalyse(self, table):
+    def makeWortartenAnalyse(self):
         """
         Mit hilfe dieser Funktion kann der Inhalt eines Dataframes eier Wordartenanalyse unterzogen werden.
         Die Sprache des übergebenen DataFrames wird automatisch ermittelt.
@@ -68,7 +70,7 @@ class Chart:
 
         """
         try:
-            command = "SELECT * FROM " + table
+            command = "SELECT * FROM " + self.table
             df = pd.read_sql_query(command, self.databaseObject.connection)
             # Dataframe wird in String umgewanderlt
             text = df.to_string(header=False, index=False)

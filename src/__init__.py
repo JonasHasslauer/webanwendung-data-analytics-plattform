@@ -224,7 +224,7 @@ def detailseite(table):
         databaseObject = DatabaseFile("Datenbank/" + current_username)
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseObject.connection)
 
-        ChartObject = Chart(databaseObject)
+        ChartObject = Chart(databaseObject, table)
 
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(current_username)
@@ -242,35 +242,37 @@ def detailseite(table):
                 # verwendet werden sollen
                 yAchse = request.form.get("yAchse")
 
-                ChartObject.makeBarChart(table, xAchse, yAchse)
+                ChartObject.makeBarChart(xAchse, yAchse)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
                                         user_list=user_list)
             elif diagrammart == "Tortendiagramm":  # macht noch keinen Sinn, zählt nicht, kann nur ein column entgegen nehmen
-                ChartObject.makePieChart(table)
+                xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse
+                # verwendet werden sollen
+                yAchse = request.form.get("yAchse")
+                ChartObject.makePieChart(xAchse, yAchse)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
                                         user_list=user_list)
             elif diagrammart == "Liniendiagramm":
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
-                ChartObject.makeLineChart(table, xAchse, yAchse)
+                ChartObject.makeLineChart(xAchse, yAchse)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
-                                        user_list=user_list)
+                                       user_list=user_list)
             elif diagrammart == "Wordcloud":
-                ChartObject.makeWordCloud(table)  # ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
+                ChartObject.makeWordCloud()  # ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", table=table,  user_list=user_list)
             elif diagrammart == "Wortartenanalyse":
-                ChartObject.makeWortartenAnalyse(table)
+                ChartObject.makeWortartenAnalyse()
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
                                         user_list=user_list)
         else:
             command = "SELECT * FROM " + table
             df = pd.read_sql_query(command, databaseObject.connection)
-
             ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
             my_list = df.columns.values.tolist()  # erstellt Liste aus column names für Dropdowns (höchstens 15)
             currentDataDF.to_html(header="true", table_id="table")
