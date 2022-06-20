@@ -248,8 +248,8 @@ def detailseite(table):
                     #ax = df.plot.pie(y=xAchse).get_figure()
                     colors = sns.color_palette('rocket')
 
-
-                    ax=plt.pie(df,  colors=colors, autopct='%.0f%%').get_figure()#wie bekomme ich die labels hin mhhh
+                    labels = df.head().tolist()
+                    ax=plt.pie(df,labels = labels,  colors=colors, autopct='%.0f%%').get_figure()
 
                     ax.savefig('static/name.png')
                     currentDataDF.to_html(header="true", table_id="table")
