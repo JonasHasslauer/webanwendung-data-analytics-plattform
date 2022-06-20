@@ -237,6 +237,7 @@ def detailseite(table):
                     ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
                     currentDataDF.to_html(header="true", table_id="table")
                     return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,  showAxis=showAxis, user_list=user_list)
+
                 elif diagrammart == "Tortendiagramm":  # macht noch keinen Sinn, zählt nicht, kann nur ein column entgegen nehmen
                     xAchse = request.form.get("xAchse")
                     yAchse = request.form.get("yAchse")
@@ -254,6 +255,7 @@ def detailseite(table):
                     ax.savefig('static/name.png')
                     currentDataDF.to_html(header="true", table_id="table")
                     return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
+
                 elif diagrammart == "Liniendiagramm":
                     xAchse = request.form.get("xAchse")
                     yAchse = request.form.get("yAchse")
@@ -264,13 +266,14 @@ def detailseite(table):
 
                     #ax = df.plot.line(x=xAchse, y=yAchse).get_figure()
 
-                    ax = sns.lineplot(x = xAchse, y = yAchse, data=df, hue="gear", palette = "rocket")
+                    ax = sns.lineplot(x = xAchse, y = yAchse, data=df, hue="gear", palette = "rocket").get_figure()
 
 
                     ax.savefig('static/name.png')
 
                     currentDataDF.to_html(header="true", table_id="table")
                     return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
+
                 elif diagrammart == "Wordcloud":
                     showAxis = False
                     command = "SELECT * FROM " + table
@@ -280,6 +283,7 @@ def detailseite(table):
                     wordcloudErstellen(df)  #ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
                     currentDataDF.to_html(header="true", table_id="table")
                     return render_template("detailseite.html",table=table, showAxis=showAxis, user_list=user_list)
+
                 elif diagrammart == "Wortartenanalyse":
                     xAchse = request.form.get("xAchse")
                     yAchse = request.form.get("yAchse")
@@ -290,6 +294,7 @@ def detailseite(table):
                     wortartenAnalyse(df)  #erstellt Grafik mit Wortartenanalyse
                     currentDataDF.to_html(header="true", table_id="table")
                     return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
+
             else:
                 showAxis=True
                 command = "SELECT * FROM " + table
@@ -301,8 +306,8 @@ def detailseite(table):
                 return render_template("detailseite.html", Liste=my_list,
                                        ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)  # muss Liste übergeben, für erstes Landing
 
-        except Exception as e:
-            #hier soll ein Button eingebaut werden der nur dann angezeit wird wenn ein Fehler bei den Diagrammen aufgetreten ist
+        except (Exception,UnboundLocalError) as e:
+            #hier ist eine Anzeige  eingebaut die nur dann angezeit wird wenn ein Fehler bei den Diagrammen aufgetreten ist
 
             flash('Leider hat die Eingabe kein gültiges Ergebnis erzeugt.'
                   " Bitte überprüfen sie Ihre Eingabe")
