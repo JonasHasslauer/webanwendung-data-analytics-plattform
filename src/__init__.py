@@ -83,15 +83,10 @@ def specUebersicht(table):
             wert = request.form.get("wert")  # Eingabe von Website Wert
             operator = request.form.get("operator")  # Eingabe von Website Operator
             spaltenfilter = request.form.get("spaltenfilter")  # Eingabe von Website
-            zeilenFilterDF = zeilenFiltern(currentDataDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
 
+            zeilenFilterDF = zeilenFiltern(currentDataDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht
-                zeilen=request.form.get("zeilen")
-                if zeilen:
-                    print("Zeilenauswahl")
-                    currentDataDF = zeilenAuswählen(currentDataDF, zeilen)
-                else:
-                    print(zeilen)
+
                 # TODO: Zeilen auswählen bei Alle oder None
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
@@ -102,14 +97,8 @@ def specUebersicht(table):
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 global newDF
-                zeilen = request.form.get('zeilen')
-                if zeilen:
-                    print("Zeilenauswahl")
-                    newDF = zeilenAuswählen(newDF, zeilen)
-                else:
-                    print(zeilen)
+                newDF = currentDataDF
                 newDF = spaltenFiltern(zeilenFilterDF, filterlist)  # Spalten werden gefiltert
-
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[newDF.to_html(classes='table table-striped text-center', index=False,
@@ -122,6 +111,7 @@ def specUebersicht(table):
             wert = request.form.get("wert")  # Eingabe von Website Wert
             operator = request.form.get("operator")  # Eingabe von Website Operator
             zeilen = request.form.get('zeilen')
+            newDF = currentDataDF
             if zeilen:
                 print("Zeilenauswahl")
                 newDF = zeilenAuswählen(newDF, zeilen)
@@ -147,6 +137,7 @@ def specUebersicht(table):
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 zeilen = request.form.get('zeilen')
+                newDF = currentDataDF
                 if zeilen:
                     print("Zeilenauswahl")
                     newDF = zeilenAuswählen(newDF, zeilen)
@@ -272,7 +263,7 @@ def detailseite(table):
                 df = pd.read_sql_query(command, databaseObject.connection)
                 my_list = df.columns.values.tolist()
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                wordcloudErstellen(df)  #ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
+                #wordcloudErstellen(df)  #ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html",table=table, showAxis=showAxis, user_list=user_list)
             elif diagrammart == "Wortartenanalyse":
@@ -282,7 +273,7 @@ def detailseite(table):
                 df = pd.read_sql_query(command, databaseObject.connection)
                 my_list = df.columns.values.tolist()
                 ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                wortartenAnalyse(df)  #erstellt Grafik mit Wortartenanalyse
+                #wortartenAnalyse(df)  #erstellt Grafik mit Wortartenanalyse
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
         else:
