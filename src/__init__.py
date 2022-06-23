@@ -155,7 +155,6 @@ def specUebersicht(table):
                                        tables=[newDF.to_html(classes='table table-striped text-center', index=False,
                                                              justify="center", col_space=20)],
                                        titles=newDF.columns.values, table=table, tablename=table, user_list=user_list)
-
         elif request.method == 'POST' and request.form.get("subset"):
             DFname = "SubsetVon" + table + "_" + request.form.get("subset")
             databaseFileObject2.saveDataFrame(newDF, DFname)
