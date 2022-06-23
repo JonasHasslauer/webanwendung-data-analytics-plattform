@@ -83,8 +83,15 @@ def specUebersicht(table):
             wert = request.form.get("wert")  # Eingabe von Website Wert
             operator = request.form.get("operator")  # Eingabe von Website Operator
             spaltenfilter = request.form.get("spaltenfilter")  # Eingabe von Website
-
-            zeilenFilterDF = zeilenFiltern(currentDataDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
+            zeilen = request.form.get("zeilen")
+            global newDF
+            newDF = currentDataDF
+            if zeilen:
+                print("Zeilenauswahl")
+                newDF = zeilenAuswählen(newDF, zeilen)
+            else:
+                print(zeilen)
+            zeilenFilterDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht
 
                 # TODO: Zeilen auswählen bei Alle oder None
@@ -96,7 +103,6 @@ def specUebersicht(table):
                                        titles=currentDataDF.columns.values, tablename=table, user_list=user_list)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
-                global newDF
                 newDF = currentDataDF
                 newDF = spaltenFiltern(zeilenFilterDF, filterlist)  # Spalten werden gefiltert
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
@@ -117,7 +123,7 @@ def specUebersicht(table):
                 newDF = zeilenAuswählen(newDF, zeilen)
             else:
                 print(zeilen)
-            newDF = zeilenFiltern(currentDataDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
+            newDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[newDF.to_html(classes='table table-striped text-center', index=False,
@@ -143,7 +149,7 @@ def specUebersicht(table):
                     newDF = zeilenAuswählen(newDF, zeilen)
                 else:
                     print(zeilen)
-                newDF = spaltenFiltern(currentDataDF, filterlist)  # Spalten werden gefiltert
+                newDF = spaltenFiltern(newDF, filterlist)  # Spalten werden gefiltert
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[newDF.to_html(classes='table table-striped text-center', index=False,
