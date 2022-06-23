@@ -36,7 +36,7 @@ class DatabaseFile:
             return True
         return False
 
-    def saveFile(self, file, name, seperator):
+    def saveFile(self, file, name:str, seperator):
         current_username = session['username']
         filename = file.filename
         namesplitted = filename.split('.')

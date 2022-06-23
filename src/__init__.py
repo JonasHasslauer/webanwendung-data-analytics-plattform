@@ -197,12 +197,15 @@ def uebersichtsseite():
             file = request.files['file']
             namesplitted = file.filename.split('.')
             seperator = request.form.get('seperator')
-            fileExists = databaseFileObject.databaseIsExisting(namesplitted[0])
+            name= namesplitted[0]
+            if name[0].isnumeric():
+                name = "a" + name
+            fileExists = databaseFileObject.databaseIsExisting(name)
             if not fileExists:
                 if seperator is None:
-                    databaseFileObject.saveFile(file, namesplitted[0], seperator=",")
+                    databaseFileObject.saveFile(file, name, seperator=",")
                 else:
-                    databaseFileObject.saveFile(file, namesplitted[0], seperator)
+                    databaseFileObject.saveFile(file, name, seperator)
                     return render_template("uebersichtsseite.html", filenames=filenames, fileFlag = False, user_list=user_list)
             else:
                 return render_template("uebersichtsseite.html", filenames=filenames, fileFlag = fileExists, user_list=user_list)
