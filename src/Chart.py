@@ -175,7 +175,7 @@ class Chart:
             # Das Dataframe wird in eine Grafik umgewandelt
             wortArten_df_nur_zeilen_mit_wert_uerber_null.head()
 
-            sns.set(rc={'figure.figsize': (10, 12)})
+            sns.set(rc={'figure.figsize': (16, 12)})
             ax = sns.barplot(y='Wortarten:', x='Werte_Wortarten:',
                              data=wortArten_df_nur_zeilen_mit_wert_uerber_null, palette='rocket')
 
