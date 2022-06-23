@@ -9,6 +9,7 @@ from src.DatabaseFile import DatabaseFile
 
 from Chart import *
 from filtern import *
+from PIL import Image
 
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
@@ -59,6 +60,9 @@ def login():
         if databaseUserObject.checkUsers(password, username) is True:
             session['username'] = username
             databaseUserObject.changeTimeStamp(username)
+            img = Image.open("static/detailseite.jpg")
+            img.save('static/name.png')
+
             return redirect(url_for('uebersichtsseite'))
         else:
             flash("Benutzerdaten überprüfen oder einen Account anlegen.")
@@ -290,7 +294,7 @@ def logout():
         databaseUserObject.deleteUser("Logins", session['username'])
         os.remove(os.getcwd() + "/Datenbank/" + session['username'])
         redirect(url_for('login'))
-    session.clear()
+        session.clear()
     return redirect(url_for("index"))
 
 
