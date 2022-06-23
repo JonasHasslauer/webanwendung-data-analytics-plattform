@@ -3,7 +3,6 @@ import sqlite3
 
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 
-
 from src.DatabaseUser import DatabaseUser
 from src.DatabaseFile import DatabaseFile
 
@@ -180,7 +179,6 @@ def specUebersicht(table):
 
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
-
     if 'username' in session:
         current_username = session['username']
         databaseFileObject = DatabaseFile("Datenbank/" + current_username)
@@ -201,7 +199,7 @@ def uebersichtsseite():
             file = request.files['file']
             namesplitted = file.filename.split('.')
             seperator = request.form.get('seperator')
-            name= namesplitted[0]
+            name = namesplitted[0]
             if name[0].isnumeric():
                 name = "a" + name
             fileExists = databaseFileObject.databaseIsExisting(name)
@@ -210,15 +208,16 @@ def uebersichtsseite():
                     databaseFileObject.saveFile(file, name, seperator=",")
                 else:
                     databaseFileObject.saveFile(file, name, seperator)
-                    return render_template("uebersichtsseite.html", filenames=filenames, fileFlag = False, user_list=user_list)
+                    return render_template("uebersichtsseite.html", filenames=filenames, fileFlag=False,
+                                           user_list=user_list)
             else:
-                return render_template("uebersichtsseite.html", filenames=filenames, fileFlag = fileExists, user_list=user_list)
+                return render_template("uebersichtsseite.html", filenames=filenames, fileFlag=fileExists,
+                                       user_list=user_list)
         else:
-            return render_template("uebersichtsseite.html", filenames=filenames, fileFlag = False, user_list=user_list)
+            return render_template("uebersichtsseite.html", filenames=filenames, fileFlag=False, user_list=user_list)
 
     else:
         return redirect(url_for('index'))
-
 
 
 @app.route('/detailseite/<string:table>', methods=["POST", "GET"])
@@ -234,44 +233,56 @@ def detailseite(table):
 
         ListeInt = currentDataDF.select_dtypes(include=np.number).columns.values.tolist()
         my_list = currentDataDF.columns.values.tolist()  # erstellt Liste aus column names für Dropdowns (höchstens 15)
+        try:
+            if request.method == 'POST' and request.form.get("diagrammart"):
+                diagrammart = request.form.get("diagrammart")  # kriegt aus Frontend, welches Diagrammart geünscht ist
+                print(diagrammart)  # nur Kontrolle
+                if diagrammart == "Balkendiagramm":
+                    xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse
+                    # verwendet werden sollen
+                    yAchse = request.form.get("yAchse")
+                    ChartObject.makeBarChart(xAchse, yAchse)
+                    return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
+                                           user_list=user_list)
+                elif diagrammart == "Tortendiagramm":  # macht noch keinen Sinn, zählt nicht, kann nur ein column entgegen nehmen
+                    xAchse = request.form.get("xAchse")
+                    yAchse = request.form.get("yAchse")
+                    ChartObject.makePieChart(xAchse, yAchse)
+                    return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
+                                           user_list=user_list)
+                elif diagrammart == "Liniendiagramm":
+                    xAchse = request.form.get("xAchse")
+                    yAchse = request.form.get("yAchse")
+                    ChartObject.makeLineChart(xAchse, yAchse)
+                    return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
+                                           user_list=user_list)
+                elif diagrammart == "Wordcloud":
+                    ChartObject.makeWordCloud()
+                    return render_template("detailseite.html", table=table, user_list=user_list)
+                elif diagrammart == "Wortartenanalyse":
+                    ChartObject.makeWortartenAnalyse()
 
-        if request.method == 'POST' and request.form.get("diagrammart"):
-            diagrammart = request.form.get("diagrammart")  # kriegt aus Frontend, welches Diagrammart geünscht ist
-            print(diagrammart)  # nur Kontrolle
-            if diagrammart == "Balkendiagramm":
-                xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse
-                # verwendet werden sollen
-                yAchse = request.form.get("yAchse")
-                ChartObject.makeBarChart(xAchse, yAchse)
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, user_list=user_list)
-            elif diagrammart == "Tortendiagramm":  # macht noch keinen Sinn, zählt nicht, kann nur ein column entgegen nehmen
-                xAchse = request.form.get("xAchse")
-                yAchse = request.form.get("yAchse")
-                ChartObject.makePieChart(xAchse, yAchse)
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, user_list=user_list)
-            elif diagrammart == "Liniendiagramm":
-                xAchse = request.form.get("xAchse")
-                yAchse = request.form.get("yAchse")
-                ChartObject.makeLineChart(xAchse, yAchse)
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, user_list=user_list)
-            elif diagrammart == "Wordcloud":
-                ChartObject.makeWordCloud()
-                return render_template("detailseite.html",table=table, user_list=user_list)
-            elif diagrammart == "Wortartenanalyse":
-                ChartObject.makeWortartenAnalyse()
+                    return render_template("detailseite.html", table=table, user_list=user_list)
+            else:
+                return render_template("detailseite.html", Liste=my_list,
+                                       ListeY=ListeInt, table=table,
+                                       user_list=user_list)  # muss Liste übergeben, für erstes Landing
 
-                return render_template("detailseite.html", table=table, user_list=user_list)
-        else:
-            return render_template("detailseite.html", Liste=my_list,
-                                   ListeY=ListeInt, table=table,  user_list=user_list)  # muss Liste übergeben, für erstes Landing
+        except (Exception, UnboundLocalError) as e:
+            # hier ist eine Anzeige  eingebaut die nur dann angezeit wird wenn ein Fehler bei den Diagrammen aufgetreten ist
+            flash('Leider hat die Eingabe kein gültiges Ergebnis erzeugt.'
+                  " Bitte überprüfen sie Ihre Eingabe")
+            return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
+                                   user_list=user_list)  # muss Liste übergeben, für erstes Landing
 
     else:
         return redirect(url_for('index'))
 
+
 @app.route("/impressum", methods=["POST", "GET"])
 def impressum():
     if 'username' in session:
-        current_username=session['username']
+        current_username = session['username']
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(current_username)
         return render_template("impressum.html", user_list=user_list)
@@ -308,6 +319,7 @@ def page_not_found(error):
 def page_error(error):
     flash("Ein Problem ist aufgetreten.")
     return redirect(url_for('login'))
+
 
 databaseUserObject.clearData()
 
