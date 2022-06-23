@@ -227,8 +227,7 @@ def detailseite(table):
         current_username = session['username']
         databaseObject = DatabaseFile("Datenbank/" + current_username)
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseObject.connection)
-        my_list = currentDataDF.columns.values.tolist()
-        ListeInt = currentDataDF.select_dtypes(include=np.number).columns.values.tolist()
+
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(current_username)
         ChartObject = Chart(databaseObject, table)
@@ -258,10 +257,10 @@ def detailseite(table):
                                            user_list=user_list)
                 elif diagrammart == "Wordcloud":
                     ChartObject.makeWordCloud()
-                    return render_template("detailseite.html", table=table, user_list=user_list)
+                    return render_template("detailseite.html", table=table, user_list=user_list, Liste=my_list, ListeY=ListeInt,)
                 elif diagrammart == "Wortartenanalyse":
                     ChartObject.makeWortartenAnalyse()
-                    return render_template("detailseite.html", table=table, user_list=user_list)
+                    return render_template("detailseite.html", table=table, user_list=user_list, Liste=my_list, ListeY=ListeInt,)
             else:
                 return render_template("detailseite.html", Liste=my_list,
                                        ListeY=ListeInt, table=table,
