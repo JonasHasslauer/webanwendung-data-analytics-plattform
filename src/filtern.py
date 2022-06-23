@@ -13,7 +13,7 @@ test_df = pd.DataFrame(test_df)
 test_df_2 ={'Dollar':['$']}
 test_df_2 =pd.DataFrame(test_df_2)
 # Test Dataframe mit zufälligen Daten
-df = pd.read_csv('test_Csv_Datein/Sacramentorealestatetransactions.csv')
+
 #print(df)
 
 def zeilenFiltern(df, spaltenname, wert, operator):
@@ -46,6 +46,12 @@ def zeilenFiltern(df, spaltenname, wert, operator):
             return filtered_df
     except Exception as e:
         print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
+
+
+
+def zeilenAuswählen(df, range:str):
+    return df[int(range.split("-")[0]):int(range.split("-")[1])+1]
+
 
 
 # mit der Funktion spaltenFiltern können einzelne oder mehrere  Spalten ausgegeben werden

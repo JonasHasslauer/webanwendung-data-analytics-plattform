@@ -57,25 +57,48 @@
                         </div>
                         </li>
                         </p>
-                        <li class="nav-item">
-                            <form method="post" action="/impressum">
-                                <button class="btn btn-secondary"
-                                        style="color: #ec6f04; background-color: white; border-color: #ec6f04; margin-top: 10px; width: 360px; height: 35px"
-                                        type="submit">Impressum
-                                </button>
-                            </form>
-                            <form method="post" action="/logout">
-                                <button class="btn btn-secondary"
-                                        style="color: #ec6f04; background-color: white; border-color: #ec6f04; margin-top: 10px; width: 360px; height: 35px"
-                                        type="submit" name="logout">Logout
-                                </button>
-                            </form>
+                        <p>
+                            <li class="nav-item">
+                                <form method="post" action="/uebersichtsseite">
+                                    <button class="btn btn-secondary" style="color: #ec6f04; background-color: white; border-color: #ec6f04; width: 360px; height: 35px" type="submit" name="uebersichtsseite"
+                                            value="uebersichtsseite">Übersichtsseite
+                                    </button>
+                                </form>
+                            </li>
+                        </p>
+                        <p>
+                            <li class="nav-item">
+                                <form method="post" action="/benutzerhandbuch">
+                                    <button class="btn btn-secondary"
+                                        style="color: #ec6f04; background-color: white; border-color: #ec6f04; width: 360px; height: 35px"
+                                        type="submit">Benutzerhandbuch
+                                    </button>
+                                </form>
+                            </li>
+                        </p>
+                        <p>
+                            <li class="nav-item">
+                                 <form method="post" action="/impressum" >
+                                    <button class="btn btn-secondary" style="color: #ec6f04; background-color: white; border-color: #ec6f04; width: 360px; height: 35px" type="submit">Impressum</button>
+                                </form>
+                            </li>
+                        </p>
+                        <p>
+                            <li class="nav-item">
+                                <form method="post" action="/logout">
+                                    <button class="btn btn-secondary" style="color: #ec6f04; background-color: white; border-color: #ec6f04; width: 360px; height: 35px" type="submit">Logout</button>
+                                </form>
+                            </li>
+                        </p>
+                        <p>
                             <form method="post" action="/logout">
                                 <input class="btn btn-secondary" type="submit" name="delete" value="Account löschen"
                                        style="color: white; background-color: red; border-color: red; margin-top: 10px; width: 360px; height: 35px">
                             </form>
                         </li>
+                        </p>
                     </ul>
+
                 </div>
             </div>
             <a class="navbar-brand" style="color: #ffffff">Team Data Analytics</a>
@@ -104,7 +127,6 @@
         </p>
 
         <p>
-            {% if showAxis %}
                 <select class="form-control" name="xAchse" id=xAchse>
                     <option value="" selected disabled hidden>Spalte für x-Achse</option>
                     {% for Liste in Liste %}
@@ -117,7 +139,6 @@
                     <option value="{{ListeY}}">{{ListeY}}</option>
                     {% endfor %}}
                 </select>
-            {% endif %}
         </p>
 
 

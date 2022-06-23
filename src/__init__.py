@@ -7,6 +7,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, f
 from src.DatabaseUser import DatabaseUser
 from src.DatabaseFile import DatabaseFile
 
+from Chart import *
 from filtern import *
 
 app = Flask(__name__, template_folder="./templates")
@@ -94,7 +95,7 @@ def specUebersicht(table):
             zeilenFilterDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht
 
-                # TODO: Zeilen auswählen bei Alle oder None
+            if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[
@@ -103,7 +104,6 @@ def specUebersicht(table):
                                        titles=currentDataDF.columns.values, tablename=table, user_list=user_list)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
-                newDF = currentDataDF
                 newDF = spaltenFiltern(zeilenFilterDF, filterlist)  # Spalten werden gefiltert
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
@@ -177,10 +177,12 @@ def specUebersicht(table):
 
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
+
     if 'username' in session:
         current_username = session['username']
         databaseFileObject = DatabaseFile("Datenbank/" + current_username)
         filenames = databaseFileObject.getAllTableNamesAsList()
+
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(current_username)
 
@@ -222,75 +224,40 @@ def detailseite(table):
 
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(current_username)
+        ChartObject = Chart(databaseObject, table)
 
-        showAxis = True
+        ListeInt = currentDataDF.select_dtypes(include=np.number).columns.values.tolist()
+        my_list = currentDataDF.columns.values.tolist()  # erstellt Liste aus column names für Dropdowns (höchstens 15)
+
         if request.method == 'POST' and request.form.get("diagrammart"):
             diagrammart = request.form.get("diagrammart")  # kriegt aus Frontend, welches Diagrammart geünscht ist
             print(diagrammart)  # nur Kontrolle
             if diagrammart == "Balkendiagramm":
-                showAxis=True
                 xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse
                 # verwendet werden sollen
                 yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
-                df = pd.read_sql_query(command, databaseObject.connection)  # wandelt Table in DataFrame um
-                my_list = df.columns.values.tolist()  # macht Liste aus column names des DataFrames
-                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                ax = df.plot.bar(x=xAchse, y=yAchse, ).get_figure()  # erstellt plot mit x- und y-Achse
-                ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
-                currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,  showAxis=showAxis, user_list=user_list)
+                ChartObject.makeBarChart(xAchse, yAchse)
+                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, user_list=user_list)
             elif diagrammart == "Tortendiagramm":  # macht noch keinen Sinn, zählt nicht, kann nur ein column entgegen nehmen
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table
-                df = pd.read_sql_query(command, databaseObject.connection)
-                my_list = df.columns.values.tolist()
-                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                ax = df.plot.pie(y=xAchse).get_figure()
-                ax.savefig('static/name.png')
-                currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
+                ChartObject.makePieChart(xAchse, yAchse)
+                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, user_list=user_list)
             elif diagrammart == "Liniendiagramm":
                 xAchse = request.form.get("xAchse")
                 yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
-                df = pd.read_sql_query(command, databaseObject.connection)
-                my_list = df.columns.values.tolist()
-                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                ax = df.plot.line(x=xAchse, y=yAchse).get_figure()
-                ax.savefig('static/name.png')
-                currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
+                ChartObject.makeLineChart(xAchse, yAchse)
+                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, user_list=user_list)
             elif diagrammart == "Wordcloud":
-                showAxis = False
-                command = "SELECT * FROM " + table
-                df = pd.read_sql_query(command, databaseObject.connection)
-                my_list = df.columns.values.tolist()
-                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                #wordcloudErstellen(df)  #ruft wordcloud auf, und erstellt wordcloud aus gesamtem dataframe
-                currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html",table=table, showAxis=showAxis, user_list=user_list)
+                ChartObject.makeWordCloud()
+                return render_template("detailseite.html",table=table, user_list=user_list)
             elif diagrammart == "Wortartenanalyse":
-                xAchse = request.form.get("xAchse")
-                yAchse = request.form.get("yAchse")
-                command = "SELECT * FROM " + table + " GROUP BY " + xAchse
-                df = pd.read_sql_query(command, databaseObject.connection)
-                my_list = df.columns.values.tolist()
-                ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-                #wortartenAnalyse(df)  #erstellt Grafik mit Wortartenanalyse
-                currentDataDF.to_html(header="true", table_id="table")
-                return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)
-        else:
-            showAxis=True
-            command = "SELECT * FROM " + table
-            df = pd.read_sql_query(command, databaseObject.connection)
+                ChartObject.makeWortartenAnalyse()
 
-            ListeInt = df.select_dtypes(include=np.number).columns.values.tolist()
-            my_list = df.columns.values.tolist()  # erstellt Liste aus column names für Dropdowns (höchstens 15)
-            currentDataDF.to_html(header="true", table_id="table")
+                return render_template("detailseite.html", table=table, user_list=user_list)
+        else:
             return render_template("detailseite.html", Liste=my_list,
-                                   ListeY=ListeInt, table=table, showAxis=showAxis, user_list=user_list)  # muss Liste übergeben, für erstes Landing
+                                   ListeY=ListeInt, table=table,  user_list=user_list)  # muss Liste übergeben, für erstes Landing
 
     else:
         return redirect(url_for('index'))
@@ -304,6 +271,16 @@ def impressum():
         return render_template("impressum.html", user_list=user_list)
     else:
         return redirect(url_for('index'))
+
+
+@app.route("/benutzerhandbuch", methods=["POST"])
+def benutzerhandbuch():
+    if 'username' in session:
+        current_username = session['username']
+        databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
+        user_list = databaseUserObject.getUser(current_username)
+        return render_template("benutzerhandbuch.html", user_list=user_list)
+
 
 @app.route("/logout", methods=["POST"])
 def logout():

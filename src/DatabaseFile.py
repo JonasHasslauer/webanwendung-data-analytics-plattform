@@ -39,10 +39,10 @@ class DatabaseFile:
     def saveFile(self, file, name, seperator):
         current_username = session['username']
         filename = file.filename
-        name = name.replace("-", " ")
-        name = name.replace(" ", "_")
         namesplitted = filename.split('.')
         last = namesplitted.pop()
+        name = name.replace("-", "_")
+        name = name.replace(" ", "_")
         if last == 'csv':
             file.save("name.csv")
             if seperator == ',':
@@ -59,7 +59,7 @@ class DatabaseFile:
                                                         dtype=None, method=None)
             os.remove("name.csv")
             flash("Datei erfolgreich hochgeladen.")
-        #TODO Was passiert sonst? 
+        #TODO Was passiert sonst?
 
     def saveDataFrame(self, file, name):
         file.to_sql(name, sql.connect("Datenbank/" + session["username"], check_same_thread=False),schema=None, if_exists='replace', index=True, index_label=None,
