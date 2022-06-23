@@ -11,6 +11,7 @@ from Chart import *
 from filtern import *
 from PIL import Image
 
+import seaborn as sns
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
 extensions = {'csv'}
@@ -227,7 +228,8 @@ def detailseite(table):
         current_username = session['username']
         databaseObject = DatabaseFile("Datenbank/" + current_username)
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseObject.connection)
-
+        my_list = currentDataDF.columns.values.tolist()
+        ListeInt = currentDataDF.select_dtypes(include=np.number).columns.values.tolist()
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(current_username)
         ChartObject = Chart(databaseObject, table)
@@ -264,6 +266,23 @@ def detailseite(table):
         else:
             return render_template("detailseite.html", Liste=my_list,
                                    ListeY=ListeInt, table=table,  user_list=user_list)  # muss Liste übergeben, für erstes Landing
+
+        except (Exception,UnboundLocalError):
+            #hier ist eine Anzeige  eingebaut die nur dann angezeit wird wenn ein Fehler bei den Diagrammen aufgetreten ist
+
+            flash('Leider hat die Eingabe kein gültiges Ergebnis erzeugt.'
+                  " Bitte überprüfen sie Ihre Eingabe")
+
+            return render_template("detailseite.html", Liste=my_list,
+                                   ListeY=ListeInt, table=table, showAxis=showAxis,
+                                   user_list=user_list)  # muss Liste übergeben, für erstes Landing
+
+
+
+
+
+
+
 
     else:
         return redirect(url_for('index'))
