@@ -263,7 +263,6 @@ def detailseite(table):
                     return render_template("detailseite.html", table=table, user_list=user_list)
                 elif diagrammart == "Wortartenanalyse":
                     ChartObject.makeWortartenAnalyse()
-
                     return render_template("detailseite.html", table=table, user_list=user_list)
             else:
                 return render_template("detailseite.html", Liste=my_list,
