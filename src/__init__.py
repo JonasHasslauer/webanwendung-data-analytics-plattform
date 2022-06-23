@@ -277,23 +277,6 @@ def detailseite(table):
             return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
                                    user_list=user_list)  # muss Liste übergeben, für erstes Landing
 
-        except (Exception,UnboundLocalError):
-            #hier ist eine Anzeige  eingebaut die nur dann angezeit wird wenn ein Fehler bei den Diagrammen aufgetreten ist
-
-            flash('Leider hat die Eingabe kein gültiges Ergebnis erzeugt.'
-                  " Bitte überprüfen sie Ihre Eingabe")
-
-            return render_template("detailseite.html", Liste=my_list,
-                                   ListeY=ListeInt, table=table, showAxis=showAxis,
-                                   user_list=user_list)  # muss Liste übergeben, für erstes Landing
-
-
-
-
-
-
-
-
     else:
         return redirect(url_for('index'))
 
