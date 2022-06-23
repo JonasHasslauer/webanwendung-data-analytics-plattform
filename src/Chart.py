@@ -15,7 +15,6 @@ class Chart:
        self.databaseObject = databaseObject
        self.table = table
 
-
     def makeBarChart(self, xAchse, yAchse):
         command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
         df = pd.read_sql_query(command, self.databaseObject.connection)
@@ -72,11 +71,11 @@ class Chart:
         try:
             command = "SELECT * FROM " + self.table
             df = pd.read_sql_query(command, self.databaseObject.connection)
-            # Dataframe wird in String umgewanderlt
+            # Dataframe wird in String umgewandlt
             text = df.to_string(header=False, index=False)
             # print(text)
             try:
-                if (langdetect.detect(text) == 'de'):
+                if langdetect.detect(text) == 'de':
                     einzelneWoerter = nltk.word_tokenize(text, language='german')
                 else:
                     einzelneWoerter = nltk.word_tokenize(text, language='english')
