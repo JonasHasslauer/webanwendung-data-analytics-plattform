@@ -93,7 +93,6 @@ def specUebersicht(table):
             else:
                 print(zeilen)
             zeilenFilterDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
-            if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht
 
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
                 currentDataDF.to_html(header="true", table_id="table")

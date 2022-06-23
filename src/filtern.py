@@ -14,7 +14,6 @@ test_df_2 ={'Dollar':['$']}
 test_df_2 =pd.DataFrame(test_df_2)
 # Test Dataframe mit zufälligen Daten
 
-#print(df)
 
 def zeilenFiltern(df, spaltenname, wert, operator):
     """
@@ -62,6 +61,8 @@ def spaltenFiltern(df, liste):
     :param liste: Liste mit dem Namen der auszuwählenden Spalten
     :return:gibt die ausgewählten Spalten als Dataframe zurück
     """
+    for i in liste:
+        type(i)
     spaltenFiltern_df = df[liste]
     return spaltenFiltern_df
 
