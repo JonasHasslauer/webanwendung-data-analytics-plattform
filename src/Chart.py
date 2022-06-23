@@ -62,6 +62,17 @@ class Chart:
 
     def makeWortartenAnalyse(self):
         """
+        !!!
+        Um mit diese Funktion arbeiten zu können benötigt das Programm zusätzliche Dateien.
+        Diese können mit Hilfe von nltk.download() heruntergeladen werden.
+        Hierzu muss nltk.download() in den Code eingefügt werden und dann einmalig ausgeführt werden.
+        Wenn dies geschiet wird ein Fenster geöffnet.
+        In diesem Fenster muss  nur der Download Button betätigt werden
+        und der Download der benötigten Dateien beginnt automatisch.
+        Nachdem der Download erfolgt ist kann das Fenster geschlossen werden.
+        Nach der Installation der benötigten Daten kann nltk.download() aus dem Code gelöscht werden.
+        !!!
+
         Mit hilfe dieser Funktion kann der Inhalt eines Dataframes eier Wordartenanalyse unterzogen werden.
         Die Sprache des übergebenen DataFrames wird automatisch ermittelt.
         Falls der Inhalt des DataFrames zu klein oder nicht aussagekräftig ist, wird Englisch als Standartwert angenommen.
