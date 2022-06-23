@@ -233,8 +233,6 @@ def detailseite(table):
         user_list = databaseUserObject.getUser(current_username)
         ChartObject = Chart(databaseObject, table)
 
-        ListeInt = currentDataDF.select_dtypes(include=np.number).columns.values.tolist()
-        my_list = currentDataDF.columns.values.tolist()  # erstellt Liste aus column names für Dropdowns (höchstens 15)
         try:
             if request.method == 'POST' and request.form.get("diagrammart"):
                 diagrammart = request.form.get("diagrammart")  # kriegt aus Frontend, welches Diagrammart geünscht ist
