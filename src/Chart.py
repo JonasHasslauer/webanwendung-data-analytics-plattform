@@ -184,7 +184,9 @@ class Chart:
                 ax.text(p.get_width(), initialx + p.get_height() / 8, '{:1.0f}'.format(p.get_width()))
 
                 initialx += 1
+
             plt.savefig('static/name.png')
+            plt.show()
 
 
         except Exception as e:

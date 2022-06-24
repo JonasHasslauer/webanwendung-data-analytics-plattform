@@ -258,10 +258,10 @@ def detailseite(table):
                                            user_list=user_list)
                 elif diagrammart == "Wordcloud":
                     ChartObject.makeWordCloud()
-                    return render_template("detailseite.html", table=table, user_list=user_list)
+                    return render_template("detailseite.html", table=table, user_list=user_list, Liste=my_list, ListeY=ListeInt,)
                 elif diagrammart == "Wortartenanalyse":
                     ChartObject.makeWortartenAnalyse()
-                    return render_template("detailseite.html", table=table, user_list=user_list)
+                    return render_template("detailseite.html", table=table, user_list=user_list, Liste=my_list, ListeY=ListeInt,)
             else:
                 return render_template("detailseite.html", Liste=my_list,
                                        ListeY=ListeInt, table=table,
