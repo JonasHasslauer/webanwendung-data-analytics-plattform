@@ -11,6 +11,7 @@ from filtern import *
 from PIL import Image
 
 import seaborn as sns
+
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
 extensions = {'csv'}
@@ -224,19 +225,23 @@ def uebersichtsseite():
 @app.route('/detailseite/<string:table>', methods=["POST", "GET"])
 def detailseite(table):
     if 'username' in session:
-        current_username = session['username']
-        databaseObject = DatabaseFile("Datenbank/" + current_username)
+        current_username = session[
+            'username']  # der username wird gebraucht, um auf die richtige Datenbank zugreifen zu können
+        databaseObject = DatabaseFile(
+            "Datenbank/" + current_username)  # das databaseObject wird benutzt, um Methoden aus databaseFile aufzurufen
         currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseObject.connection)
-        my_list = currentDataDF.columns.values.tolist()
-        ListeInt = currentDataDF.select_dtypes(include=np.number).columns.values.tolist()
+        my_list = currentDataDF.columns.values.tolist()  # Listen der column names für die Auswahl, welche Spalten für die Diagramme verwendet werden sollen
+        ListeInt = currentDataDF.select_dtypes(
+            include=np.number).columns.values.tolist()  # für die y-Achse können nur Zahlen verwendet werden -> nur columns mit numerics stehen zur Auswahl
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
-        user_list = databaseUserObject.getUser(current_username)
-        ChartObject = Chart(databaseObject, table)
+        user_list = databaseUserObject.getUser(
+            current_username)  # aktuelle User-Daten werden gebraucht, um den aktuellen User in der Nav bar anzuzeigen
+        ChartObject = Chart(databaseObject, table)  # ChartObject wird verwendet, um die Diagramme zu erstellen
 
         try:
             if request.method == 'POST' and request.form.get("diagrammart"):
-                diagrammart = request.form.get("diagrammart")  # kriegt aus Frontend, welches Diagrammart geünscht ist
-                print(diagrammart)  # nur Kontrolle
+                diagrammart = request.form.get("diagrammart")  # kriegt aus Frontend, welches Diagrammart gewünscht ist, ruft
+                #Methoden aus Chart.py auf, um das jeweilige Diagramm zu erstellen
                 if diagrammart == "Balkendiagramm":
                     xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse
                     # verwendet werden sollen
@@ -244,7 +249,9 @@ def detailseite(table):
                     ChartObject.makeBarChart(xAchse, yAchse)
                     return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
                                            user_list=user_list)
-                elif diagrammart == "Tortendiagramm":  # macht noch keinen Sinn, zählt nicht, kann nur ein column entgegen nehmen
+                                #die Listen werden übergeben, für die Dropdowns auf der Detailseite, in denen man die Spalten für das Diagramm auswählen kann
+                                #die table wird übergeben, um die Daten aus der Tabelle zu kriegen, user_list wird für den User in der Nav bar gebracuht
+                elif diagrammart == "Tortendiagramm":
                     xAchse = request.form.get("xAchse")
                     yAchse = request.form.get("yAchse")
                     ChartObject.makePieChart(xAchse, yAchse)
@@ -258,10 +265,12 @@ def detailseite(table):
                                            user_list=user_list)
                 elif diagrammart == "Wordcloud":
                     ChartObject.makeWordCloud()
-                    return render_template("detailseite.html", table=table, user_list=user_list, Liste=my_list, ListeY=ListeInt,)
+                    return render_template("detailseite.html", table=table, user_list=user_list, Liste=my_list,
+                                           ListeY=ListeInt, )
                 elif diagrammart == "Wortartenanalyse":
                     ChartObject.makeWortartenAnalyse()
-                    return render_template("detailseite.html", table=table, user_list=user_list, Liste=my_list, ListeY=ListeInt,)
+                    return render_template("detailseite.html", table=table, user_list=user_list, Liste=my_list,
+                                           ListeY=ListeInt, )
             else:
                 return render_template("detailseite.html", Liste=my_list,
                                        ListeY=ListeInt, table=table,

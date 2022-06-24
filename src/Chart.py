@@ -11,27 +11,63 @@ class Chart:
     databaseObject = ''
     table = ''
 
+    """
+    Die Klasse Chart erstellt Diagramme
+    :param databaseObject: Das Objekt, das auf die aktuelle User-Datenbank referenziert
+    :param table: die Tabelle, aus der die Daten für dei Diagramme kommen
+    """
+
     def __init__(self, databaseObject, table):
        self.databaseObject = databaseObject
        self.table = table
 
-    def makeBarChart(self, xAchse, yAchse):
+    def makeBarChart(self, xAchse:list, yAchse:list):
+        """
+        :param xAchse: wird für die x-Achse des Diagramms benutzt
+        :param yAchse: wird für die y-Achse des Diagramms benutzt
+
+        die Methode erstellt ein Balkendiagramm aus den übergebenen Daten
+        Die Tabelle wird gruppiert nach xAchse, damit nicht unendlich viele Balken entstehen
+        Das Plot wird als png in static gespeichert, damit detailseite.html das Bild aufrufen und anzeigen kann
+        """
         command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
         df = pd.read_sql_query(command, self.databaseObject.connection)
         ax = df.plot(kind='bar', x=xAchse, y=yAchse).get_figure()  # erstellt plot mit x- und y-Achse
         ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
 
-    def makePieChart(self, xAchse, yAchse):
+
+    def makePieChart(self, xAchse:list, yAchse:list):
+        """
+        :param xAchse: wird für dei Berechnung der %-Zahlen der Kuchenstücke benutzt
+        :param yAchse: die Daten, zu denen xAchse ins Verhältnis gesetzt wird
+
+        die Methode erstellt ein pie chart aus den beiden übergebenen Daten
+        die Daten der x-Achse-Variable werden gruppiert, und dann wird angegeben wie viel % die Werte der y-Achse-Variable der x-Achse einnehmen
+        Beispiel:
+        Eine Tabelle mit Teams und Punkten, Team A: 25Punkte, Team B: 20 Punkte, Team C: 10 Punkte
+        Team ist yAchse, und Punkte is xAchse ->  Kuchenstück von A hat 46%, Kuchenstück von B hat 37%, Kuchenstück von C hat 17%
+        Das Plot wird als png in static gespeichert, damit detailseite.html das Bild aufrufen und anzeigen kann
+        """
         command = "SELECT * FROM " + self.table
         df = pd.read_sql_query(command, self.databaseObject.connection)
         ax = df.groupby([xAchse]).sum().plot(kind='pie', y=yAchse, autopct='%1.0f%%').get_figure()
         ax.savefig('static/name.png')
 
-    def makeLineChart(self, xAchse, yAchse):
+
+    def makeLineChart(self, xAchse:list, yAchse:list):
+        """
+        :param xAchse: wird für die x-Achse des Diagramms benutzt
+        :param yAchse: wird für die y-Achse des Diagramms benutzt
+
+        die Methode erstellt ein Liniendiagramm aus den übergebenen Daten
+        Die Tabelle wird gruppiert nach xAchse, damit nicht unendlich viele Balken entstehen
+        Das Plot wird als png in static gespeichert, damit detailseite.html das Bild aufrufen und anzeigen kann
+        """
         command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
         df = pd.read_sql_query(command, self.databaseObject.connection)
         ax = df.plot(kind='line', x=xAchse, y=yAchse).get_figure()
         ax.savefig('static/name.png')
+
 
     def makeWordCloud(self):
         """
