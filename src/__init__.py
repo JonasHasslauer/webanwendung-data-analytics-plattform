@@ -2,6 +2,7 @@ import os
 import sqlite3
 
 from flask import Flask, render_template, request, session, redirect, url_for, flash
+from werkzeug.exceptions import BadRequestKeyError
 
 from src.DatabaseUser import DatabaseUser
 from src.DatabaseFile import DatabaseFile
@@ -182,42 +183,45 @@ def specUebersicht(table):
 @app.route('/uebersichtsseite', methods=["POST", "GET"])
 def uebersichtsseite():
     if 'username' in session:
-        current_username = session['username']
-        databaseFileObject = DatabaseFile("Datenbank/" + current_username)
-        filenames = databaseFileObject.getAllTableNamesAsList()
+        try:
+            current_username = session['username']
+            databaseFileObject = DatabaseFile("Datenbank/" + current_username)
+            filenames = databaseFileObject.getAllTableNamesAsList()
 
-        databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
-        user_list = databaseUserObject.getUser(current_username)
+            databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
+            user_list = databaseUserObject.getUser(current_username)
 
-        if request.method == 'POST' and (
-                request.form.get('submit') == 'Refresh' or request.form.get('uebersichtsseite') == 'uebersichtsseite'):
-            return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
+            if request.method == 'POST' and (
+                    request.form.get('submit') == 'Refresh' or request.form.get('uebersichtsseite') == 'uebersichtsseite'):
+                return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
 
-        # if request.method == 'POST' and request.form.get('uebersichtsseite') == 'uebersichtsseite':
-        #    return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
+            # if request.method == 'POST' and request.form.get('uebersichtsseite') == 'uebersichtsseite':
+            #    return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
 
-        # Dateiupload
-        elif request.method == 'POST' and request.files['file']:
-            file = request.files['file']
-            namesplitted = file.filename.split('.')
-            seperator = request.form.get('seperator')
-            name = namesplitted[0]
-            if name[0].isnumeric():
-                name = "a" + name
-            fileExists = databaseFileObject.databaseIsExisting(name)
-            if not fileExists:
-                if seperator is None:
-                    databaseFileObject.saveFile(file, name, seperator=",")
+            # Dateiupload
+            elif request.method == 'POST' and request.files['file']:
+                file = request.files['file']
+                namesplitted = file.filename.split('.')
+                seperator = request.form.get('seperator')
+                name = namesplitted[0]
+                if name[0].isnumeric():
+                    name = "a" + name
+                fileExists = databaseFileObject.databaseIsExisting(name)
+                if not fileExists:
+                    if seperator is None:
+                        databaseFileObject.saveFile(file, name, seperator=",")
+                    else:
+                        databaseFileObject.saveFile(file, name, seperator)
+                        return render_template("uebersichtsseite.html", filenames=filenames, fileFlag=False,
+                                               user_list=user_list)
                 else:
-                    databaseFileObject.saveFile(file, name, seperator)
-                    return render_template("uebersichtsseite.html", filenames=filenames, fileFlag=False,
+                    return render_template("uebersichtsseite.html", filenames=filenames, fileFlag=fileExists,
                                            user_list=user_list)
             else:
-                return render_template("uebersichtsseite.html", filenames=filenames, fileFlag=fileExists,
-                                       user_list=user_list)
-        else:
-            return render_template("uebersichtsseite.html", filenames=filenames, fileFlag=False, user_list=user_list)
+                return render_template("uebersichtsseite.html", filenames=filenames, fileFlag=False, user_list=user_list)
 
+        except BadRequestKeyError:
+            return render_template("uebersichtsseite.html", filenames=filenames, fileFlag=False, user_list=user_list)
     else:
         return redirect(url_for('index'))
 
