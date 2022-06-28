@@ -49,9 +49,17 @@
                     <input class="form-control" style="border-color:#6c757d" name="username" id=username placeholder="Username" required="required">
 
                     <label for="password"></label>
-                    <input type="password" style="border-color:#6c757d" class="form-control" name="password" id=password placeholder="Passwort"
+                    <input type="password"
+                           style="border-color:#6c757d" class="form-control" name="password" id=password placeholder="Passwort"
                            required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"required>
-
+                    <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+                        <span class="fs-6  lead mb-0 me-3" style="color: #6c757d">Damit das Passwort sicher ist, muss es:
+                                                                        <ul><li>8 Zeichen lang sein</li>
+                                                                        <li>einen Großbuchstaben enthalten</li>
+                                                                        <li>einen Kleinbuchstaben enthalten</li>
+                                                                        <li>ein Sonderzeichen enthalten</li></ul>
+                        </span>
+                </div>
                     <div class="text-center text-lg-start mt-4 pt-2" style="width: 200px; float: left; margin-right: 16px">
                         <button type="submit" class="btn btn-primary btn-lg" name="register"
                                 style="background-color: #ec6f04; border-color: #ec6f04; margin-top: 5px; margin-bottom: 5px; padding-left: 2.5rem; padding-right: 2.5rem;">
