@@ -39,20 +39,23 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        if not databaseUserObject.checkIfUserExists(username):
-            try:
-                databaseUserObject.addUser(username, firstname, lastname, birthday, password)
-                flash("Account erfolgreich registriert.")
-                return redirect(url_for("login"))
-            except sqlite3.IntegrityError as e:
-                flash("Benutzername bereits vergeben. Bitte anderen Nutzernamen benutzen.")
-                return redirect(url_for("register"))
-        else:  # Nutzer muss sich mit anderem Namen registrieren
-            flash("Benutzername bereits vergeben. Bitte anderen Nutzernamen benutzen.")
-            return render_template(url_for("register"))
+        if '/' not in username:
+            if not databaseUserObject.checkIfUserExists(username):
+                try:
+                    databaseUserObject.addUser(username, firstname, lastname, birthday, password)
+                    flash("Account erfolgreich registriert.")
+                    return redirect(url_for("login"))
+                except sqlite3.IntegrityError as e:
+                    flash("username bereits vergeben. Bitte anderen username benutzen.")
+                    return redirect(url_for("register"))
+            else:  # Nutzer muss sich mit anderem Namen registrieren
+                flash("username bereits vergeben. Bitte anderen username benutzen.")
+                return render_template(url_for("register"))
+        else:
+            flash("username enhält '/', bitte melden Sie sich mit einem anderen username an")
+            return redirect(url_for("register"))
     else:
         return render_template("register.html")
-
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
