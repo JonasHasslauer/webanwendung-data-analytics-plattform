@@ -9,7 +9,7 @@
        {% block content %}
 {% for message in get_flashed_messages()%}
 <div class="alert alert-danger" role="alert">
-  Benutzername bereits vergeben. Bitte anderen Benutzername benutzen.
+  {{message}}
 </div>
 {% endfor %}
     {%endblock content%}
