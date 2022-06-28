@@ -16,7 +16,7 @@
     {% block content %}
 {% for message in get_flashed_messages()%}
 <div class="alert alert-success" role="alert">
-  Datei erfolgreich hochgeladen. Klicke auf Refresh, um die Datei anzuzeigen.
+    {{message}}
 </div>
 {% endfor %}
     {%endblock content%}

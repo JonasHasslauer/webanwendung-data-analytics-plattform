@@ -326,8 +326,8 @@ def logout():
 
 @app.errorhandler(404)
 def page_not_found(error):
-    flash("Die gesuchte URL existiert nicht.")
-    return redirect(url_for('login'))
+    flash("Keine Datei ausgewählt. Bitte Datei aus dem Dateiarchiv auswählen.")
+    return redirect(url_for('uebersichtsseite'))
 
 
 @app.errorhandler(500)
