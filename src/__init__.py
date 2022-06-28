@@ -56,7 +56,6 @@ def register():
     else:
         return render_template("register.html")
 
-
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
