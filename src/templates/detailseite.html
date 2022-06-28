@@ -118,29 +118,45 @@
     <h4 style="font-weight: lighter; font-size: smaller; color: #6c757d">Table: '{{table}}'</h4>
     <!--Überschrift "Sie befinden <Sich..."-->
 
+    <script>
+    function disable(select_val,input_id1,input_id2) {
+                var e = document.getElementById(select_val);
+                var strUser = e.options[e.selectedIndex].value;
+                if(strUser === ("Liniendiagramm") || strUser === ("Balkendiagramm") || strUser === ("Tortendiagramm")) {
+                    document.getElementById(input_id1).disabled = false;
+                    document.getElementById(input_id2).disabled = false;
+                }
+                else{
+                    document.getElementById(input_id1).value = document.getElementById(input_id1).defaultValue;
+                    document.getElementById(input_id1).disabled = true;
+                    document.getElementById(input_id2).value = document.getElementById(input_id2).defaultValue;
+                    document.getElementById(input_id2).disabled = true;
+                }
+}
+    </script>
 
     <form method="POST" action="{{ url_for('detailseite', table=table) }}">
         <p>
             <label for="diagrammart" class="form-label" style="font-weight: lighter">Wählen Sie die Diagrammart und die
                 gewünschten Spalten für das Diagramm</label>
-            <select class="form-control" name="diagrammart" id=diagrammart>
+            <select class="form-control" name="diagrammart" id=diagrammart onchange="disable('diagrammart', 'xAchse', 'yAchse')">
                 <option value="" selected disabled hidden>Diagrammart wählen</option>
-                <option value="Balkendiagramm">Balkendiagramm</option>
-                <option value="Liniendiagramm">Liniendiagramm</option>
-                <option value="Tortendiagramm">Tortendiagramm</option>
+                <option name="Balkendiagramm" value="Balkendiagramm">Balkendiagramm</option>
+                <option name="Liniendiagramm" value="Liniendiagramm">Liniendiagramm</option>
+                <option name ="Tortendiagramm" value="Tortendiagramm">Tortendiagramm</option>
                 <option value="Wordcloud">Wordcloud</option>
                 <option value="Wortartenanalyse">Wortartenanalyse</option>
             </select>
         </p>
 
         <p>
-                <select class="form-control" name="xAchse" id=xAchse>
+                <select class="form-control" name="xAchse" id=xAchse disabled value="">
                     <option value="" selected disabled hidden>Spalte für x-Achse</option>
                     {% for Liste in Liste %}
                     <option value="{{Liste}}">{{Liste}}</option>
                     {% endfor %}
                 </select>
-                <select class="form-control" name="yAchse" id=yAchse>
+                <select class="form-control" name="yAchse" id=yAchse disabled value="">
                     <option value="" selected disabled hidden>Spalte für y-Achse</option>
                     {% for ListeY in ListeY %}
                     <option value="{{ListeY}}">{{ListeY}}</option>
@@ -156,7 +172,6 @@
 
 
     </form>
-
 
     <img src="{{ url_for('static', filename='name.png') }}" class="rounded mx-auto d-block" width="880" height="750"
          alt="Es wurde noch kein Diagramm erstellt, oder es kann nicht angezeigt werden">
