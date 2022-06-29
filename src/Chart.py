@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import nltk
 import langdetect
+import seaborn as sns
 from filtern import *
 
 
@@ -30,10 +31,19 @@ class Chart:
         Die Tabelle wird gruppiert nach xAchse, damit nicht unendlich viele Balken entstehen
         Das Plot wird als png in static gespeichert, damit detailseite.html das Bild aufrufen und anzeigen kann
         """
-        command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
-        df = pd.read_sql_query(command, self.databaseObject.connection)
-        ax = df.plot(kind='bar', x=xAchse, y=yAchse).get_figure()  # erstellt plot mit x- und y-Achse
-        ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
+        try:
+            command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
+            df = pd.read_sql_query(command, self.databaseObject.connection)
+
+            #ax = df.plot(kind='bar', x=xAchse, y=yAchse).get_figure()  # erstellt plot mit x- und y-Achse
+
+            ax = sns.barplot(y=yAchse, x=xAchse, data=df, palette='rocket').get_figure()  # erstellt plot mit x- und y-Achse
+
+            ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
+
+        except Exception as e:
+            print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
+
 
 
     def makePieChart(self, xAchse:list, yAchse:list):
@@ -63,15 +73,24 @@ class Chart:
         Die Tabelle wird gruppiert nach xAchse, damit nicht unendlich viele Balken entstehen
         Das Plot wird als png in static gespeichert, damit detailseite.html das Bild aufrufen und anzeigen kann
         """
-        command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
-        df = pd.read_sql_query(command, self.databaseObject.connection)
-        ax = df.plot(kind='line', x=xAchse, y=yAchse).get_figure()
-        ax.savefig('static/name.png')
 
+        try:
+            command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
+            df = pd.read_sql_query(command, self.databaseObject.connection)
+            ax = df.plot(kind='line', x=xAchse, y=yAchse).get_figure()
+
+            #ax = sns.lineplot(x=xAchse, y=yAchse,data=df, palette='rocket').get_figure()
+
+            ax.savefig('static/name.png')
+
+        except Exception as e:
+            print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
 
     def makeWordCloud(self):
         """
         Dies Methode erstellt eine WordCloud aus einem Ihr übergebenen DataFrame
+        Das Plot wird als png in static gespeichert,
+        damit detailseite.html das Bild aufrufen und anzeigen kann
         :param df: zu bearbeitendes DataFrame
         """
         try:
@@ -112,6 +131,8 @@ class Chart:
         Mit hilfe dieser Funktion kann der Inhalt eines Dataframes eier Wordartenanalyse unterzogen werden.
         Die Sprache des übergebenen DataFrames wird automatisch ermittelt.
         Falls der Inhalt des DataFrames zu klein oder nicht aussagekräftig ist, wird Englisch als Standartwert angenommen.
+        Das Plot wird als png in static gespeichert,
+        damit detailseite.html das Bild aufrufen und anzeigen kann
         :param df: Zu übergebendes DataFrame
 
         """
