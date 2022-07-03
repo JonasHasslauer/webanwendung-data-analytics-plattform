@@ -42,30 +42,29 @@ class DatabaseFile(Database):
             return True
         return False
 
+    def allowed(self, file) -> bool:
+        filename = file.filename
+        last = filename.split('.').pop()
+        if last == 'csv':
+            return True
+        else:
+            return False
+
     def saveFile(self, file, name:str, seperator):
         current_username = session['username']
-        filename = file.filename
-        namesplitted = filename.split('.')
-        last = namesplitted.pop()
         name = name.replace("-", "_")
         name = name.replace(" ", "_")
-        if last == 'csv':
+        if DatabaseFile.allowed(self, file) == True:
             file.save("name.csv")
-            if seperator == ',':
-                pd.read_csv("name.csv", sep=',').to_sql(name, sql.connect("Datenbank/" + current_username,
-                                                                          check_same_thread=False),
-                                                        schema=None, if_exists='replace', index=True, index_label=None,
-                                                        chunksize=None,
-                                                        dtype=None, method=None)
-            elif seperator == ';':
-                pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/" + current_username,
-                                                                          check_same_thread=False),
-                                                        schema=None, if_exists='replace', index=True, index_label=None,
-                                                        chunksize=None,
-                                                        dtype=None, method=None)
+            pd.read_csv("name.csv", sep=seperator).to_sql(name, sql.connect("Datenbank/" + current_username,
+                                                                      check_same_thread=False),
+                                                    schema=None, if_exists='replace', index=True, index_label=None,
+                                                    chunksize=None,
+                                                    dtype=None, method=None)
             os.remove("name.csv")
             flash("Datei erfolgreich hochgeladen.")
-        #TODO Was passiert sonst?
+        else:
+            flash("Die Datei ist keine csv-Datei. Bitte laden Sie nur csv-Dateien hoch!")
 
     def saveDataFrame(self, file, name):
         file.to_sql(name, sql.connect("Datenbank/" + session["username"], check_same_thread=False),schema=None, if_exists='replace', index=True, index_label=None,
