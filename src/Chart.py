@@ -37,7 +37,9 @@ class Chart:
 
             #ax = df.plot(kind='bar', x=xAchse, y=yAchse).get_figure()  # erstellt plot mit x- und y-Achse
 
-            ax = sns.barplot(y=yAchse, x=xAchse, data=df, palette='rocket').get_figure()  # erstellt plot mit x- und y-Achse
+            # erstellt plot mit x- und y-Achse
+            ax = sns.barplot(y=yAchse, x=xAchse, data=df, palette='rocket').get_figure()
+
 
             ax.savefig('static/name.png')  # speichert Bild zwischen, damit es angezeigt werden kann
 
@@ -58,10 +60,20 @@ class Chart:
         Team ist yAchse, und Punkte is xAchse ->  Kuchenstück von A hat 46%, Kuchenstück von B hat 37%, Kuchenstück von C hat 17%
         Das Plot wird als png in static gespeichert, damit detailseite.html das Bild aufrufen und anzeigen kann
         """
-        command = "SELECT * FROM " + self.table
-        df = pd.read_sql_query(command, self.databaseObject.connection)
-        ax = df.groupby([xAchse]).sum().plot(kind='pie', y=yAchse, autopct='%1.0f%%').get_figure()
-        ax.savefig('static/name.png')
+
+        try:
+            command = "SELECT * FROM " + self.table
+            df = pd.read_sql_query(command, self.databaseObject.connection)
+
+
+            ax = df.groupby([xAchse]).sum().plot(kind='pie', y=yAchse, autopct='%1.0f%%').get_figure()
+
+            #colors = sns.color_palette('rocket')
+            #ax = plt.pie(data =df, colors = colors, autopct='%.0f%%')
+
+            ax.savefig('static/name.png')
+        except Exception as e:
+            print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
 
 
     def makeLineChart(self, xAchse:list, yAchse:list):
@@ -77,9 +89,15 @@ class Chart:
         try:
             command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
             df = pd.read_sql_query(command, self.databaseObject.connection)
-            ax = df.plot(kind='line', x=xAchse, y=yAchse).get_figure()
 
-            #ax = sns.lineplot(x=xAchse, y=yAchse,data=df, palette='rocket').get_figure()
+            #ax = df.plot(kind='line', x=xAchse, y=yAchse).get_figure()
+
+            #Auf jeden Fall nochmals überprüfen
+            #ab und zu Fehler bei mir
+            #wenn dies nicht zu beheben sind einfach die ursrpringliche
+            #Version nutzen um das Line Chart zu  erzeugen
+
+            ax = sns.lineplot(x=xAchse, y=yAchse,data=df, palette='rocket').get_figure()
 
             ax.savefig('static/name.png')
 
