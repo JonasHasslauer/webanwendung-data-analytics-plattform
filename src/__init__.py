@@ -4,8 +4,8 @@ import sqlite3
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 from werkzeug.exceptions import BadRequestKeyError
 
-from src.DatabaseUser import DatabaseUser
-from src.DatabaseFile import DatabaseFile
+from src.Database import DatabaseUser
+from src.Database import DatabaseFile
 
 from Chart import *
 from filtern import *
@@ -273,11 +273,11 @@ def detailseite(table):
                 elif diagrammart == "Wordcloud":
                     ChartObject.makeWordCloud()
                     return render_template("detailseite.html", table=table, user_list=user_list, Liste=my_list,
-                                           ListeY=ListeInt, )
+                                           ListeY=ListeInt)
                 elif diagrammart == "Wortartenanalyse":
                     ChartObject.makeWortartenAnalyse()
                     return render_template("detailseite.html", table=table, user_list=user_list, Liste=my_list,
-                                           ListeY=ListeInt, )
+                                           ListeY=ListeInt )
             else:
                 return render_template("detailseite.html", Liste=my_list,
                                        ListeY=ListeInt, table=table,

@@ -1,14 +1,79 @@
-import hashlib
 import sqlite3 as sql
 import pandas as pd
 import os
+from flask import session, flash
+import hashlib
 
-from flask import session
 
 
-class DatabaseUser:
+class Database:
     connection = ""
     cursor = ""
+
+    def __init__(self, database: str):
+        self.connection = sql.connect(database, check_same_thread=False)
+        self.cursor = self.connection.cursor()
+
+
+class DatabaseFile(Database):
+
+    def __init__(self, database: str):
+        super().__init__(database)
+
+    def getAllTableNamesAsList(self):
+        command = """SELECT tbl_name
+                     FROM sqlite_master
+                     WHERE type='table' ORDER BY rootpage DESC"""
+        exec = self.cursor.execute(command).fetchall()
+        listValues = [item[0] for item in exec]
+        return listValues
+
+    def checkIfTableWithNameExists(self):
+        pass
+        # check which user to get the specific database (maliks changes)
+        # check Table names
+
+    def getAllDataToFileFromTable(self, tablename: str) -> pd.DataFrame:
+        command = "SELECT * FROM " + tablename
+        return pd.read_sql_query(command, self.connection)
+
+    def databaseIsExisting(self, databasename: str) -> bool:
+        if databasename in self.getAllTableNamesAsList():
+            return True
+        return False
+
+    def saveFile(self, file, name:str, seperator):
+        current_username = session['username']
+        filename = file.filename
+        namesplitted = filename.split('.')
+        last = namesplitted.pop()
+        name = name.replace("-", "_")
+        name = name.replace(" ", "_")
+        if last == 'csv':
+            file.save("name.csv")
+            if seperator == ',':
+                pd.read_csv("name.csv", sep=',').to_sql(name, sql.connect("Datenbank/" + current_username,
+                                                                          check_same_thread=False),
+                                                        schema=None, if_exists='replace', index=True, index_label=None,
+                                                        chunksize=None,
+                                                        dtype=None, method=None)
+            elif seperator == ';':
+                pd.read_csv("name.csv", sep=';').to_sql(name, sql.connect("Datenbank/" + current_username,
+                                                                          check_same_thread=False),
+                                                        schema=None, if_exists='replace', index=True, index_label=None,
+                                                        chunksize=None,
+                                                        dtype=None, method=None)
+            os.remove("name.csv")
+            flash("Datei erfolgreich hochgeladen.")
+        #TODO Was passiert sonst?
+
+    def saveDataFrame(self, file, name):
+        file.to_sql(name, sql.connect("Datenbank/" + session["username"], check_same_thread=False),schema=None, if_exists='replace', index=True, index_label=None,
+                                                chunksize=None,
+                                                dtype=None, method=None)
+
+
+class DatabaseUser(Database):
 
     createTable = "CREATE TABLE if not EXISTS Logins(username VARCHAR(10) UNIQUE PRIMARY KEY not null, firstname " \
                   "VARCHAR(" \
@@ -17,8 +82,7 @@ class DatabaseUser:
                   "accountcreated TIMESTAMP not null, lastlogin TIMESTAMP not null)"
 
     def __init__(self, database: str):
-        self.connection = sql.connect(database, check_same_thread=False)
-        self.cursor = self.connection.cursor()
+        super().__init__(database)
         self.createLoginTable()
 
     def createLoginTable(self):
@@ -82,3 +146,4 @@ class DatabaseUser:
         self.cursor.execute("DELETE FROM LOGINS WHERE lastlogin < DATETIME('NOW', '-2 days')")
         self.connection.commit()
         # self.connection.close()
+

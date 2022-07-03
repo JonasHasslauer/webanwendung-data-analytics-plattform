@@ -272,7 +272,7 @@ class Chart:
                 initialx += 1
 
             plt.savefig('static/name.png')
-            plt.show()
+
 
 
         except Exception as e:
