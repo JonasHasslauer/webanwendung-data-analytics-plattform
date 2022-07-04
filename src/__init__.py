@@ -15,15 +15,9 @@ import seaborn as sns
 
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
-extensions = {'csv'}
-
-
-def allowed(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in extensions
 
 
 databaseUserObject = DatabaseUser('Datenbank/my_logins4.db')
-
 
 @app.route("/")
 def index():
@@ -326,7 +320,7 @@ def logout():
 
 @app.errorhandler(404)
 def page_not_found(error):
-    flash("Keine Datei ausgewählt. Bitte Datei aus dem Dateiarchiv auswählen.", 'error')
+    flash("Keine Datei ausgewählt. Bitte Datei aus dem Dateiarchiv auswählen.", 'info')
     return redirect(url_for('uebersichtsseite'))
 
 
