@@ -62,9 +62,9 @@ class DatabaseFile(Database):
                                                     chunksize=None,
                                                     dtype=None, method=None)
             os.remove("name.csv")
-            flash("Datei erfolgreich hochgeladen.")
+            flash(u'Datei erfolgreich hochgeladen.', 'success')
         else:
-            flash("Die Datei ist keine csv-Datei. Bitte laden Sie nur csv-Dateien hoch!")
+            flash(u'Die Datei ist keine csv-Datei. Bitte laden Sie nur csv-Dateien hoch!', 'error')
 
     def saveDataFrame(self, file, name):
         file.to_sql(name, sql.connect("Datenbank/" + session["username"], check_same_thread=False),schema=None, if_exists='replace', index=True, index_label=None,
