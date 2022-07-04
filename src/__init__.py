@@ -49,7 +49,7 @@ def register():
                     flash("username bereits vergeben. Bitte anderen username benutzen.", 'error')
                     return redirect(url_for("register"))
             else:  # Nutzer muss sich mit anderem Namen registrieren
-                flash("username bereits vergeben. Bitte anderen username benutzen.", 'error')
+                flash("username bereits vergeben. Bitte anderen username benutzen.", 'info')
                 return render_template(url_for("register"))
         else:
             flash("username enhält '/', bitte melden Sie sich mit einem anderen username an", 'error')
@@ -70,7 +70,7 @@ def login():
 
             return redirect(url_for('uebersichtsseite'))
         else:
-            flash("Benutzerdaten überprüfen oder einen Account anlegen.")
+            flash("Benutzerdaten überprüfen oder einen Account anlegen.", 'info')
             return redirect(url_for('login'))
     else:
         return redirect(url_for('index'))
