@@ -12,7 +12,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
             integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
             crossorigin="anonymous"></script>
-
 </head>
 
 
@@ -119,29 +118,50 @@
     <!--Überschrift "Sie befinden <Sich..."-->
 
 
+
     <form method="POST" action="{{ url_for('detailseite', table=table) }}">
         <p>
             <label for="diagrammart" class="form-label" style="font-weight: lighter">Wählen Sie die Diagrammart und die
                 gewünschten Spalten für das Diagramm</label>
-            <select class="form-control" name="diagrammart" id=diagrammart>
+            <select class="form-control" name="diagrammart" id=diagrammart onchange="disable('diagrammart', 'xAchse', 'yAchse')">
                 <option value="" selected disabled hidden>Diagrammart wählen</option>
-                <option value="Balkendiagramm">Balkendiagramm</option>
-                <option value="Liniendiagramm">Liniendiagramm</option>
-                <option value="Tortendiagramm">Tortendiagramm</option>
+                <option name="Balkendiagramm" value="Balkendiagramm">Balkendiagramm</option>
+                <option name="Liniendiagramm" value="Liniendiagramm">Liniendiagramm</option>
+                <option name ="Tortendiagramm" value="Tortendiagramm">Tortendiagramm</option>
                 <option value="Wordcloud">Wordcloud</option>
                 <option value="Wortartenanalyse">Wortartenanalyse</option>
             </select>
         </p>
 
+        <!-- JavaScript zum Deaktivieren der x-/y-Achse bei Wordcloud und Wortartenanalyse -->
+        <script type="text/javascript">
+            function disable(select_val,input_id1,input_id2) {
+                var e = document.getElementById(select_val);
+                var strUser = e.options[e.selectedIndex].value;
+                if(strUser === ("Liniendiagramm") || strUser === ("Balkendiagramm") || strUser === ("Tortendiagramm")) {
+                    document.getElementById(input_id1).disabled = false;
+                    document.getElementById(input_id2).disabled = false;
+                }
+                else{
+                    document.getElementById(input_id1).value = document.getElementById(input_id1).defaultValue;
+                    document.getElementById(input_id1).disabled = true;
+                    document.getElementById(input_id2).value = document.getElementById(input_id2).defaultValue;
+                    document.getElementById(input_id2).disabled = true;
+                }
+            }
+        </script>
+
         <p>
-                <select class="form-control" name="xAchse" id=xAchse>
-                    <option value="" selected disabled hidden>Spalte für x-Achse</option>
+                <label for="xAchse" class="form-label" style="font-weight: lighter">Spalte für x-Achse:</label>
+                <select class="form-control" name="xAchse" id=xAchse disabled value="">
                     {% for Liste in Liste %}
                     <option value="{{Liste}}">{{Liste}}</option>
                     {% endfor %}
                 </select>
-                <select class="form-control" name="yAchse" id=yAchse>
-                    <option value="" selected disabled hidden>Spalte für y-Achse</option>
+        </p>
+        <p>
+                <label for="yAchse" class="form-label" style="font-weight: lighter">Spalte für y-Achse:</label>
+                <select class="form-control" name="yAchse" id=yAchse disabled value="">
                     {% for ListeY in ListeY %}
                     <option value="{{ListeY}}">{{ListeY}}</option>
                     {% endfor %}}
@@ -156,7 +176,6 @@
 
 
     </form>
-
 
     <img src="{{ url_for('static', filename='name.png') }}" class="rounded mx-auto d-block" width="880" height="750"
          alt="Es wurde noch kein Diagramm erstellt, oder es kann nicht angezeigt werden">
