@@ -43,16 +43,16 @@ def register():
             if not databaseUserObject.checkIfUserExists(username):
                 try:
                     databaseUserObject.addUser(username, firstname, lastname, birthday, password)
-                    flash("Account erfolgreich registriert.")
+                    flash("Account erfolgreich registriert.", 'success')
                     return redirect(url_for("login"))
                 except sqlite3.IntegrityError as e:
-                    flash("username bereits vergeben. Bitte anderen username benutzen.")
+                    flash("username bereits vergeben. Bitte anderen username benutzen.", 'error')
                     return redirect(url_for("register"))
             else:  # Nutzer muss sich mit anderem Namen registrieren
-                flash("username bereits vergeben. Bitte anderen username benutzen.")
+                flash("username bereits vergeben. Bitte anderen username benutzen.", 'error')
                 return render_template(url_for("register"))
         else:
-            flash("username enhält '/', bitte melden Sie sich mit einem anderen username an")
+            flash("username enhält '/', bitte melden Sie sich mit einem anderen username an", 'error')
             return redirect(url_for("register"))
     else:
         return render_template("register.html")
@@ -286,7 +286,7 @@ def detailseite(table):
         except (Exception, UnboundLocalError) as e:
             # hier ist eine Anzeige  eingebaut die nur dann angezeit wird wenn ein Fehler bei den Diagrammen aufgetreten ist
             flash('Leider hat die Eingabe kein gültiges Ergebnis erzeugt.'
-                  " Bitte überprüfen sie Ihre Eingabe")
+                  " Bitte überprüfen sie Ihre Eingabe", 'error')
             return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
                                    user_list=user_list)  # muss Liste übergeben, für erstes Landing
 
@@ -326,13 +326,13 @@ def logout():
 
 @app.errorhandler(404)
 def page_not_found(error):
-    flash("Keine Datei ausgewählt. Bitte Datei aus dem Dateiarchiv auswählen.")
+    flash("Keine Datei ausgewählt. Bitte Datei aus dem Dateiarchiv auswählen.", 'error')
     return redirect(url_for('uebersichtsseite'))
 
 
 @app.errorhandler(500)
 def page_error(error):
-    flash("Ein Problem ist aufgetreten.")
+    flash("Ein Problem ist aufgetreten.", 'error')
     return redirect(url_for('login'))
 
 
