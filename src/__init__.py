@@ -91,10 +91,7 @@ def specUebersicht(table):
             global newDF
             newDF = currentDataDF
             if zeilen:
-                print("Zeilenauswahl")
                 newDF = zeilenAuswählen(newDF, zeilen)
-            else:
-                print(zeilen)
             zeilenFilterDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
 
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
@@ -121,10 +118,7 @@ def specUebersicht(table):
             zeilen = request.form.get('zeilen')
             newDF = currentDataDF
             if zeilen:
-                print("Zeilenauswahl")
                 newDF = zeilenAuswählen(newDF, zeilen)
-            else:
-                print(zeilen)
             newDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
@@ -147,10 +141,7 @@ def specUebersicht(table):
                 zeilen = request.form.get('zeilen')
                 newDF = currentDataDF
                 if zeilen:
-                    print("Zeilenauswahl")
                     newDF = zeilenAuswählen(newDF, zeilen)
-                else:
-                    print(zeilen)
                 newDF = spaltenFiltern(newDF, filterlist)  # Spalten werden gefiltert
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
