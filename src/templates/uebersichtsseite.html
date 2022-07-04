@@ -47,6 +47,16 @@
 {% endif %}
 {% endwith %}
 
+    {% with errors = get_flashed_messages(category_filter=["info"]) %}
+{% if errors %}
+    {%- for msg in errors %}
+<div class="alert alert-secondary d-flex align-items-center" role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#info-fill"/></svg>
+  <div>{{msg}}</div>
+</div>
+    {% endfor -%}
+{% endif %}
+{% endwith %}
 
 </head>
 
