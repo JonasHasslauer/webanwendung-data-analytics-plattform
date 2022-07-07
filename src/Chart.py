@@ -106,6 +106,13 @@ class Chart:
 
     def makeWordCloud(self):
         """
+        !!!
+        bei dieser Funktion können es zu Fehlern auftreten,
+        falls die Version 14.0 von c++
+        nicht installiert ist.(dies kann vor allem bei älteren Windows PCs der Fall sein).
+        Diese kann sehr einfach über den Visual Studio Installer herunter geladen werden.
+        !!!
+
         Dies Methode erstellt eine WordCloud aus einem Ihr übergebenen DataFrame
         Das Plot wird als png in static gespeichert,
         damit detailseite.html das Bild aufrufen und anzeigen kann
@@ -176,6 +183,8 @@ class Chart:
             woerterMitTokensEinfacheListe = [x for xs in woerterMitTokenslistOfLists for x in xs]
 
             # Die verschiedenen Wordarten werden gezählt
+            # Falls Textbausteine wie NNP oder JJR im ursprünglischen Text enthalten sind,
+            # werden diese subtrahiert
             dollar = woerterMitTokensEinfacheListe.count('$') - einzelneWoerter.count('$')
             quotationMark = woerterMitTokensEinfacheListe.count("''")- einzelneWoerter.count("''")
             openingParenthesis = woerterMitTokensEinfacheListe.count('(')-einzelneWoerter.count('(')
@@ -264,7 +273,7 @@ class Chart:
             sns.set(rc={'figure.figsize': (16, 12)})
             ax = sns.barplot(y='Wortarten:', x='Werte_Wortarten:',
                              data=wortArten_df_nur_zeilen_mit_wert_uerber_null, palette='rocket')
-
+            #Die werte werden hinter den Balken angezeigt
             initialx = 0
             for p in ax.patches:
                 ax.text(p.get_width(), initialx + p.get_height() / 8, '{:1.0f}'.format(p.get_width()))
