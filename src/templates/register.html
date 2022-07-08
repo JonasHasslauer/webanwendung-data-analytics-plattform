@@ -88,7 +88,7 @@
                     <label for="password"></label>
                     <input type="password"
                            style="border-color:#6c757d" class="form-control" name="password" id=password placeholder="Passwort"
-                           required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"required>
+                           required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}"required>
                     <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                         <span class="fs-6  lead mb-0 me-3" style="color: #6c757d">Damit das Passwort sicher ist, muss es:
                                                                         <ul><li>8 Zeichen lang sein</li>
