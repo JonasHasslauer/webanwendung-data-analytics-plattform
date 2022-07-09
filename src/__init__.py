@@ -157,7 +157,7 @@ def specUebersicht(table):
                                                          justify="center", col_space=20)],
                                    titles=newDF.columns.values, table=table, user_list=user_list)
 
-        elif request.method == 'POST' and 'deletefile' in request.form:
+        elif request.method == 'POST' and request.form.get('submit') == 'Ausgewählte Datei löschen':
             print("löschen1")
             databaseFileObject.deleteFile(table)
             flash("Die ausgewählte Datei wurde aus der Datenbank entfernt.", 'info')
