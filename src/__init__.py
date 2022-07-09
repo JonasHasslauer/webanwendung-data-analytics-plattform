@@ -320,6 +320,28 @@ def page_error(error):
     flash("Ein Problem ist aufgetreten.", 'error')
     return redirect(url_for('login'))
 
+@app.errorhandler(204)
+def no_Content(error):
+    flash("Das gesuchte Objekt existiert nicht.", 'error')
+    return redirect(url_for('login'))
+
+
+@app.errorhandler(400)
+def bad_Request(error):
+    flash("Request nicht möglich auszuführen.", 'error')
+    return redirect(url_for('login'))
+
+@app.errorhandler(401)
+def no_Session(error):
+    flash("Bitte erst anmelden oder  registirieren.", 'error')
+    return redirect(url_for('login'))
+
+@app.errorhandler(504)
+def timeout(error):
+    flash("Länge der Wartezeit für den Request abgelaufen. Bitte erneut anmelden.", 'error')
+    return redirect(url_for('login'))
+
+
 
 databaseUserObject.clearData()
 

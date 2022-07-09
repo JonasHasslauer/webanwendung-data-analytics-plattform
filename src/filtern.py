@@ -5,7 +5,7 @@ import nltk
 import langdetect
 import seaborn as sns
 import numpy as np
-
+from flask import flash
 # nltk.download()
 test_df = {'Tiere': ['Maus', 'Affe', 'Huhn','Dollar'],
            'Werte Tiere':[1,2,3,'$']}
@@ -24,6 +24,7 @@ def zeilenFiltern(df, spaltenname, wert, operator):
     :param spaltenname: Überschrift nach der zu sortierenden Spalte
     :param wert: Spaltenwert nach dem gefiltert werden soll
     :param operator: </>/==
+    :param operator:o.Quartil & u.Quartil  müssen bei werd derzeit einen neutralen Wert 0 eingeben
     :return:gibt die gefilterten Zeilen als neues Dataframe aus
     """
     try:
@@ -43,6 +44,40 @@ def zeilenFiltern(df, spaltenname, wert, operator):
             df_maske = df[spaltenname] != wert
             filtered_df = df[df_maske]
             return filtered_df
+        elif operator == '> median':
+            df_maske = df[spaltenname] > df[spaltenname].quantile(q=0.50)
+            filtered_df = df[df_maske]
+            return filtered_df
+
+        elif operator == '< median':
+            df_maske = df[spaltenname] < df[spaltenname].quantile(q=0.50)
+            filtered_df = df[df_maske]
+            return filtered_df
+
+        elif operator == '> oQuartil':
+            df_maske = df[spaltenname] > df[spaltenname].quantile(q=0.75)
+
+            filtered_df = df[df_maske]
+            return filtered_df
+
+        elif operator == '< oQuartil':
+            df_maske = df[spaltenname] < df[spaltenname].quantile(q=0.75)
+            filtered_df = df[df_maske]
+            return filtered_df
+
+        elif operator == '> uQuartil':
+            df_maske = df[spaltenname] > df[spaltenname].quantile(q=0.25)
+            filtered_df = df[df_maske]
+            return filtered_df
+
+        elif operator == '< uQuartil':
+            df_maske = df[spaltenname] < df[spaltenname].quantile(q=0.25)
+            filtered_df = df[df_maske]
+            return filtered_df
+
+
+
+
     except Exception as e:
         print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
 
