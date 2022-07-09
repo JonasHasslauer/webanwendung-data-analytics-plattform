@@ -74,9 +74,9 @@ def login():
 def specUebersicht(table):
     if 'username' in session:
         current_username = session['username']
-        databaseFileObject2 = DatabaseFile("Datenbank/" + current_username)
-        filenames = databaseFileObject2.getAllTableNamesAsList()
-        currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseFileObject2.connection)
+        databaseFileObject = DatabaseFile("Datenbank/" + current_username)
+        filenames = databaseFileObject.getAllTableNamesAsList()
+        currentDataDF = pd.read_sql_query("SELECT * FROM " + table, databaseFileObject.connection)
 
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(current_username)
@@ -150,13 +150,18 @@ def specUebersicht(table):
                                        titles=newDF.columns.values, table=table, tablename=table, user_list=user_list)
         elif request.method == 'POST' and request.form.get("subset"):
             DFname = "SubsetVon" + table + "_" + request.form.get("subset")
-            databaseFileObject2.saveDataFrame(newDF, DFname)
+            databaseFileObject.saveDataFrame(newDF, DFname)
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[newDF.to_html(classes='table table-striped text-center', index=False,
                                                          justify="center", col_space=20)],
                                    titles=newDF.columns.values, table=table, user_list=user_list)
 
+        elif request.method == 'POST' and 'deletefile' in request.form:
+            print("löschen1")
+            databaseFileObject.deleteFile(table)
+            flash("Die ausgewählte Datei wurde aus der Datenbank entfernt.", 'info')
+            return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
 
         else:
             return render_template("uebersichtsseite.html", filenames=filenames,
@@ -200,16 +205,17 @@ def uebersichtsseite():
                         databaseFileObject.saveFile(file, name, seperator=",")
                     else:
                         databaseFileObject.saveFile(file, name, seperator)
-                        return render_template("uebersichtsseite.html", filenames=filenames, fileFlag=False,
+                        return render_template("uebersichtsseite.html", filenames=filenames,
                                                user_list=user_list)
                 else:
-                    return render_template("uebersichtsseite.html", filenames=filenames, fileFlag=fileExists,
+                    flash("Es existiert bereits eine Datei mit diesem Namen, diese wurde nicht überschrieben.", 'error')
+                    return render_template("uebersichtsseite.html", filenames=filenames,
                                            user_list=user_list)
             else:
-                return render_template("uebersichtsseite.html", filenames=filenames, fileFlag=False, user_list=user_list)
+                return render_template("uebersichtsseite.html", filenames=filenames,  user_list=user_list)
 
         except BadRequestKeyError:
-            return render_template("uebersichtsseite.html", filenames=filenames, fileFlag=False, user_list=user_list)
+            return render_template("uebersichtsseite.html", filenames=filenames,  user_list=user_list)
     else:
         return redirect(url_for('index'))
 

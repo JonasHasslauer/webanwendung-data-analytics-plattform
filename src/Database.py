@@ -28,10 +28,6 @@ class DatabaseFile(Database):
         listValues = [item[0] for item in exec]
         return listValues
 
-    def checkIfTableWithNameExists(self):
-        pass
-        # check which user to get the specific database (maliks changes)
-        # check Table names
 
     def getAllDataToFileFromTable(self, tablename: str) -> pd.DataFrame:
         command = "SELECT * FROM " + tablename
@@ -49,6 +45,10 @@ class DatabaseFile(Database):
             return True
         else:
             return False
+
+    def deleteFile(self, tablename:str):
+        print('löschen')
+        self.cursor.execute("DROP TABLE " + tablename)
 
     def saveFile(self, file, name:str, seperator):
         current_username = session['username']
