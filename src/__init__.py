@@ -320,10 +320,10 @@ def page_error(error):
     flash("Ein Problem ist aufgetreten.", 'error')
     return redirect(url_for('login'))
 
-@app.errorhandler(204)
-def no_Content(error):
-    flash("Das gesuchte Objekt existiert nicht.", 'error')
-    return redirect(url_for('login'))
+#@app.errorhandler(204)
+#def no_Content(error):
+#    flash("Das gesuchte Objekt existiert nicht.", 'error')
+#    return redirect(url_for('login'))
 
 
 @app.errorhandler(400)
