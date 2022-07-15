@@ -35,12 +35,16 @@ def register():
 
         if '/' not in username:
             if not databaseUserObject.checkIfUserExists(username):
-                try:
-                    databaseUserObject.addUser(username, firstname, lastname, birthday, password)
-                    flash("Account erfolgreich registriert.", 'success')
-                    return redirect(url_for("login"))
-                except sqlite3.IntegrityError as e:
-                    flash("username bereits vergeben. Bitte anderen username benutzen.", 'error')
+                if len(username) <= 10:
+                    try:
+                        databaseUserObject.addUser(username, firstname, lastname, birthday, password)
+                        flash("Account erfolgreich registriert.", 'success')
+                        return redirect(url_for("login"))
+                    except sqlite3.IntegrityError as e:
+                        flash("username bereits vergeben. Bitte anderen username benutzen.", 'error')
+                        return redirect(url_for("register"))
+                else: #Nutzer muss kürzeren Namen wählen
+                    flash("username ist zu lang, der username darf höchstens 10 Zeichen haben", 'error')
                     return redirect(url_for("register"))
             else:  # Nutzer muss sich mit anderem Namen registrieren
                 flash("username bereits vergeben. Bitte anderen username benutzen.", 'info')
@@ -151,24 +155,21 @@ def specUebersicht(table):
                                        titles=newDF.columns.values, table=table, tablename=table, user_list=user_list)
 
 
-
+        #hier wird die DAtei, die aktuell ausgewählt ist (table) aus der Datenbank entfernt, wenn der Button dafür gedrückt wird
         elif request.method == 'POST' and request.form.get("deletefile"):
-            print("löschen1")
             databaseFileObject.deleteFile(table)
             flash("Die ausgewählte Datei wurde aus der Datenbank entfernt.", 'info')
             return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
+
 
         elif request.method == 'POST' and request.form.get("subset"):
-            databaseFileObject.deleteFile(table)
-            flash("Die ausgewählte Datei wurde aus der Datenbank entfernt.", 'info')
-            return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
-            #DFname = "SubsetVon" + table + "_" + request.form.get("subset")
-            #databaseFileObject.saveDataFrame(newDF, DFname)
-            #newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
-            #return render_template("uebersichtsseite.html", filenames=filenames,
-             #                      tables=[newDF.to_html(classes='table table-striped text-center', index=False,
-              #                                           justify="center", col_space=20)],
-               #                    titles=newDF.columns.values, table=table, user_list=user_list)
+            DFname = "SubsetVon" + table + "_" + request.form.get("subset")     #unter diesem Namen wird das Subset gespeichert
+            databaseFileObject.saveDataFrame(newDF, DFname)                     #hier wird die Methode aufgerufen, die das Subset dann als neues Dataframe speichert
+            newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
+            return render_template("uebersichtsseite.html", filenames=filenames,
+                                   tables=[newDF.to_html(classes='table table-striped text-center', index=False,
+                                                        justify="center", col_space=20)],
+                                   titles=newDF.columns.values, table=table, user_list=user_list)
 
 
 
@@ -337,10 +338,10 @@ def page_error(error):
     flash("Ein Problem ist aufgetreten.", 'error')
     return redirect(url_for('login'))
 
-@app.errorhandler(204)
+''''@app.errorhandler(204)
 def no_Content(error):
     flash("Das gesuchte Objekt existiert nicht.", 'error')
-    return redirect(url_for('login'))
+    return redirect(url_for('login'))'''
 
 
 @app.errorhandler(400)
