@@ -7,12 +7,7 @@ import seaborn as sns
 import numpy as np
 from flask import flash
 # nltk.download()
-test_df = {'Tiere': ['Maus', 'Affe', 'Huhn','Dollar'],
-           'Werte Tiere':[1,2,3,'$']}
-test_df = pd.DataFrame(test_df)
-test_df_2 ={'Dollar':['$']}
-test_df_2 =pd.DataFrame(test_df_2)
-# Test Dataframe mit zufälligen Daten
+
 
 
 def zeilenFiltern(df, spaltenname, wert, operator):

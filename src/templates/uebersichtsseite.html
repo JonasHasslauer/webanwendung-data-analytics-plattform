@@ -50,7 +50,7 @@
     {% with errors = get_flashed_messages(category_filter=["info"]) %}
 {% if errors %}
     {%- for msg in errors %}
-<div class="alert alert-primary d-flex align-items-center" role="alert">
+<div class="alert alert-secondary d-flex align-items-center" role="alert">
     <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#info-fill"/></svg>
   <div>{{msg}}</div>
 </div>
@@ -156,13 +156,23 @@
 
         <div class="col-5 bg">
             <h3 style="color: #ec6f04; font-style: italic; font-weight: lighter">Upload</h3>
-            <span class="fs-6  lead mb-0 me-3" style="color: #6c757d">Vorsicht sehr große Dateien,<br />
+            <span class="fs-6  lead mb-0 me-3" style="color: #6c757d">Vorsicht sehr großen Dateien<br />
                 können zu Problemen führen
-            </span>
+
+
+
+                        </span>
             <!-- Dateiupload -->
             <form action="/uebersichtsseite" method="post"
                   enctype="multipart/form-data">
                 <input type="file" name="file"/>
+
+                {% if fileFlag %}
+                <div>
+                    <h5 style="color: red; font-size: smaller; margin-top: 5px; margin-bottom: 5px; font-weight: bolder">
+                        Die Datei existiert bereits und wurde nicht überschrieben</h5>
+                </div>
+                {% endif %}
 
 
                 <!-- <p style="margin-bottom: -2px; font-size: small; color: #6c757d; font-style: italic">Trenner:</p> -->
@@ -191,18 +201,12 @@
                 {% for filenames in filenames %}
                 <form action="{{ url_for('specUebersicht', table=filenames) }}" method="POST">
                     <button type="submit" class="btn btn-outline-secondary"
-                            style=" padding-left:0; height: 35px; width: 375px; text-align: center; font-size: small"
+                            style="padding-left:0; height: 35px; width: 375px; text-align: center; font-size: small"
                             id="{{filenames}}"
                             value="{{filenames}}" name="file">{{filenames}}
                     </button>
                 </form>
                 {% endfor %}
-
-                <form method="POST" action="{{ url_for('specUebersicht', table=table) }}">
-                    <input class="btn btn-primary" type="submit" name="deletefile" id=deletefile
-                           value="Ausgewählte Datei löschen"
-                           style="background-color: #ec6f04; border-color: #ec6f04; color:#ffffff; padding-left:0; height: 35px; width: 375px; text-align: center; font-size: small">
-                </form>
             </div>
         </div>
 
@@ -244,12 +248,6 @@
                         <option value=">">Größer</option>
                         <option value="==">Gleich</option>
                         <option value="!=">Ungleich</option>
-                        <option value="> median">Größer Median</option>
-                         <option value="< median">Kleiner Median</option>
-                         <option value="> oQuartil">Größer o.Quartil</option>
-                         <option value="< oQuartil">Kleiner o.Quartil</option>
-                         <option value="> uQuartil">Größer u.Quartil</option>
-                         <option value="< uQuartil">Kleiner u.Quartil</option>
                     </select>
                     <input type="text" class="form-control" name="wert" id=wert placeholder="Sortierungswert?"
                            style="margin-bottom: 10px; margin-top: 10px; border-color: #6c757d">
@@ -278,7 +276,6 @@
                             value="Subset speichern">Subset speichern
                     </button>
                 </form>
-
                 <form method="post" action="{{ url_for('detailseite', table=table) }}">
                     <button class="btn btn-primary"
                             style="background-color: #ec6f04; border-color: #ec6f04; margin-top: 10px; margin-bottom: 5px; float:left"

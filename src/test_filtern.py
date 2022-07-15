@@ -7,6 +7,9 @@ class Test(TestCase):
     def test_wordarten_analyse(self):
         self.fail()
 
+#dadruch, dass Wortartenanalyse nun ein png zuückgibt ist
+# dieser Test leider nicht mehr funktionstüchtig
+
 
 class Test(TestCase):
     def test_wordarten_analyse(self):
