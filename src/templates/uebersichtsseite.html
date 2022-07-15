@@ -191,15 +191,17 @@
                 {% for filenames in filenames %}
                 <form action="{{ url_for('specUebersicht', table=filenames) }}" method="POST">
                     <button type="submit" class="btn btn-outline-secondary"
-                            style="padding-left:0; height: 35px; width: 375px; text-align: center; font-size: small"
+                            style=" padding-left:0; height: 35px; width: 375px; text-align: center; font-size: small"
                             id="{{filenames}}"
                             value="{{filenames}}" name="file">{{filenames}}
                     </button>
                 </form>
                 {% endfor %}
-                <br/>
-                <form action="/uebersichtsseite" method="POST">
-                    <input class="btn btn-secondary" type="submit" name="Ausgewählte Datei löschen" value="Ausgewählte Datei löschen" style=" height: 35px; width: 375px; text-align: center; font-size: small">
+
+                <form method="POST" action="{{ url_for('specUebersicht', table=table) }}">
+                    <input class="btn btn-primary" type="submit" name="deletefile" id=deletefile
+                           value="Ausgewählte Datei löschen"
+                           style="background-color: #ec6f04; border-color: #ec6f04; color:#ffffff; padding-left:0; height: 35px; width: 375px; text-align: center; font-size: small">
                 </form>
             </div>
         </div>
@@ -270,6 +272,7 @@
                             value="Subset speichern">Subset speichern
                     </button>
                 </form>
+
                 <form method="post" action="{{ url_for('detailseite', table=table) }}">
                     <button class="btn btn-primary"
                             style="background-color: #ec6f04; border-color: #ec6f04; margin-top: 10px; margin-bottom: 5px; float:left"

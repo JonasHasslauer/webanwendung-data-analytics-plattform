@@ -16,8 +16,8 @@ import seaborn as sns
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
 
-
 databaseUserObject = DatabaseUser('Datenbank/my_logins4.db')
+
 
 @app.route("/")
 def index():
@@ -46,10 +46,11 @@ def register():
                 flash("username bereits vergeben. Bitte anderen username benutzen.", 'info')
                 return render_template(url_for("register"))
         else:
-            flash("username enhält '/', bitte melden Sie sich mit einem anderen username an", 'error')
+            flash("username enthält '/', bitte melden Sie sich mit einem anderen username an", 'error')
             return redirect(url_for("register"))
     else:
         return render_template("register.html")
+
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -148,20 +149,28 @@ def specUebersicht(table):
                                        tables=[newDF.to_html(classes='table table-striped text-center', index=False,
                                                              justify="center", col_space=20)],
                                        titles=newDF.columns.values, table=table, tablename=table, user_list=user_list)
-        elif request.method == 'POST' and request.form.get("subset"):
-            DFname = "SubsetVon" + table + "_" + request.form.get("subset")
-            databaseFileObject.saveDataFrame(newDF, DFname)
-            newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
-            return render_template("uebersichtsseite.html", filenames=filenames,
-                                   tables=[newDF.to_html(classes='table table-striped text-center', index=False,
-                                                         justify="center", col_space=20)],
-                                   titles=newDF.columns.values, table=table, user_list=user_list)
 
-        elif request.method == 'POST' and request.form.get('submit') == 'Ausgewählte Datei löschen':
+
+
+        elif request.method == 'POST' and request.form.get("deletefile"):
             print("löschen1")
             databaseFileObject.deleteFile(table)
             flash("Die ausgewählte Datei wurde aus der Datenbank entfernt.", 'info')
             return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
+
+        elif request.method == 'POST' and request.form.get("subset"):
+            databaseFileObject.deleteFile(table)
+            flash("Die ausgewählte Datei wurde aus der Datenbank entfernt.", 'info')
+            return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
+            #DFname = "SubsetVon" + table + "_" + request.form.get("subset")
+            #databaseFileObject.saveDataFrame(newDF, DFname)
+            #newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
+            #return render_template("uebersichtsseite.html", filenames=filenames,
+             #                      tables=[newDF.to_html(classes='table table-striped text-center', index=False,
+              #                                           justify="center", col_space=20)],
+               #                    titles=newDF.columns.values, table=table, user_list=user_list)
+
+
 
         else:
             return render_template("uebersichtsseite.html", filenames=filenames,
@@ -185,7 +194,8 @@ def uebersichtsseite():
             user_list = databaseUserObject.getUser(current_username)
 
             if request.method == 'POST' and (
-                    request.form.get('submit') == 'Refresh' or request.form.get('uebersichtsseite') == 'uebersichtsseite'):
+                    request.form.get('submit') == 'Refresh' or request.form.get(
+                'uebersichtsseite') == 'uebersichtsseite'):
                 return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
 
             # if request.method == 'POST' and request.form.get('uebersichtsseite') == 'uebersichtsseite':
@@ -212,10 +222,10 @@ def uebersichtsseite():
                     return render_template("uebersichtsseite.html", filenames=filenames,
                                            user_list=user_list)
             else:
-                return render_template("uebersichtsseite.html", filenames=filenames,  user_list=user_list)
+                return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
 
         except BadRequestKeyError:
-            return render_template("uebersichtsseite.html", filenames=filenames,  user_list=user_list)
+            return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
     else:
         return redirect(url_for('index'))
 
@@ -238,8 +248,9 @@ def detailseite(table):
 
         try:
             if request.method == 'POST' and request.form.get("diagrammart"):
-                diagrammart = request.form.get("diagrammart")  # kriegt aus Frontend, welches Diagrammart gewünscht ist, ruft
-                #Methoden aus Chart.py auf, um das jeweilige Diagramm zu erstellen
+                diagrammart = request.form.get(
+                    "diagrammart")  # kriegt aus Frontend, welches Diagrammart gewünscht ist, ruft
+                # Methoden aus Chart.py auf, um das jeweilige Diagramm zu erstellen
                 if diagrammart == "Balkendiagramm":
                     xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse
                     # verwendet werden sollen
@@ -247,8 +258,8 @@ def detailseite(table):
                     ChartObject.makeBarChart(xAchse, yAchse)
                     return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
                                            user_list=user_list)
-                                #die Listen werden übergeben, für die Dropdowns auf der Detailseite, in denen man die Spalten für das Diagramm auswählen kann
-                                #die table wird übergeben, um die Daten aus der Tabelle zu kriegen, user_list wird für den User in der Nav bar gebracuht
+                    # die Listen werden übergeben, für die Dropdowns auf der Detailseite, in denen man die Spalten für das Diagramm auswählen kann
+                    # die table wird übergeben, um die Daten aus der Tabelle zu kriegen, user_list wird für den User in der Nav bar gebracuht
                 elif diagrammart == "Tortendiagramm":
                     xAchse = request.form.get("xAchse")
                     yAchse = request.form.get("yAchse")
@@ -268,7 +279,7 @@ def detailseite(table):
                 elif diagrammart == "Wortartenanalyse":
                     ChartObject.makeWortartenAnalyse()
                     return render_template("detailseite.html", table=table, user_list=user_list, Liste=my_list,
-                                           ListeY=ListeInt )
+                                           ListeY=ListeInt)
             else:
                 return render_template("detailseite.html", Liste=my_list,
                                        ListeY=ListeInt, table=table,
@@ -324,6 +335,30 @@ def page_not_found(error):
 @app.errorhandler(500)
 def page_error(error):
     flash("Ein Problem ist aufgetreten.", 'error')
+    return redirect(url_for('login'))
+
+
+# @app.errorhandler(204)
+# def no_Content(error):
+#    flash("Das gesuchte Objekt existiert nicht.", 'error')
+#    return redirect(url_for('login'))
+
+
+@app.errorhandler(400)
+def bad_Request(error):
+    flash("Request nicht möglich auszuführen.", 'error')
+    return redirect(url_for('login'))
+
+
+@app.errorhandler(401)
+def no_Session(error):
+    flash("Bitte erst anmelden oder  registirieren.", 'error')
+    return redirect(url_for('login'))
+
+
+@app.errorhandler(504)
+def timeout(error):
+    flash("Länge der Wartezeit für den Request abgelaufen. Bitte erneut anmelden.", 'error')
     return redirect(url_for('login'))
 
 
