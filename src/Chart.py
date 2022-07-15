@@ -185,6 +185,8 @@ class Chart:
             # Die verschiedenen Wordarten werden gezählt
             # Falls Textbausteine wie NNP oder JJR im ursprünglischen Text enthalten sind,
             # werden diese subtrahiert
+
+
             dollar = woerterMitTokensEinfacheListe.count('$') - einzelneWoerter.count('$')
             quotationMark = woerterMitTokensEinfacheListe.count("''")- einzelneWoerter.count("''")
             openingParenthesis = woerterMitTokensEinfacheListe.count('(')-einzelneWoerter.count('(')
