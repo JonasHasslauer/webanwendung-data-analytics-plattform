@@ -123,7 +123,7 @@ class Chart:
         bei dieser Funktion können es zu Fehlern auftreten,
         falls die Version 14.0 von c++
         nicht installiert ist.(dies kann vor allem bei älteren Windows PCs der Fall sein).
-        Diese kann sehr einfach über den Visual Studio Installer herunter geladen werden.
+        Diese Version kann sehr einfach über den Visual Studio Installer herunter geladen werden.
         !!!
 
         Dies Methode erstellt eine WordCloud aus einem Ihr übergebenen DataFrame

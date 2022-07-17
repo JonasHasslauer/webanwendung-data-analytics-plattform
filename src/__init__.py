@@ -11,7 +11,7 @@ from src.Database import DatabaseFile
 from Chart import *
 from filtern import *
 from PIL import Image
-from initialisierungSeabornWordcloud import *
+
 from initialisierung_seaborn import *
 import seaborn as sns
 
@@ -243,12 +243,14 @@ def detailseite(table):
     if 'username' in session:
 
         #zunachst wird ein kleines Diagramm erstellt um seaborn zu initialisieren
-        #Variante 1 hier wird ein Wordcloud Diagramm erstelle
+        #Variante 1:
+        #hier wird ein Wordcloud Diagramm erstellet
 
         text_3 = "Test"
         #wordcloudErstellen(text_3)
 
-        #Variante 2 hier wird eine seaborn balkendiagramm erstellt
+        #Variante 2:
+        #hier wird eine seaborn balkendiagramm erstellt
         initialisierungSeaborn()
 
 
