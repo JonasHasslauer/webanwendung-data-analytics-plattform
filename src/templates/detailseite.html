@@ -50,7 +50,7 @@
     {% with errors = get_flashed_messages(category_filter=["info"]) %}
 {% if errors %}
     {%- for msg in errors %}
-<div class="alert alert-secondary d-flex align-items-center" role="alert">
+<div class="alert alert-primary d-flex align-items-center" role="alert">
     <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#info-fill"/></svg>
   <div>{{msg}}</div>
 </div>
@@ -224,7 +224,7 @@
     </form>
 
 
-    <img src="{{ url_for('static', filename='name.png') }}" class="rounded mx-auto d-block" width="880" height="750"
+    <img src="{{ url_for('static', filename= bild) }}" class="rounded mx-auto d-block" width="880" height="750"
          alt="Es wurde noch kein Diagramm erstellt, oder es kann nicht angezeigt werden">
 </div>
 

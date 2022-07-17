@@ -96,6 +96,3 @@ def spaltenFiltern(df, liste):
     spaltenFiltern_df = df[liste]
     return spaltenFiltern_df
 
-def zeilenAuswählen(df, range:str):
-    return df[int(range.split("-")[0]):int(range.split("-")[1])+1]
-

@@ -245,7 +245,7 @@ def detailseite(table):
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(
             current_username)  # aktuelle User-Daten werden gebraucht, um den aktuellen User in der Nav bar anzuzeigen
-        ChartObject = Chart(databaseObject, table)  # ChartObject wird verwendet, um die Diagramme zu erstellen
+        ChartObject = Chart(databaseObject)  # ChartObject wird verwendet, um die Diagramme zu erstellen
 
         try:
             if request.method == 'POST' and request.form.get("diagrammart"):
@@ -256,34 +256,34 @@ def detailseite(table):
                     xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse
                     # verwendet werden sollen
                     yAchse = request.form.get("yAchse")
-                    ChartObject.makeBarChart(xAchse, yAchse)
-                    return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
+                    ChartObject.makeBarChart(xAchse, yAchse, table)
+                    return render_template("detailseite.html", bild = 'balkendiagramm.png', Liste=my_list, ListeY=ListeInt, table=table,
                                            user_list=user_list)
                     # die Listen werden übergeben, für die Dropdowns auf der Detailseite, in denen man die Spalten für das Diagramm auswählen kann
                     # die table wird übergeben, um die Daten aus der Tabelle zu kriegen, user_list wird für den User in der Nav bar gebracuht
                 elif diagrammart == "Tortendiagramm":
                     xAchse = request.form.get("xAchse")
                     yAchse = request.form.get("yAchse")
-                    ChartObject.makePieChart(xAchse, yAchse)
-                    return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
+                    ChartObject.makePieChart(xAchse, yAchse, table)
+                    return render_template("detailseite.html", bild='piechart.png', Liste=my_list, ListeY=ListeInt, table=table,
                                            user_list=user_list)
                 elif diagrammart == "Liniendiagramm":
                     xAchse = request.form.get("xAchse")
                     yAchse = request.form.get("yAchse")
-                    ChartObject.makeLineChart(xAchse, yAchse)
-                    return render_template("detailseite.html", Liste=my_list, ListeY=ListeInt, table=table,
+                    ChartObject.makeLineChart(xAchse, yAchse, table)
+                    return render_template("detailseite.html", bild='liniendiagramm.png', Liste=my_list, ListeY=ListeInt, table=table,
                                            user_list=user_list)
                 elif diagrammart == "Wordcloud":
-                    ChartObject.makeWordCloud()
-                    return render_template("detailseite.html", table=table, user_list=user_list, Liste=my_list,
+                    ChartObject.makeWordCloud(table)
+                    return render_template("detailseite.html", table=table, bild='wordcloud.png', user_list=user_list, Liste=my_list,
                                            ListeY=ListeInt)
                 elif diagrammart == "Wortartenanalyse":
-                    ChartObject.makeWortartenAnalyse()
-                    return render_template("detailseite.html", table=table, user_list=user_list, Liste=my_list,
+                    ChartObject.makeWortartenAnalyse(table)
+                    return render_template("detailseite.html", table=table, bild='wortartenanalyse.png', user_list=user_list, Liste=my_list,
                                            ListeY=ListeInt)
             else:
                 return render_template("detailseite.html", Liste=my_list,
-                                       ListeY=ListeInt, table=table,
+                                       ListeY=ListeInt, table=table, bild='detailseite.jpg',
                                        user_list=user_list)  # muss Liste übergeben, für erstes Landing
 
         except (Exception, UnboundLocalError) as e:

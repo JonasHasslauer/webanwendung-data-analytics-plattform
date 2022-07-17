@@ -50,7 +50,7 @@
     {% with errors = get_flashed_messages(category_filter=["info"]) %}
 {% if errors %}
     {%- for msg in errors %}
-<div class="alert alert-secondary d-flex align-items-center" role="alert">
+<div class="alert alert-primary d-flex align-items-center" role="alert">
     <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#info-fill"/></svg>
   <div>{{msg}}</div>
 </div>
@@ -204,6 +204,13 @@
                     </button>
                 </form>
                 {% endfor %}
+
+                <form method="POST" action="{{ url_for('specUebersicht', table=table) }}">
+                    <input class="btn btn-primary" type="submit" name="deletefile" id=deletefile
+                           value="Ausgewählte Datei löschen"
+                           style="background-color: #ec6f04; border-color: #ec6f04; color:#ffffff; padding-left:0; height: 35px; width: 375px; text-align: center; font-size: small">
+                </form>
+
             </div>
         </div>
 
