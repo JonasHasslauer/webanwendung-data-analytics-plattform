@@ -310,4 +310,22 @@ class Chart:
             print("Oopsidupsi! ", e.__class__, "ist aufgetreten.")
 
 
+    def testWordcloud(self):
+        try:
+            testDataFrame = {"Schnitzel": ["Klöß"],
+                             "SchnitzelWerte": [1]}
+
+            df = testDataFrame
+            text = df.to_string(header=False, index=False)
+            wordcloud = WordCloud(background_color="white", width=1920, height=1080, ).generate(text)
+            plt.imshow(wordcloud, interpolation="bilinear")
+            plt.axis("off")
+            # plt.savefig('static/wordcloud.png')
+
+            plt.clf()
+            plt.cla()
+            plt.close()
+            plt.show()
+        except Exception as e:
+            print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
 

@@ -1,6 +1,7 @@
 import os
 import sqlite3
 
+import matplotlib.pyplot as plt
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 from werkzeug.exceptions import BadRequestKeyError
 
@@ -10,7 +11,7 @@ from src.Database import DatabaseFile
 from Chart import *
 from filtern import *
 from PIL import Image
-
+from wordcloud2 import *
 import seaborn as sns
 
 app = Flask(__name__, template_folder="./templates")
@@ -58,6 +59,10 @@ def register():
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
+
+
+
+
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
@@ -235,6 +240,11 @@ def uebersichtsseite():
 @app.route('/detailseite/<string:table>', methods=["POST", "GET"])
 def detailseite(table):
     if 'username' in session:
+        text_3 = "Test"
+        wordcloudErstellen(text_3)
+
+
+
         current_username = session[
             'username']  # der username wird gebraucht, um auf die richtige Datenbank zugreifen zu können
         databaseObject = DatabaseFile(
