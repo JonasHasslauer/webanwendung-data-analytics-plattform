@@ -14,19 +14,28 @@ Prato erwähnte bereits 1879 mehrere italienische Gerichte wie Makkaroni, Risi e
 text_3 ="test"
 
 def wordcloudErstellen(text):
-    nichtinteressant = "und von Der das den wir ist die auf im wird"
-    liste_der_unerwuenschten_woerter = nichtinteressant.split()
+    """
+    Mit dieser Funktion soll seaborn initialisiert werden
+    hierfür wird ein kleines Wordclouddiagramm erstellt
+    Einen weiteren Nutzen hat diese Funktion nicht
+    :param text: text der übergeben wird
+    """
+    try:
+        nichtinteressant = "und von Der das den wir ist die auf im wird"
+        liste_der_unerwuenschten_woerter = nichtinteressant.split()
 
-    STOPWORDS.update(liste_der_unerwuenschten_woerter)
-    x, y = np.ogrid[:1000, :1000]
+        STOPWORDS.update(liste_der_unerwuenschten_woerter)
+        x, y = np.ogrid[:1000, :1000]
 
-    mask = (x - 500) ** 2 + (y - 500) ** 2 > 400 ** 2
-    mask = 255 * mask.astype(int)
+        mask = (x - 500) ** 2 + (y - 500) ** 2 > 400 ** 2
+        mask = 255 * mask.astype(int)
 
-    wordcloud = WordCloud(background_color="white", width=1920, height=1080, mask=mask).generate(text)
-    plt.imshow(wordcloud, interpolation="bilinear")
-    plt.axis("off")
-    plt.show()
+        wordcloud = WordCloud(background_color="white", width=1920, height=1080, mask=mask).generate(text)
+        plt.imshow(wordcloud, interpolation="bilinear")
+        plt.axis("off")
+        plt.show()
+    except Exception as e:
+        print("Oopsidupsi! ", e.__class__, "ist aufgetreten.")
 
 #wordcloudErstellen(text_2)
 wordcloudErstellen(text_3)

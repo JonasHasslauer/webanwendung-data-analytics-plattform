@@ -11,7 +11,8 @@ from src.Database import DatabaseFile
 from Chart import *
 from filtern import *
 from PIL import Image
-from wordcloud2 import *
+from initialisierungSeabornWordcloud import *
+from initialisierung_seaborn import *
 import seaborn as sns
 
 app = Flask(__name__, template_folder="./templates")
@@ -240,9 +241,15 @@ def uebersichtsseite():
 @app.route('/detailseite/<string:table>', methods=["POST", "GET"])
 def detailseite(table):
     if 'username' in session:
-        text_3 = "Test"
-        wordcloudErstellen(text_3)
 
+        #zunachst wird ein kleines Diagramm erstellt um seaborn zu initialisieren
+        #Variante 1 hier wird ein Wordcloud Diagramm erstelle
+
+        text_3 = "Test"
+        #wordcloudErstellen(text_3)
+
+        #Variante 2 hier wird eine seaborn balkendiagramm erstellt
+        initialisierungSeaborn()
 
 
         current_username = session[
