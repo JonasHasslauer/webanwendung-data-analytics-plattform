@@ -166,6 +166,7 @@ def specUebersicht(table):
             DFname = "SubsetVon" + table + "_" + request.form.get("subset")     #unter diesem Namen wird das Subset gespeichert
             databaseFileObject.saveDataFrame(newDF, DFname)                     #hier wird die Methode aufgerufen, die das Subset dann als neues Dataframe speichert
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
+            flash('Das Subset wurde abgespeichert. Bitte refreshen Sie das Dateiarchiv, um es zu sehen', 'success')
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[newDF.to_html(classes='table table-striped text-center', index=False,
                                                         justify="center", col_space=20)],
@@ -245,7 +246,7 @@ def detailseite(table):
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(
             current_username)  # aktuelle User-Daten werden gebraucht, um den aktuellen User in der Nav bar anzuzeigen
-        ChartObject = Chart(databaseObject)  # ChartObject wird verwendet, um die Diagramme zu erstellen
+        ChartObject = Chart(databaseObject, table)  # ChartObject wird verwendet, um die Diagramme zu erstellen
 
         try:
             if request.method == 'POST' and request.form.get("diagrammart"):
@@ -256,7 +257,7 @@ def detailseite(table):
                     xAchse = request.form.get("xAchse")  # kriegt aus Frontend die column names die für x- bzw. y-Achse
                     # verwendet werden sollen
                     yAchse = request.form.get("yAchse")
-                    ChartObject.makeBarChart(xAchse, yAchse, table)
+                    ChartObject.makeBarChart(xAchse, yAchse)
                     return render_template("detailseite.html", bild = 'balkendiagramm.png', Liste=my_list, ListeY=ListeInt, table=table,
                                            user_list=user_list)
                     # die Listen werden übergeben, für die Dropdowns auf der Detailseite, in denen man die Spalten für das Diagramm auswählen kann
@@ -264,21 +265,21 @@ def detailseite(table):
                 elif diagrammart == "Tortendiagramm":
                     xAchse = request.form.get("xAchse")
                     yAchse = request.form.get("yAchse")
-                    ChartObject.makePieChart(xAchse, yAchse, table)
+                    ChartObject.makePieChart(xAchse, yAchse)
                     return render_template("detailseite.html", bild='piechart.png', Liste=my_list, ListeY=ListeInt, table=table,
                                            user_list=user_list)
                 elif diagrammart == "Liniendiagramm":
                     xAchse = request.form.get("xAchse")
                     yAchse = request.form.get("yAchse")
-                    ChartObject.makeLineChart(xAchse, yAchse, table)
+                    ChartObject.makeLineChart(xAchse, yAchse)
                     return render_template("detailseite.html", bild='liniendiagramm.png', Liste=my_list, ListeY=ListeInt, table=table,
                                            user_list=user_list)
                 elif diagrammart == "Wordcloud":
-                    ChartObject.makeWordCloud(table)
+                    ChartObject.makeWordCloud()
                     return render_template("detailseite.html", table=table, bild='wordcloud.png', user_list=user_list, Liste=my_list,
                                            ListeY=ListeInt)
                 elif diagrammart == "Wortartenanalyse":
-                    ChartObject.makeWortartenAnalyse(table)
+                    ChartObject.makeWortartenAnalyse()
                     return render_template("detailseite.html", table=table, bild='wortartenanalyse.png', user_list=user_list, Liste=my_list,
                                            ListeY=ListeInt)
             else:
@@ -322,6 +323,17 @@ def logout():
     if request.method == "POST" and request.form.get("delete") == "Account löschen":
         databaseUserObject.deleteUser("Logins", session['username'])
         os.remove(os.getcwd() + "/Datenbank/" + session['username'])
+        if os.path.exists('static/liniendiagramm.png'):
+            os.remove('static/liniendiagramm.png')
+        if os.path.exists('static/piechart.png'):
+            os.remove('static/piechart.png')
+        if os.path.exists('static/wordcloud.png'):
+            os.remove('static/wprdcloud.png')
+        if os.path.exists('static/wortartenanalyse.png'):
+            os.remove('static/wortartenanalyse.png')
+        if os.path.exists('static/balkendiagramm.png'):
+            os.remove('static/balkendiagramm.png')
+
         redirect(url_for('login'))
         session.clear()
     return redirect(url_for("index"))

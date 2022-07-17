@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Impressum</title>
+    <title>Benutzerhandbuch</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
@@ -36,7 +36,7 @@
                         <p>
                             <li class="nav-item">
                         <div class="container px-4">
-                            <div class="row g-0">
+                            <div class="row gx-5">
                                 <div class="col-sm-4 col-md-3">
                                     <img src="{{ url_for('static', filename='GrafikUser.jpg') }}"
                                          class="rounded mx-auto d-block" width="50" height="120"
@@ -103,22 +103,103 @@
 
 
 
-    <div class="container">
+    <div class="container mw-100">
         <p>
         <h2 style="font-weight:lighter">Benutzerhandbuch</h2></p>
-        <h3 style="font-weight:lighter; font-size:smaller">Damit Sie sich auf unserer Webseite einfach zurecht finden,
-        finden Sie hier ein ausführliches Benutzerhandbuch. <br/> Wenn Sie ein Input-Feld anwählen, wird Ihnen dieses nochmal
-        kurz erklärt.</h3>
+        <h3 style="font-weight:lighter; font-size:16px">Damit Sie sich auf unserer Webseite einfach zurechtfinden,
+            finden Sie hier ein ausführliches Benutzerhandbuch. <br/> Inder Navigationsbar können Sie ihre Userdaten und das Impressum finden. Hier können Sie auch zwischen den verschiedenen Seiten wechseln. <br/> Wir wünschen Ihnen viel Spaß bei der Benutzung unserer Webseite! <br/> Wenn Sie ein Input-Feld anwählen, wird Ihnen dieses nochmal
+            kurz erklärt.
+        </h3>
         </p>
         <p>
         <h4 style="font-weight:lighter">Übersichtsseite</h4>
-
+            <div class="container mw-100">
+              <div class="row gx-5">
+                <div class="col">
+                 <img src="{{ url_for('static', filename='screenuebersicht1.png') }}" class="rounded mx-auto d-block" width=900 height=auto
+                                        alt="Bild nicht verfügbar">
+                </div>
+                <div class="col">
+                    <h3 style="font-weight:lighter; font-size:16px; line-height:1.8">
+                        Auf der Übersichtsseite befindet sich der Dateiupload, das Dateiarchiv und die Selektion der Daten. </br> Für den
+                    <span style="color: #ec6f04; font-size: 18px">Dateiupload </span>  wählen Sie eine csv-Datei aus, und wählen den Seperator:
+                        ist Ihre csv-Datei mit einem ',' oder einem ';' getrennt? Nachdem sie auf   <input class="btn btn-secondary" type="submit" name="submit" value="Datei Senden"
+                           style="font-size: x-small; width: 80px; text-align:center; font-weight: lighter">   klicken, wir die Datei in der Datenbank gespeichert. Sie bekommen direkt Feedback, ob der Upload geklappt hat. Der Upload funktioniert nicht, wenn
+                        es sich bei der Datei nicht um eine csv-Datei handelt, oder wenn schon eine Datei mit demselben Namen existiert. Um die hochgeladene Datei nun im Dateiarchiv sehen zu können, klicken Sie auf <input class="btn btn-secondary" type="submit" name="submit" value="Refresh"
+                           style="font-size: x-small; width: 80px; text-align:center; font-weight: lighter">  <br/> Im <span style="color: #ec6f04; font-size: 18px">Dateiarchiv </span>  finden Sie alle Daten, die Ihrem Benutzernamen zugeordnet sind.
+                        Sie haben mit <input class="btn btn-primary" type="submit" name="deletefile" id=deletefile
+                           value="Ausgewählte Datei löschen"
+                           style="background-color: #ec6f04; border-color: #ec6f04; color:#ffffff; padding-left:0; width: 125px; text-align: center; font-size: x-small; font-weight: lighter"> auch die Möglichkeit die ausgewählte Datei aus der Datenbank zu löschen. </br>
+                        Wählen Sie eine Datei aus (im Beispiel: Sacramentoappartment), wird diese rechts unter <span style="color: #ec6f04; font-size: 18px">Selektion der Daten </span>  angezeigt. Nun können Sie die Datei anschauen und selektieren. Dies wird im nächsten Abschnitt noch genauer erläuert.
+                    </h3>
+                </div>
+              </div>
+            </div>
+            <div class="container mw-100">
+                <div class="row gx-5">
+                    <div class="col">
+                        <img src="{{ url_for('static', filename='screenuebersicht2.jpg') }}" class="rounded mx-auto d-block" width=900 height=auto
+                                        alt="Bild nicht verfügbar">
+                    </div>
+                    <div class="col">
+                        <h3 style="font-weight:lighter; font-size: 16px;  line-height:1.8">
+                            Direkt unter der angezeigten Tabelle finden Sie die Möglichkeit, Ihre Daten zu selektieren. <br/>
+                        <span style=" color: crimson; font-weight: normal; font-size:18px">Spaltenfilter: </span> <br/>
+                            In der ersten Zeile haben Sie die Möglichkeit, einzelne Spalten zu selektieren.
+                            In dieser Beispieldatei wäre eine mögliche Eingabe: 'street,city,beds,baths,type', um sich nur noch diese Spalten anzeigen zu lassen. Die einzelnen Werte müssen mit einem ','
+                            getrennt und ohne Leerzeichen eingegeben werden. <br/>
+                            <span style=" color: green; font-weight: normal; font-size:18px">Wertefilter: </span> <br/>
+                            Wenn Sie nach bestimmten Werten filtern möchten, haben Sie dazu
+                            im 2. Block die Möglichkeit: Sie können den Spaltennamen, den Operator und den gewünschten Wert wählen. Im Beispiel könnte man beispielsweise 'beds>2' filtern, und würde nur noch die Zeilen sehen, in denen der Wert von beds größer als 2 ist.
+                            Sie können bei Operator auch statistische Werte wählen: Median, unteres Quartil und oberes Quartil. Wenn dies als Operator gewählt wird, muss eine '0' bei Sortierungswert eingetragen werden. <br/>
+                            Möchten Sie beide Filter kombinieren, muss die Checkbox <input class="form-check-input" type="checkbox" style="font-weight: bold" name="checkbox" id="checkbox"
+                           style="border-color: #6c757d" data-bs-toggle="popover" data-bs-trigger="focus" title="Mehrere Filter auswählen"
+                            data-bs-placement="left" data-bs-content="Hier können Sie auswählen, ob mehrere Filter gleichzeitig angewandt werden sollen.">
+                            <label class="form-check-label" for="checkbox" style="font-weight: lighter">Beide filtern</label> anwählen.  <br/>
+                        <span style=" color: blue; font-weight: normal; font-size:18px">Zeilenauswahl: </span>
+                            Die Zeilenauswahl kann unabhängig von den anderen beiden Filtern verwendet werden. Sie können hier die Zeilen auswählen, innerhalb welcher
+                            die Filter angewendet werden sollen. Die gewünschten Zeilen müssen dabei im Format 'x-y' angegeben werden. <br/>
+                            Die ursprüngliche Datei wird durch die Filter nicht verändert, Sie können diese jederzeit rückgängig machen. Möchten Sie die Änderungen speichern, können einen Namen für das
+                            erstellte Subset eingeben, und dieses mit <input class="btn btn-primary" type="submit" name="deletefile"
+                           value="Subset speichern"
+                           style="background-color: #ec6f04; border-color: #ec6f04; color:#ffffff; padding-left:0; width: 90px; text-align: center; font-size: x-small; font-weight: lighter"> speichern. Nach einem Refresh ist die Datei dann im Dateiarchiv verfügbar. <br/>
+                            Die Datei, die im Dateiarchiv ausgewählt ist, wird mit einem Klick auf <input class="btn btn-primary" type="submit" name="deletefile"
+                           value="Detailseite"
+                           style="background-color: #ec6f04; border-color: #ec6f04; color:#ffffff; padding-left:0; width: 70px; text-align: center; font-size: x-small; font-weight: lighter"> mit auf die Detailseite genommen, wo Sie dann genauere Diagramme erstellen können!
+                        </h3>
+                    </div>
+                </div>
+            </div>
         </p>
         <p>
         <h4 style="font-weight:lighter">Detailseite</h4>
-
+            <div class="container mw-100">
+                <div class="row gx-5">
+                    <div class="col">
+                        <img src="{{ url_for('static', filename='screendetailseite.jpg') }}" class="rounded mx-auto d-block" width=900 height=auto
+                                        alt="Bild nicht verfügbar">
+                    </div>
+                    <div class="col">
+                        <h3 style="font-weight:lighter; font-size:16px; line-height:1.8">
+                            Auch auf der Detailseite sehen Sie die ausgewählte Datei. <br/>
+                            <span style=" color: crimson; font-weight: normal; font-size:18px ">Wahl der Diagrammart:</span> <br/>
+                            Bei diesem Dropdown-Menü haben Sie die Möglichkeit zwischen einem Balkendiagramm, Liniendiagramm, Tortendiagramm, einer Wordcloud oder einer Wortartenanlyse
+                            zu wählen. Bei Wahl eines Balken-, Linien- oder Tortendiagramms müssen im nächsten Schritt noch die Spalten ausgewählt werden, die für das Diagram verwendet werden sollen.
+                            Bei Balken- und Liniendriagramm sind die ausgewählten Spalten dann die x- bzw. Achse. Beim Tortendiagramm wird angegeben wie viel % die Werte der y-Achse-Variable der x-Achse einnehmen.
+                            (Beispiel:
+                            Eine Tabelle mit Teams und Punkten, Team A: 25Punkte, Team B: 20 Punkte, Team C: 10 Punkte
+                            Team ist yAchse, und Punkte is xAchse ->  Kuchenstück von A hat 46%, Kuchenstück von B hat 37%, Kuchenstück von C hat 17%) <br/>
+                            <span style=" color: green; font-weight: normal; font-size:18px ">Wahl der Spalten für die Achsen:</span> <br/>
+                            Nun haben Sie die Möglichkeit, ihre Spalten zu wählen, zu denen das Diagramm erstellt werden soll. In dem Dropdown-Menü für die
+                            y-Achse werden Sie nur die Spaltennamen finden, die ausschließlich numerische Werte enthalten, da sonst die Erstellung eines Diagramms nicht möglich ist.
+                            <br/> Durch Klicken auf <input class="btn btn-primary" type="submit" name="deletefile"
+                           value="Bestätigen"
+                           style="background-color: #ec6f04; border-color: #ec6f04; color:#ffffff; padding-left:0; width: 70px; text-align: center; font-size: x-small; font-weight: lighter"> wird das Diagramm erstellt, und Ihnen auf der Detailseite angezeigt.
+                        </h3>
+                    </div>
+                </div>
+            </div>
         </p>
-
     </div>
 </body>
 </html>

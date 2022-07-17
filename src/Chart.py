@@ -12,7 +12,7 @@ from filtern import *
 class Chart:
 
     databaseObject = ''
-    #table = ''
+    table = ''
 
     """
     Die Klasse Chart erstellt Diagramme
@@ -20,11 +20,11 @@ class Chart:
     :param table: die Tabelle, aus der die Daten für dei Diagramme kommen
     """
 
-    def __init__(self, databaseObject):
+    def __init__(self, databaseObject, table):
        self.databaseObject = databaseObject
-       #self.table = table
+       self.table = table
 
-    def makeBarChart(self, xAchse:list, yAchse:list, table):
+    def makeBarChart(self, xAchse:list, yAchse:list):
         """
         :param xAchse: wird für die x-Achse des Diagramms benutzt
         :param yAchse: wird für die y-Achse des Diagramms benutzt
@@ -34,13 +34,13 @@ class Chart:
         Das Plot wird als png in static gespeichert, damit detailseite.html das Bild aufrufen und anzeigen kann
         """
         try:
-            command = "SELECT * FROM " + table + " GROUP BY " + xAchse
+            command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
             df = pd.read_sql_query(command, self.databaseObject.connection)
 
-            ax = df.plot(kind='bar', x=xAchse, y=yAchse).get_figure()  # erstellt plot mit x- und y-Achse
+            #ax = df.plot(kind='bar', x=xAchse, y=yAchse).get_figure()  # erstellt plot mit x- und y-Achse
 
             # erstellt plot mit x- und y-Achse
-            #ax = sns.barplot(y=yAchse, x=xAchse, data=df, palette='rocket').get_figure()
+            ax = sns.barplot(y=yAchse, x=xAchse, data=df, palette='rocket').get_figure()
 
 
             ax.savefig('static/balkendiagramm.png')  # speichert Bild zwischen, damit es angezeigt werden kann
@@ -54,7 +54,7 @@ class Chart:
 
 
 
-    def makePieChart(self, xAchse:list, yAchse:list, table):
+    def makePieChart(self, xAchse:list, yAchse:list):
         """
         :param xAchse: wird für dei Berechnung der %-Zahlen der Kuchenstücke benutzt
         :param yAchse: die Daten, zu denen xAchse ins Verhältnis gesetzt wird
@@ -68,7 +68,7 @@ class Chart:
         """
 
         try:
-            command = "SELECT * FROM " + table
+            command = "SELECT * FROM " + self.table
             df = pd.read_sql_query(command, self.databaseObject.connection)
 
 
@@ -86,7 +86,7 @@ class Chart:
             print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
 
 
-    def makeLineChart(self, xAchse:list, yAchse:list, table):
+    def makeLineChart(self, xAchse:list, yAchse:list):
         """
         :param xAchse: wird für die x-Achse des Diagramms benutzt
         :param yAchse: wird für die y-Achse des Diagramms benutzt
@@ -97,17 +97,17 @@ class Chart:
         """
 
         try:
-            command = "SELECT * FROM " + table + " GROUP BY " + xAchse
+            command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
             df = pd.read_sql_query(command, self.databaseObject.connection)
 
-            ax = df.plot(kind='line', x=xAchse, y=yAchse).get_figure()
+            #ax = df.plot(kind='line', x=xAchse, y=yAchse).get_figure()
 
             #Auf jeden Fall nochmals überprüfen
             #ab und zu Fehler bei mir
             #wenn dies nicht zu beheben sind einfach die ursrpringliche
             #Version nutzen um das Line Chart zu  erzeugen
 
-            #ax = sns.lineplot(x=xAchse, y=yAchse,data=df, palette='rocket').get_figure()
+            ax = sns.lineplot(x=xAchse, y=yAchse,data=df, palette='rocket').get_figure()
 
             ax.savefig('static/liniendiagramm.png')
             plt.clf()
@@ -117,7 +117,7 @@ class Chart:
         except Exception as e:
             print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
 
-    def makeWordCloud(self, table):
+    def makeWordCloud(self):
         """
         !!!
         bei dieser Funktion können es zu Fehlern auftreten,
@@ -132,7 +132,7 @@ class Chart:
         :param df: zu bearbeitendes DataFrame
         """
         try:
-            command = "SELECT * FROM " + table
+            command = "SELECT * FROM " + self.table
             df = pd.read_sql_query(command, self.databaseObject.connection)
             text = df.to_string(header=False, index=False)
             wordcloud = WordCloud(background_color="white", width=1920, height=1080, ).generate(text)
@@ -157,7 +157,7 @@ class Chart:
             print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
 
 
-    def makeWortartenAnalyse(self, table):
+    def makeWortartenAnalyse(self):
         """
         !!!
         Um mit diese Funktion arbeiten zu können benötigt das Programm zusätzliche Dateien.
@@ -179,7 +179,7 @@ class Chart:
 
         """
         try:
-            command = "SELECT * FROM " + table
+            command = "SELECT * FROM " + self.table
             df = pd.read_sql_query(command, self.databaseObject.connection)
             # Dataframe wird in String umgewandlt
             text = df.to_string(header=False, index=False)
