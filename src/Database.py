@@ -244,8 +244,13 @@ class DatabaseUser(Database):
         '''
         #soll die Datenbanken löschen, wenn die user sich 2 Tage nicht mehr angemeldet haben
         names = self.cursor.execute("SELECT username FROM LOGINS WHERE lastlogin<DATETIME('NOW', '-2 days')").fetchall()
-        for name in names:
-            os.remove(os.getcwd() + "/Datenbank/" + name)
+        try:
+            for name in [item[0] for item in names]:
+                os.remove(os.getcwd() + "/Datenbank/" + name)
+        except FileNotFoundError as error:
+            print(error)
+
+
 
         self.cursor.execute("DELETE FROM LOGINS WHERE lastlogin < DATETIME('NOW', '-2 days')")
         self.connection.commit()
