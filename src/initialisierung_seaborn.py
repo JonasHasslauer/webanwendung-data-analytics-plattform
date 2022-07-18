@@ -73,7 +73,7 @@ def initialisierungSeaborn():
 
 
 
-        plt.show()
+        #plt.show()
 
     except Exception as e:
         print("Oopsidupsi! ", e.__class__, "ist aufgetreten.")
