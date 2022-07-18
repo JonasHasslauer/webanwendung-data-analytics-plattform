@@ -2,7 +2,7 @@ import os
 import sqlite3
 
 import matplotlib.pyplot as plt
-from flask import Flask, render_template, request, session, redirect, url_for, flash
+from flask import Flask, render_template, request, session, redirect, url_for, flash, abort
 from werkzeug.exceptions import BadRequestKeyError
 
 from src.Database import DatabaseUser
@@ -103,7 +103,12 @@ def specUebersicht(table):
             newDF = currentDataDF
             if zeilen:
                 newDF = zeilenAuswählen(newDF, zeilen)
-            zeilenFilterDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
+
+            if operator == '> median' or '< median' or '> oQuartil' or '< oQuartil' or '> uQuartil' or '< oQuartil':
+                zeilenFilterDF = zeilenfilternStatisch(newDF, spalte,  operator)
+
+            else:
+                zeilenFilterDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
 
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
                 currentDataDF.to_html(header="true", table_id="table")
@@ -130,7 +135,12 @@ def specUebersicht(table):
             newDF = currentDataDF
             if zeilen:
                 newDF = zeilenAuswählen(newDF, zeilen)
-            newDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
+            if operator == '> median' or '< median' or '> oQuartil' or '< oQuartil' or '> uQuartil' or '< oQuartil':
+                zeilenFilterDF = zeilenfilternStatisch(newDF, spalte, operator)
+
+            else:
+                zeilenFilterDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
+
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[newDF.to_html(classes='table table-striped text-center', index=False,
@@ -187,6 +197,7 @@ def specUebersicht(table):
                                    titles=currentDataDF.columns.values,
                                    table=table, tablename=table, user_list=user_list)
     else:
+        abort(401)
         return redirect(url_for('index'))
 
 
@@ -235,6 +246,7 @@ def uebersichtsseite():
         except BadRequestKeyError:
             return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
     else:
+        abort(401)
         return redirect(url_for('index'))
 
 
@@ -314,6 +326,7 @@ def detailseite(table):
                                    user_list=user_list)  # muss Liste übergeben, für erstes Landing
 
     else:
+        abort(401)
         return redirect(url_for('index'))
 
 
@@ -325,6 +338,7 @@ def impressum():
         user_list = databaseUserObject.getUser(current_username)
         return render_template("impressum.html", user_list=user_list)
     else:
+        abort(401)
         return redirect(url_for('index'))
 
 
@@ -369,12 +383,6 @@ def page_error(error):
     flash("Ein Problem ist aufgetreten.", 'error')
     return redirect(url_for('login'))
 
-''''@app.errorhandler(204)
-def no_Content(error):
-    flash("Das gesuchte Objekt existiert nicht.", 'error')
-    return redirect(url_for('login'))'''
-
-
 @app.errorhandler(400)
 def bad_Request(error):
     flash("Request nicht möglich auszuführen.", 'error')
@@ -390,30 +398,6 @@ def timeout(error):
     flash("Länge der Wartezeit für den Request abgelaufen. Bitte erneut anmelden.", 'error')
     return redirect(url_for('login'))
 
-
-
-# @app.errorhandler(204)
-# def no_Content(error):
-#    flash("Das gesuchte Objekt existiert nicht.", 'error')
-#    return redirect(url_for('login'))
-
-
-@app.errorhandler(400)
-def bad_Request(error):
-    flash("Request nicht möglich auszuführen.", 'error')
-    return redirect(url_for('login'))
-
-
-@app.errorhandler(401)
-def no_Session(error):
-    flash("Bitte erst anmelden oder  registirieren.", 'error')
-    return redirect(url_for('login'))
-
-
-@app.errorhandler(504)
-def timeout(error):
-    flash("Länge der Wartezeit für den Request abgelaufen. Bitte erneut anmelden.", 'error')
-    return redirect(url_for('login'))
 
 
 databaseUserObject.clearData()

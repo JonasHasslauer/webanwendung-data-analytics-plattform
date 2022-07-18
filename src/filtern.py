@@ -7,6 +7,48 @@ import seaborn as sns
 import numpy as np
 from flask import flash
 # nltk.download()
+def zeilenfilternStatisch(df, spaltenname, operator):
+        """
+           mit Hilfe der zeilenFiltern Methode können Zeilen ausgegeben werden, wenn sie einem bestimmten
+           Spaltenwert entsprechen/größer/kleiner bzw dem 1. oder 3. Quartiel entsprechen  sind
+
+           :param df: das zu bearbeitende DataFrame
+           :param spaltenname: Überschrift nach der zu sortierenden Spalte
+           :param operator:  median/< median/> oQuartil/< oQuartil/> uQuartil/< uQuartil
+           :return:gibt die gefilterten Zeilen als neues Dataframe aus
+           """
+
+        if operator == '> median':
+            df_maske = df[spaltenname] > df[spaltenname].quantile(q=0.50)
+            filtered_df = df[df_maske]
+            return filtered_df
+
+        elif operator == '< median':
+                df_maske = df[spaltenname] < df[spaltenname].quantile(q=0.50)
+                filtered_df = df[df_maske]
+                return filtered_df
+
+        elif operator == '> oQuartil':
+                df_maske = df[spaltenname] > df[spaltenname].quantile(q=0.75)
+
+                filtered_df = df[df_maske]
+                return filtered_df
+
+        elif operator == '< oQuartil':
+                df_maske = df[spaltenname] < df[spaltenname].quantile(q=0.75)
+                filtered_df = df[df_maske]
+                return filtered_df
+
+        elif operator == '> uQuartil':
+                df_maske = df[spaltenname] > df[spaltenname].quantile(q=0.25)
+                filtered_df = df[df_maske]
+                return filtered_df
+
+        elif operator == '< uQuartil':
+                df_maske = df[spaltenname] < df[spaltenname].quantile(q=0.25)
+                filtered_df = df[df_maske]
+                return filtered_df
+
 
 
 
@@ -18,8 +60,7 @@ def zeilenFiltern(df, spaltenname, wert, operator):
     :param df: das zu bearbeitende DataFrame
     :param spaltenname: Überschrift nach der zu sortierenden Spalte
     :param wert: Spaltenwert nach dem gefiltert werden soll
-    :param operator: </>/==/> median/< median/> oQuartil/< oQuartil/> uQuartil/< uQuartil
-    :param operator:o.Quartil & u.Quartil  müssen bei werd derzeit einen neutralen Wert 0 eingeben
+    :param operator: </>/==/>
     :return:gibt die gefilterten Zeilen als neues Dataframe aus
     """
     try:
