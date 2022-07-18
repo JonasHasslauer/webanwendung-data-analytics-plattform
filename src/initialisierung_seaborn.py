@@ -41,9 +41,9 @@ def wordcloudErstellen(text):
         mask = 255 * mask.astype(int)
 
         wordcloud = WordCloud(background_color="white", width=1920, height=1080, mask=mask).generate(text)
-        plt.imshow(wordcloud, interpolation="bilinear")
+       # plt.imshow(wordcloud, interpolation="bilinear")
         plt.axis("off")
-        plt.show()
+        #plt.show()
     except Exception as e:
         print("Oopsidupsi! ", e.__class__, "ist aufgetreten.")
 

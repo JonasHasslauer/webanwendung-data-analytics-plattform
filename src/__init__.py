@@ -371,12 +371,12 @@ def logout():
         session.clear()
     return redirect(url_for("index"))
 
-
+"""
 @app.errorhandler(404)
 def page_not_found(error):
     flash("Keine Datei ausgewählt. Bitte Datei aus dem Dateiarchiv auswählen.", 'info')
     return redirect(url_for('uebersichtsseite'))
-
+"""
 
 @app.errorhandler(500)
 def page_error(error):
