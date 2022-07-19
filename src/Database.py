@@ -242,13 +242,15 @@ class DatabaseUser(Database):
         löscht alle 2 Tage (basierend auf den Timestamps des letzten logins die Userdaten, wenn sie nicht verwendet werden
         :return:
         '''
-        #löscht die Datenbanken, wenn User gelöscht werden
-        names = self.cursor.execute("SELECT username FROM LOGINS WHERE lastlogin < DATETIME('NOW', '- 2 days')").fetchall()
-        for name in names:
-            #werden von cursor als Tupel zurück gegeben --> die usernames müssen "ausgeschnitten" werden
-            x = str(name).rsplit("'", 1)
-            z = str(x[0]).split("'", 1)
-            os.remove(os.getcwd() + "/Datenbank/" + z[1])
+        #soll die Datenbanken löschen, wenn die user sich 2 Tage nicht mehr angemeldet haben
+        names = self.cursor.execute("SELECT username FROM LOGINS WHERE lastlogin<DATETIME('NOW', '-2 days')").fetchall()
+        try:
+            for name in [item[0] for item in names]:
+                os.remove(os.getcwd() + "/Datenbank/" + name)
+        except FileNotFoundError as error:
+            print(error)
+
+
 
         self.cursor.execute("DELETE FROM LOGINS WHERE lastlogin < DATETIME('NOW', '-2 days')")
         self.connection.commit()
