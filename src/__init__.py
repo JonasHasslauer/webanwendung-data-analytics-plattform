@@ -1,7 +1,6 @@
 import os
 import sqlite3
 
-import matplotlib.pyplot as plt
 from flask import Flask, render_template, request, session, redirect, url_for, flash, abort
 from werkzeug.exceptions import BadRequestKeyError
 
@@ -13,7 +12,7 @@ from filtern import *
 from PIL import Image
 
 from initialisierung_seaborn import *
-import seaborn as sns
+
 
 app = Flask(__name__, template_folder="./templates")
 app.secret_key = "key"
@@ -21,11 +20,13 @@ app.secret_key = "key"
 databaseUserObject = DatabaseUser('Datenbank/my_logins4.db')
 
 
+#Landingpage: Login-Seite
 @app.route("/")
 def index():
     return render_template("login.html")
 
 
+#Registrieren-Seite
 @app.route("/register", methods=["POST", "GET"])
 def register():
     if request.method == "POST":
@@ -58,12 +59,9 @@ def register():
         return render_template("register.html")
 
 
+#Loginseite
 @app.route("/login", methods=["POST", "GET"])
 def login():
-
-
-
-
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
@@ -105,9 +103,8 @@ def specUebersicht(table):
             if zeilen:
                 newDF = zeilenAuswählen(newDF, zeilen)
 
-            if operator == '>' or operator == '<' or operator == '==' or operator == '!=':
+            if operator == '>' or operator =='<' or operator == '==' or operator == '!=':
                 zeilenFilterDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
-            # elif operator == '> median' or '< median' or '> oQuartil' or '< oQuartil' or '> uQuartil' or '< oQuartil':
             else:
                 zeilenFilterDF = zeilenfilternStatisch(newDF, spalte, operator)  # Zeilen werden gefiltert
 
@@ -140,7 +137,6 @@ def specUebersicht(table):
 
             if operator == '>' or  operator =='<' or operator== '==' or operator =='!=':
                 newDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
-            #elif operator == '> median' or '< median' or '> oQuartil' or '< oQuartil' or '> uQuartil' or '< oQuartil':
             else:
                 newDF = zeilenfilternStatisch(newDF, spalte, operator)
 
@@ -174,7 +170,7 @@ def specUebersicht(table):
                                        titles=newDF.columns.values, table=table, tablename=table, user_list=user_list)
 
 
-        #hier wird die DAtei, die aktuell ausgewählt ist (table) aus der Datenbank entfernt, wenn der Button dafür gedrückt wird
+        #hier wird die Datei, die aktuell ausgewählt ist (table) aus der Datenbank entfernt, wenn der Button dafür gedrückt wird
         elif request.method == 'POST' and request.form.get("deletefile"):
             databaseFileObject.deleteFile(table)
             flash("Die ausgewählte Datei wurde aus der Datenbank entfernt.", 'info')
@@ -282,7 +278,7 @@ def uebersichtsseite():
 def detailseite(table):
     if 'username' in session:
 
-        #zunachst wird ein kleines Diagramm erstellt um seaborn zu initialisieren
+        #zunächst wird ein kleines Diagramm erstellt um seaborn zu initialisieren
         #Variante 1:
         #hier wird ein Wordcloud Diagramm erstellet
 
@@ -292,7 +288,6 @@ def detailseite(table):
         #Variante 2:
         #hier wird eine seaborn balkendiagramm erstellt
         initialisierungSeaborn()
-
 
         current_username = session[
             'username']  # der username wird gebraucht, um auf die richtige Datenbank zugreifen zu können
@@ -396,15 +391,15 @@ def logout():
             os.remove('static/balkendiagramm.png')
 
         redirect(url_for('login'))
-        session.clear()
+    session.clear()
     return redirect(url_for("index"))
 
-"""
+
 @app.errorhandler(404)
 def page_not_found(error):
     flash("Keine Datei ausgewählt. Bitte Datei aus dem Dateiarchiv auswählen.", 'info')
     return redirect(url_for('uebersichtsseite'))
-"""
+
 
 @app.errorhandler(500)
 def page_error(error):

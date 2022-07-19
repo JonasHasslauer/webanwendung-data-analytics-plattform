@@ -1,12 +1,4 @@
-import pandas as pd
-from wordcloud import WordCloud
-import matplotlib.pyplot as plt
-import nltk
-import langdetect
-import seaborn as sns
-import numpy as np
-from flask import flash
-# nltk.download()
+
 def zeilenfilternStatisch(df, spaltenname, operator):
         """
            mit Hilfe der zeilenFiltern Methode können Zeilen ausgegeben werden, wenn sie einem bestimmten

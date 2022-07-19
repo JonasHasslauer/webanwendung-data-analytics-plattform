@@ -1,11 +1,4 @@
-import os
 
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import nltk
-import langdetect
-import seaborn as sns
 from filtern import *
 
 
@@ -39,8 +32,6 @@ class Chart:
             plt.close()
             command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
             df = pd.read_sql_query(command, self.databaseObject.connection)
-
-            #ax = df.plot(kind='bar', x=xAchse, y=yAchse).get_figure()  # erstellt plot mit x- und y-Achse
 
             # erstellt plot mit x- und y-Achse
             ax = sns.barplot(y=yAchse, x=xAchse, data=df, palette='rocket').get_figure()
@@ -78,8 +69,6 @@ class Chart:
 
             ax = df.groupby([xAchse]).sum().plot(kind='pie', y=yAchse, autopct='%1.0f%%').get_figure()
 
-            #colors = sns.color_palette('rocket')
-            #ax = plt.pie(data =df, colors = colors, autopct='%.0f%%')
 
             ax.savefig('static/piechart.png')
 
@@ -105,7 +94,6 @@ class Chart:
             command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
             df = pd.read_sql_query(command, self.databaseObject.connection)
 
-            #ax = df.plot(kind='line', x=xAchse, y=yAchse).get_figure()
 
             #Auf jeden Fall nochmals überprüfen
             #ab und zu Fehler bei mir
@@ -141,7 +129,7 @@ class Chart:
             command = "SELECT * FROM " + self.table
             df = pd.read_sql_query(command, self.databaseObject.connection)
             text = df.to_string(header=False, index=False)
-            wordcloud = WordCloud(background_color="white", width=1920, height=1080, ).generate(text)
+            wordcloud = WordCloud(background_color="white", width=1920, height=1080).generate(text)
             plt.imshow(wordcloud, interpolation="bilinear")
             plt.axis("off")
             plt.savefig('static/wordcloud.png')
@@ -190,7 +178,6 @@ class Chart:
             df = pd.read_sql_query(command, self.databaseObject.connection)
             # Dataframe wird in String umgewandlt
             text = df.to_string(header=False, index=False)
-            # print(text)
             try:
                 if langdetect.detect(text) == 'de':
                     einzelneWoerter = nltk.word_tokenize(text, language='german')
@@ -306,7 +293,6 @@ class Chart:
 
                 initialx += 1
 
-            #ax.getfigure()
             plt.savefig('static/wortartenanalyse.png')
 
 
