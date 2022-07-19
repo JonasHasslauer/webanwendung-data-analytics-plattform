@@ -92,6 +92,7 @@ def specUebersicht(table):
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(current_username)
 
+        isHeader = True
         if request.form.get('submit') == 'Überschriften':
             isHeader = True
         elif request.form.get('submit') == 'Keine Überschriften':
