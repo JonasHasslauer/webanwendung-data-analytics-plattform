@@ -85,7 +85,7 @@ class DatabaseFile(Database):
         '''
         self.cursor.execute("DROP TABLE " + tablename)
 
-    def saveFile(self, file, name:str, seperator):
+    def saveFile(self, file, name:str, seperator, ueberschriften:bool):
         '''
         diese Methode speichert die übergebene Datei in die Datenbank, es müssen ein Name, unter dem sie gespeichert werden soll,
         und der gewünschte Seperator übergeben werden
@@ -99,14 +99,28 @@ class DatabaseFile(Database):
         name = name.replace("-", "_")
         name = name.replace(" ", "_")
         if DatabaseFile.allowed(self, file) == True:
-            file.save("name.csv")
-            pd.read_csv("name.csv", sep=seperator).to_sql(name, sql.connect("Datenbank/" + current_username,
-                                                                      check_same_thread=False),
-                                                    schema=None, if_exists='replace', index=True, index_label=None,
-                                                    chunksize=None,
-                                                    dtype=None, method=None)
-            os.remove("name.csv")
-            flash(u'Datei erfolgreich hochgeladen.', 'success')
+            if ueberschriften == True:
+                file.save("name.csv")
+                pd.read_csv("name.csv", sep=seperator).to_sql(name, sql.connect("Datenbank/" + current_username,
+                                                                          check_same_thread=False),
+                                                        schema=None, if_exists='replace', index=True, index_label=None,
+                                                        chunksize=None,
+                                                        dtype=None, method=None)
+                os.remove("name.csv")
+                flash(u'Datei erfolgreich hochgeladen.', 'success')
+            else:
+                file.save("name.csv")
+                df =pd.read_csv("name.csv", sep=seperator)
+                columns = df.columns.values.tolist()
+                werte = list(range(len(columns)))
+                pd.read_csv("name.csv", sep=seperator, header=None, names=werte).to_sql(name, sql.connect("Datenbank/" + current_username,
+                                                                                check_same_thread=False),
+                                                              schema=None, if_exists='replace', index=True,
+                                                              index_label=None,
+                                                              chunksize=None,
+                                                              dtype=None, method=None)
+                os.remove("name.csv")
+                flash(u'Datei erfolgreich hochgeladen.', 'success')
         else:
             flash(u'Die Datei ist keine csv-Datei. Bitte laden Sie nur csv-Dateien hoch!', 'error')
 

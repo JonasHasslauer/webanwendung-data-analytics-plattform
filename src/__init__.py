@@ -226,23 +226,48 @@ def uebersichtsseite():
             #    return render_template("uebersichtsseite.html", filenames=filenames, user_list=user_list)
 
             # Dateiupload
-            elif request.method == 'POST' and request.files['file']:
-                file = request.files['file']
-                namesplitted = file.filename.split('.')
-                seperator = request.form.get('seperator')
-                name = namesplitted[0]
-                if name[0].isnumeric():
-                    name = "a" + name
-                fileExists = databaseFileObject.databaseIsExisting(name)
-                if not fileExists:
-                    if seperator is None:
-                        databaseFileObject.saveFile(file, name, seperator=",")
+            elif request.method == 'POST' and request.files['file'] :
+                if request.form.get('ueberschriften')=='yes':
+                    ueberschriften=True
+                    file = request.files['file']
+                    namesplitted = file.filename.split('.')
+                    seperator = request.form.get('seperator')
+                    name = namesplitted[0]
+                    if name[0].isnumeric():
+                        name = "a" + name
+                    fileExists = databaseFileObject.databaseIsExisting(name)
+                    if not fileExists:
+                        if seperator is None:
+                            databaseFileObject.saveFile(file, name, ",", ueberschriften)
+                        else:
+                            databaseFileObject.saveFile(file, name, seperator, ueberschriften)
+                            return render_template("uebersichtsseite.html", filenames=filenames,
+                                                   user_list=user_list)
                     else:
-                        databaseFileObject.saveFile(file, name, seperator)
+                        flash("Es existiert bereits eine Datei mit diesem Namen, diese wurde nicht überschrieben.", 'error')
                         return render_template("uebersichtsseite.html", filenames=filenames,
                                                user_list=user_list)
                 else:
-                    flash("Es existiert bereits eine Datei mit diesem Namen, diese wurde nicht überschrieben.", 'error')
+                    ueberschriften = False
+                    file = request.files['file']
+                    namesplitted = file.filename.split('.')
+                    seperator = request.form.get('seperator')
+                    name = namesplitted[0]
+                    if name[0].isnumeric():
+                        name = "a" + name
+                    fileExists = databaseFileObject.databaseIsExisting(name)
+                    if not fileExists:
+                        if seperator is None:
+                            databaseFileObject.saveFile(file, name, ",", ueberschriften)
+                        else:
+                            databaseFileObject.saveFile(file, name, seperator, ueberschriften)
+                            return render_template("uebersichtsseite.html", filenames=filenames,
+                                                   user_list=user_list)
+                    else:
+                        flash("Es existiert bereits eine Datei mit diesem Namen, diese wurde nicht überschrieben.",
+                              'error')
+                        return render_template("uebersichtsseite.html", filenames=filenames,
+                                               user_list=user_list)
                     return render_template("uebersichtsseite.html", filenames=filenames,
                                            user_list=user_list)
             else:
