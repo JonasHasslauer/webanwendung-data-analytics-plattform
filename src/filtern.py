@@ -10,7 +10,7 @@ from flask import flash
 def zeilenfilternStatisch(df, spaltenname, operator):
         """
            mit Hilfe der zeilenFiltern Methode können Zeilen ausgegeben werden, wenn sie einem bestimmten
-           Spaltenwert entsprechen/größer/kleiner bzw dem 1. oder 3. Quartiel entsprechen  sind
+           Spaltenwert entsprechen/größer/kleiner bzw dem 1. oder 3. Quartil entsprechen  sind
 
            :param df: das zu bearbeitende DataFrame
            :param spaltenname: Überschrift nach der zu sortierenden Spalte
@@ -80,39 +80,6 @@ def zeilenFiltern(df, spaltenname, wert, operator):
             df_maske = df[spaltenname] != wert
             filtered_df = df[df_maske]
             return filtered_df
-        elif operator == '> median':
-            df_maske = df[spaltenname] > df[spaltenname].quantile(q=0.50)
-            filtered_df = df[df_maske]
-            return filtered_df
-
-        elif operator == '< median':
-            df_maske = df[spaltenname] < df[spaltenname].quantile(q=0.50)
-            filtered_df = df[df_maske]
-            return filtered_df
-
-        elif operator == '> oQuartil':
-            df_maske = df[spaltenname] > df[spaltenname].quantile(q=0.75)
-
-            filtered_df = df[df_maske]
-            return filtered_df
-
-        elif operator == '< oQuartil':
-            df_maske = df[spaltenname] < df[spaltenname].quantile(q=0.75)
-            filtered_df = df[df_maske]
-            return filtered_df
-
-        elif operator == '> uQuartil':
-            df_maske = df[spaltenname] > df[spaltenname].quantile(q=0.25)
-            filtered_df = df[df_maske]
-            return filtered_df
-
-        elif operator == '< uQuartil':
-            df_maske = df[spaltenname] < df[spaltenname].quantile(q=0.25)
-            filtered_df = df[df_maske]
-            return filtered_df
-
-
-
 
     except Exception as e:
         print("Oopsidupsi!", e.__class__, "ist aufgetreten.")

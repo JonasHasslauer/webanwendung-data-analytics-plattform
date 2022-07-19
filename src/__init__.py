@@ -92,11 +92,6 @@ def specUebersicht(table):
         databaseUserObject = DatabaseUser("Datenbank/my_logins4.db")
         user_list = databaseUserObject.getUser(current_username)
 
-        isHeader = True
-        if request.form.get('submit') == 'Überschriften':
-            isHeader = True
-        elif request.form.get('submit') == 'Keine Überschriften':
-            isHeader = False
         # Zeilen- und Spaltenfilter kombiniert
         if request.method == 'POST' and request.form.get("checkbox"):
             spalte = request.form.get("spalte")  # Eingabe von Website Spalte
@@ -106,21 +101,22 @@ def specUebersicht(table):
             zeilen = request.form.get("zeilen")
             global newDF
             newDF = currentDataDF
+
             if zeilen:
                 newDF = zeilenAuswählen(newDF, zeilen)
 
-            if operator == '> median' or '< median' or '> oQuartil' or '< oQuartil' or '> uQuartil' or '< oQuartil':
-                zeilenFilterDF = zeilenfilternStatisch(newDF, spalte,  operator)
-
-            else:
+            if operator == '>' or operator == '<' or operator == '==' or operator == '!=':
                 zeilenFilterDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
+            # elif operator == '> median' or '< median' or '> oQuartil' or '< oQuartil' or '> uQuartil' or '< oQuartil':
+            else:
+                zeilenFilterDF = zeilenfilternStatisch(newDF, spalte, operator)  # Zeilen werden gefiltert
 
             if spaltenfilter == 'Alle' or None:  # Eingabe Alle anzeigen oder keine Eingabe (keine Eingabe funkioniert nicht)
                 currentDataDF.to_html(header="true", table_id="table")
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[
                                            currentDataDF.to_html(classes='table table-striped text-center', index=False,
-                                                                 justify="center", col_space=20, header=isHeader)],
+                                                                 justify="center", col_space=20)],
                                        titles=currentDataDF.columns.values, tablename=table, user_list=user_list)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
@@ -128,8 +124,8 @@ def specUebersicht(table):
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[newDF.to_html(classes='table table-striped text-center', index=False,
-                                                             justify="center", col_space=20, header=isHeader)],
-                                       titles=newDF.columns.values, table=table, tablename=table, user_list=user_list, header=isHeader)
+                                                             justify="center", col_space=20)],
+                                       titles=newDF.columns.values, table=table, tablename=table, user_list=user_list)
 
         # Zeilenfilter
         elif request.method == 'POST' and request.form.get("spalte"):
@@ -140,16 +136,18 @@ def specUebersicht(table):
             newDF = currentDataDF
             if zeilen:
                 newDF = zeilenAuswählen(newDF, zeilen)
-            if operator == '> median' or '< median' or '> oQuartil' or '< oQuartil' or '> uQuartil' or '< oQuartil':
-                zeilenFilterDF = zeilenfilternStatisch(newDF, spalte, operator)
 
+
+            if operator == '>' or  operator =='<' or operator== '==' or operator =='!=':
+                newDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
+            #elif operator == '> median' or '< median' or '> oQuartil' or '< oQuartil' or '> uQuartil' or '< oQuartil':
             else:
-                zeilenFilterDF = zeilenFiltern(newDF, spalte, int(wert), operator)  # Zeilen werden gefiltert
+                newDF = zeilenfilternStatisch(newDF, spalte, operator)
 
             newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[newDF.to_html(classes='table table-striped text-center', index=False,
-                                                         justify="center", col_space=20, header=isHeader)], titles=newDF.columns.values,
+                                                         justify="center", col_space=20)], titles=newDF.columns.values,
                                    table=table, tablename=table, user_list=user_list)
 
         # Spaltenfilter
@@ -160,8 +158,8 @@ def specUebersicht(table):
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[
                                            currentDataDF.to_html(classes='table table-striped text-center', index=False,
-                                                                 justify="center", col_space=20, header=isHeader)],
-                                       titles=currentDataDF.columns.values, tablename=table, user_list=user_list, header=isHeader)
+                                                                 justify="center", col_space=20)],
+                                       titles=currentDataDF.columns.values, tablename=table, user_list=user_list)
             else:
                 filterlist = spaltenfilter.split(',')  # Trennt Eingabe in einzelne Spaltennamen
                 zeilen = request.form.get('zeilen')
@@ -172,8 +170,8 @@ def specUebersicht(table):
                 newDF.to_html(header="true", table_id="table")  # Dataframe an HTML übergeben
                 return render_template("uebersichtsseite.html", filenames=filenames,
                                        tables=[newDF.to_html(classes='table table-striped text-center', index=False,
-                                                             justify="center", col_space=20, header=isHeader)],
-                                       titles=newDF.columns.values, table=table, tablename=table, user_list=user_list, header=isHeader)
+                                                             justify="center", col_space=20)],
+                                       titles=newDF.columns.values, table=table, tablename=table, user_list=user_list)
 
 
         #hier wird die DAtei, die aktuell ausgewählt ist (table) aus der Datenbank entfernt, wenn der Button dafür gedrückt wird
@@ -190,7 +188,7 @@ def specUebersicht(table):
             flash('Das Subset wurde abgespeichert. Bitte refreshen Sie das Dateiarchiv, um es zu sehen', 'success')
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[newDF.to_html(classes='table table-striped text-center', index=False,
-                                                        justify="center", col_space=20, header=isHeader)],
+                                                        justify="center", col_space=20)],
                                    titles=newDF.columns.values, table=table, user_list=user_list)
 
 
@@ -198,7 +196,7 @@ def specUebersicht(table):
         else:
             return render_template("uebersichtsseite.html", filenames=filenames,
                                    tables=[currentDataDF.to_html(classes='table table-striped text-center', index=False,
-                                                                 justify="center", col_space=20, header=isHeader)],
+                                                                 justify="center", col_space=20)],
                                    titles=currentDataDF.columns.values,
                                    table=table, tablename=table, user_list=user_list)
     else:
