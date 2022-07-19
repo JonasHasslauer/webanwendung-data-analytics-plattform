@@ -131,6 +131,8 @@ class DatabaseFile(Database):
         :param name: der Name, unter dem das Dataframe abgespeichert werden soll
         :return: nichts
         '''
+        name = name.replace("-", "_")
+        name = name.replace(" ", "_")
         file.to_sql(name, sql.connect("Datenbank/" + session["username"], check_same_thread=False),schema=None, if_exists='replace', index=True, index_label=None,
                                                 chunksize=None,
                                                 dtype=None, method=None)

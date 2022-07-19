@@ -123,10 +123,11 @@
                     <h3 style="font-weight:lighter; font-size:16px; line-height:1.8">
                         Auf der Übersichtsseite befindet sich der Dateiupload, das Dateiarchiv und die Selektion der Daten. </br> Für den
                     <span style="color: #ec6f04; font-size: 18px">Dateiupload </span>  wählen Sie eine csv-Datei aus, und wählen den Seperator:
-                        ist Ihre csv-Datei mit einem ',' oder einem ';' getrennt? Nachdem sie auf   <input class="btn btn-secondary" type="submit" name="submit" value="Datei Senden"
+                        ist Ihre csv-Datei mit einem ',' oder einem ';' getrennt? Außerdem können Sie auswählen, ob Ihre Datei Überschriften enthält: ist die checkbox mit 'Überschriften' angewählt, wird die erste Zeile der Datei
+                        als Spaltennamen verwendet. Sonst wird eine neue Zeile mit Spaltennamen (0,1,2,...) erzeugt. Nachdem sie auf   <input class="btn btn-secondary" type="submit" name="submit" value="Datei Senden"
                            style="font-size: x-small; width: 80px; text-align:center; font-weight: lighter">   klicken, wird die Datei in der Datenbank gespeichert. Sie bekommen direkt Feedback, ob der Upload geklappt hat. Der Upload klappt nicht, wenn
                         es sich bei der Datei nicht um eine csv-Datei handelt, oder wenn schon eine Datei mit demselben Namen existiert. Um die hochgeladene Datei nun im Dateiarchiv sehen zu können, klicken Sie auf <input class="btn btn-secondary" type="submit" name="submit" value="Refresh"
-                           style="font-size: x-small; width: 80px; text-align:center; font-weight: lighter">  <br/> Im <span style="color: #ec6f04; font-size: 18px">Dateiarchiv </span>  finden Sie alle Dateien, die Ihrem Benutzernamen zugeordnet sind.
+                           style="font-size: x-small; width: 80px; text-align:center; font-weight: lighter">  <br/> Im <span style="color: #ec6f04; font-size: 18px">Dateiarchiv </span>  finden Sie alle Dateien, die Ihrem Benutzernamen zugeordnet sind. <br/> Hinweis: '-' und Leerzeichen im Dateinamen weden zu '_' abgeändert.
                         Sie haben mit <input class="btn btn-primary" type="submit" name="deletefile" id=deletefile
                            value="Ausgewählte Datei löschen"
                            style="background-color: #ec6f04; border-color: #ec6f04; color:#ffffff; padding-left:0; width: 125px; text-align: center; font-size: x-small; font-weight: lighter"> auch die Möglichkeit, die ausgewählte Datei aus der Datenbank zu löschen. </br>
