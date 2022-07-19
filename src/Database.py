@@ -93,6 +93,7 @@ class DatabaseFile(Database):
         :param file: die Datei, die gespeichert werden soll
         :param name: unter welchem Namen die Datei gespeichert werden soll
         :param seperator: der Seperator in der csv-Datei (sind die Spalten mit , oder ; getrennt)
+        :param ueberschriften: gibt an, ob die erste Zeile die Überschriften sein sollen, oder eine Zeile erstellt werden soll
         :return: nichts
         '''
         current_username = session['username']
@@ -112,7 +113,7 @@ class DatabaseFile(Database):
                 file.save("name.csv")
                 df =pd.read_csv("name.csv", sep=seperator)
                 columns = df.columns.values.tolist()
-                werte = list(range(len(columns)))
+                werte = list(range(len(columns)))   #[0,1,2,3,...]
                 pd.read_csv("name.csv", sep=seperator, header=None, names=werte).to_sql(name, sql.connect("Datenbank/" + current_username,
                                                                                 check_same_thread=False),
                                                               schema=None, if_exists='replace', index=True,
