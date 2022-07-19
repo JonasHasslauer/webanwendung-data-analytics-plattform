@@ -34,6 +34,9 @@ class Chart:
         Das Plot wird als png in static gespeichert, damit detailseite.html das Bild aufrufen und anzeigen kann
         """
         try:
+            plt.clf()
+            plt.cla()
+            plt.close()
             command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
             df = pd.read_sql_query(command, self.databaseObject.connection)
 
@@ -45,9 +48,7 @@ class Chart:
 
             ax.savefig('static/balkendiagramm.png')  # speichert Bild zwischen, damit es angezeigt werden kann
 
-            plt.clf()
-            plt.cla()
-            plt.close()
+
 
         except Exception as e:
             print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
@@ -68,6 +69,9 @@ class Chart:
         """
 
         try:
+            plt.clf()
+            plt.cla()
+            plt.close()
             command = "SELECT * FROM " + self.table
             df = pd.read_sql_query(command, self.databaseObject.connection)
 
@@ -79,9 +83,7 @@ class Chart:
 
             ax.savefig('static/piechart.png')
 
-            plt.clf()
-            plt.cla()
-            plt.close()
+
         except Exception as e:
             print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
 
@@ -97,6 +99,9 @@ class Chart:
         """
 
         try:
+            plt.clf()
+            plt.cla()
+            plt.close()
             command = "SELECT * FROM " + self.table + " GROUP BY " + xAchse
             df = pd.read_sql_query(command, self.databaseObject.connection)
 
@@ -110,9 +115,7 @@ class Chart:
             ax = sns.lineplot(x=xAchse, y=yAchse,data=df, palette='rocket').get_figure()
 
             ax.savefig('static/liniendiagramm.png')
-            plt.clf()
-            plt.cla()
-            plt.close()
+
 
         except Exception as e:
             print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
@@ -132,6 +135,9 @@ class Chart:
         :param df: zu bearbeitendes DataFrame
         """
         try:
+            plt.clf()
+            plt.cla()
+            plt.close()
             command = "SELECT * FROM " + self.table
             df = pd.read_sql_query(command, self.databaseObject.connection)
             text = df.to_string(header=False, index=False)
@@ -140,9 +146,7 @@ class Chart:
             plt.axis("off")
             plt.savefig('static/wordcloud.png')
 
-            plt.clf()
-            plt.cla()
-            plt.close()
+
         except Exception as e:
             print("Oopsidupsi!", e.__class__, "ist aufgetreten.")
 
@@ -179,6 +183,9 @@ class Chart:
 
         """
         try:
+            plt.clf()
+            plt.cla()
+            plt.close()
             command = "SELECT * FROM " + self.table
             df = pd.read_sql_query(command, self.databaseObject.connection)
             # Dataframe wird in String umgewandlt
@@ -301,9 +308,7 @@ class Chart:
 
             #ax.getfigure()
             plt.savefig('static/wortartenanalyse.png')
-            plt.clf()
-            plt.cla()
-            plt.close()
+
 
 
         except Exception as e:
